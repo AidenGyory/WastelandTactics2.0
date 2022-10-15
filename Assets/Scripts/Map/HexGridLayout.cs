@@ -33,12 +33,12 @@ public class HexGridLayout : MonoBehaviour
                 if (z % 2 == 0)
                 {
                     //If even number then offset in a line
-                    _tile.transform.position = new Vector3(x * _tileXOffset, 0, z * _tileZOffset);
+                    _tile.transform.position = new Vector3(transform.position.x + x * _tileXOffset, transform.position.y, transform.position.z + z * _tileZOffset);
                 }
                 else
                 {
                     // if odd number then offset half the width to slot in the middle
-                    _tile.transform.position = new Vector3(x * _tileXOffset + _tileXOffset / 2, 0, z * _tileZOffset);
+                    _tile.transform.position = new Vector3(transform.position.x + x * _tileXOffset + _tileXOffset / 2, transform.position.y, transform.position.z + z * _tileZOffset);
                 }
                 SetTileParent(_tile, x, z);
 
