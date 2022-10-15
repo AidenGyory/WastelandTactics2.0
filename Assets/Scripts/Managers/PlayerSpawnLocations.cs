@@ -1,8 +1,4 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using static UnityEditor.VersionControl.Asset;
 
 public class PlayerSpawnLocations : MonoBehaviour
 {
@@ -26,18 +22,6 @@ public class PlayerSpawnLocations : MonoBehaviour
             _HQ.transform.position = _pos;
             _HQ.GetComponent<StructureInfo>().playerColour = PlayerManager.Instance.playerBaseColour[i];
             _HQ.GetComponent<StructureInfo>().UpdatePlayerDetails();
-            
-
-            
-
         }
-
-
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 }

@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using UnityEditor.SearchService;
 using UnityEngine;
 
 public class HexGridLayout : MonoBehaviour
@@ -51,5 +50,6 @@ public class HexGridLayout : MonoBehaviour
     {
         _tile.transform.parent = transform;
         _tile.name = "HexTile: " + x.ToString() + ", " + z.ToString();
+        
     }
 }
