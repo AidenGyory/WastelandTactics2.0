@@ -408,6 +408,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f128e48a0cc6c8c4a9759a3574e2346b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  highlightedObject: {fileID: 0}
 --- !u!4 &1096846104
 Transform:
   m_ObjectHideFlags: 0
@@ -1015,6 +1016,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f128e48a0cc6c8c4a9759a3574e2346b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  highlightedObject: {fileID: 0}
 --- !u!4 &8890044943060439608
 Transform:
   m_ObjectHideFlags: 0

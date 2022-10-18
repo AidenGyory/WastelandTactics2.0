@@ -26,7 +26,7 @@ public class SpawnRandomTile : MonoBehaviour
         }
         else
         RandomNumber(); 
-
+        
     }
     void RandomNumber()
     {

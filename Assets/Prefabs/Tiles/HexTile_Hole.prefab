@@ -257,7 +257,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0b6178d87affe9046b54a63cace8c4b9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  state: 0
+  state: 2
   isClear: 0
   isSpawn:
     serializedVersion: 2
@@ -275,7 +275,7 @@ MeshCollider:
   serializedVersion: 4
   m_Convex: 1
   m_CookingOptions: 30
-  m_Mesh: {fileID: 4300000, guid: 16a68787b633c3a4da4a11f4483a97f5, type: 3}
+  m_Mesh: {fileID: 4300000, guid: 3078ae27edb66534787d012b1bf9b1ff, type: 3}
 --- !u!114 &-3015171758610746552
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -307,7 +307,7 @@ MonoBehaviour:
   - {fileID: 339088178692967117}
   - {fileID: 6226419834967847979}
   selected: {r: 0, g: 0, b: 0, a: 0}
-  brightness: 1.2
+  brightness: 1.5
   flashSpeed: 0.3
 --- !u!1001 &4088849471576832023
 PrefabInstance:
@@ -375,6 +375,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: BorderFrame
+      objectReference: {fileID: 0}
+    - target: {fileID: 9076470542775273627, guid: f76be463a3ba24543b7affc0bb75b730,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f76be463a3ba24543b7affc0bb75b730, type: 3}

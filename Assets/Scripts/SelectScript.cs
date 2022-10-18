@@ -10,6 +10,7 @@ public class SelectScript : MonoBehaviour
     public enum objType
     {
         tile,
+        structure,
     }
 
     [Header("Object State Info")]
@@ -43,44 +44,26 @@ public class SelectScript : MonoBehaviour
     }
     public void Highlight()
     {
+        if (isHighlighted) { return; } //don't start highlight if already highlighted
         isHighlighted = true;
         for (int i = 0; i < modelRenderer.Length; i++)
         {
+            DOTween.Kill(modelRenderer[i].material);
             modelRenderer[i].material.DOColor(unselected[i] * brightness, 0.5f);
         }
-
-    }
-    public void Unhighlight(Transform _NotThisTransform)
-    {
-        SelectScript[] obj = FindObjectsOfType<SelectScript>();
-
-        foreach (SelectScript _obj in obj)
-        {
-            if (_obj.transform != _NotThisTransform)
-            {
-                if (!isSelected)
-                {
-                    _obj.isHighlighted = false;
-                    _obj.UnhighlightModel(); 
-                }
-            }
-        }
-        
     }
 
-    public void UnhighlightModel()
+    public void Unhighlight()
     {
+        if (!isHighlighted) { return; } //don't start unhighlight if already highlighted
+        isHighlighted = false;
         for (int i = 0; i < modelRenderer.Length; i++)
         {
+            DOTween.Kill(modelRenderer[i].material);
             modelRenderer[i].material.DOColor(unselected[i], 0.5f);
         }
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
     //public void SelectObject()
     //{
     //    isSelected = true;
@@ -139,7 +122,7 @@ public class SelectScript : MonoBehaviour
     //        }
     //    }
     //}
-    
+
 
     //public void ObjectSelectedFlashUp()
     //{

@@ -33,21 +33,4 @@ public class StructureInfo : MonoBehaviour
             baseColouredParts[i].material = playerColour; 
         } 
     }
-    //public void ClearTile()
-    //{
-    //    RaycastHit hit;
-    //    // Does the ray intersect any objects excluding the player layer
-    //    if (Physics.Raycast(transform.position + Vector3.up, Vector3.down, out hit, 2f, tile))
-    //    {
-    //        Debug.DrawRay(transform.position + Vector3.up, Vector3.down, Color.yellow);
-
-    //        Debug.Log("Hit " + hit.transform.name);
-    //        hit.transform.GetComponent<TileInfo>().ClearTile(); 
-    //    }
-    //    else
-    //    {
-    //        Debug.DrawRay(transform.position + Vector3.up, Vector3.down, Color.yellow);
-    //        Debug.Log("Did not Hit");
-    //    }
-    //}
 }

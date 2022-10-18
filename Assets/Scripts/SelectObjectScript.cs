@@ -8,13 +8,12 @@ public class SelectObjectScript : MonoBehaviour
     //Raycast for Object Selection
     private Ray _ray;
     private RaycastHit _hit;
-    // Start is called before the first frame update
-    void Start()
-    {
 
-    }
+    public SelectScript highlightedObject;
 
-    // Update is called once per frame
+    //check if mouse has moved 
+    //bool for mouse move 
+    //run raycast on mouse move 
     void Update()
     {
         RayCastToObjects();
@@ -26,30 +25,23 @@ public class SelectObjectScript : MonoBehaviour
 
         if (Physics.Raycast(_ray, out _hit))
         {
-            if (EventSystem.current.IsPointerOverGameObject())
+            if (_hit.transform.GetComponent<SelectScript>() != highlightedObject)
             {
-                SelectScript[] obj = FindObjectsOfType<SelectScript>();
-
-                foreach (SelectScript _obj in obj)
+                if (highlightedObject != null)
                 {
-                    if (_obj.transform.GetComponent<SelectScript>().isHighlighted)
-                    {
-                        if (!_obj.transform.GetComponent<SelectScript>().isSelected)
-                        {
-                            _obj.isHighlighted = false;
-                        }
-                    }
+                    highlightedObject.Unhighlight();
                 }
+                if (_hit.transform.GetComponent<SelectScript>() != null)
+                {
+                    _hit.transform.GetComponent<SelectScript>().Highlight();
+                    highlightedObject = _hit.transform.GetComponent<SelectScript>();
+                }
+                else
+                {
+                    highlightedObject = null; 
+                }
+                 
             }
-
-            // Raycast to Highight Tiles, Buildings or Units 
-            else if (_hit.transform.GetComponent<SelectScript>() != null)
-            {
-                _hit.transform.GetComponent<SelectScript>().Unhighlight(_hit.transform);
-
-                _hit.transform.GetComponent<SelectScript>().Highlight();
-            }
-
         }
     }
 }
