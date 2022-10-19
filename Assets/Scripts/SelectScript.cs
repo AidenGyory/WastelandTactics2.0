@@ -44,25 +44,66 @@ public class SelectScript : MonoBehaviour
     }
     public void Highlight()
     {
-        if (isHighlighted) { return; } //don't start highlight if already highlighted
+        if (isHighlighted || isSelected) { return; } //don't start highlight if already highlighted
         isHighlighted = true;
         for (int i = 0; i < modelRenderer.Length; i++)
         {
             DOTween.Kill(modelRenderer[i].material);
             modelRenderer[i].material.DOColor(unselected[i] * brightness, 0.5f);
+            if (type == objType.tile)
+            {
+                transform.DOScaleY(1.5f, 0.5f);
+            }
         }
     }
 
     public void Unhighlight()
     {
-        if (!isHighlighted) { return; } //don't start unhighlight if already highlighted
+        if (!isHighlighted || isSelected) { return; } //don't start unhighlight if already highlighted
         isHighlighted = false;
         for (int i = 0; i < modelRenderer.Length; i++)
         {
             DOTween.Kill(modelRenderer[i].material);
             modelRenderer[i].material.DOColor(unselected[i], 0.5f);
+            if (type == objType.tile)
+            {
+                transform.DOScaleY(1f, 0.5f);
+            }
         }
     }
+    public void Select()
+    {
+        if (isSelected) { return; } //don't start highlight if already highlighted
+        isSelected = true;
+        for (int i = 0; i < modelRenderer.Length; i++)
+        {
+            DOTween.Kill(modelRenderer[i].material);
+            modelRenderer[i].material.DOColor(unselected[i] * selected * brightness,0.5f).SetLoops(-1,LoopType.Yoyo);
+            if(type == objType.tile)
+            {
+                transform.DOScaleY(2f, 0.5f);
+                
+            }  
+        }
+    }
+    public void Deselect()
+    {
+        if (!isSelected) { return; } //don't start unhighlight if already highlighted
+        isSelected = false;
+        isHighlighted = false;
+        for (int i = 0; i < modelRenderer.Length; i++)
+        {
+            DOTween.Kill(modelRenderer[i].material);
+            modelRenderer[i].material.DOColor(unselected[i], 0.5f);
+            if (type == objType.tile)
+            {
+                transform.DOScaleY(1f, 0.5f);
+            }
+            
+        }
+    }
+
+
 
     //public void SelectObject()
     //{

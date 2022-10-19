@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 6052483875400654675}
   - component: {fileID: 9154955067157841574}
   - component: {fileID: 2827272470035316157}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: HQBuilding
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -50,10 +50,9 @@ MonoBehaviour:
   playerColour: {fileID: 0}
   baseColouredParts:
   - {fileID: 2206055220914614249}
-  tile:
+  isTile:
     serializedVersion: 2
     m_Bits: 128
-  clearTileonStart: 0
 --- !u!114 &9154955067157841574
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -98,7 +97,7 @@ GameObject:
   - component: {fileID: 558719948975342512}
   - component: {fileID: 3210878853339360975}
   - component: {fileID: 2206055220914614249}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Model
   m_TagString: Untagged
   m_Icon: {fileID: 0}

@@ -11,8 +11,6 @@ public class Structures : MonoBehaviour
 
     [Header("Player Headquarters")]
     public GameObject HQ;
-    
-
     void Awake()
     {
         if (Instance == null)
@@ -24,16 +22,5 @@ public class Structures : MonoBehaviour
         {
             Destroy(gameObject);
         }
-    }
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 }

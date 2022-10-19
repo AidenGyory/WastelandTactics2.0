@@ -1,9 +1,5 @@
-using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
-using UnityEditor;
 using UnityEngine;
-using UnityEngine.UIElements;
+
 
 public class TileInfo : MonoBehaviour
 {
@@ -17,10 +13,12 @@ public class TileInfo : MonoBehaviour
     public TileState state;
     public bool isClear; 
     [SerializeField] LayerMask isSpawn;
+    [SerializeField] LayerMask isStructure;
+    [SerializeField] LayerMask isUnit; 
+ 
+    public GameObject structureOnTile;
+    public GameObject unitOnTile; 
 
-    
-
-    // Start is called before the first frame update
     void Start()
     {
         if(!isClear)
@@ -34,7 +32,27 @@ public class TileInfo : MonoBehaviour
             StateSwitch();
         }
     }
+    public void AttachStructure()
+    {
+        Collider[] _structures = Physics.OverlapSphere(transform.position, 0.1f, isStructure);
 
+        foreach (Collider _structure in _structures)
+        {
+            Debug.Log("hit" + _structure.gameObject.name);
+            structureOnTile = _structure.gameObject;
+        }
+    }
+
+    public void AttachUnit()
+    {
+        Collider[] _units = Physics.OverlapSphere(transform.position, 0.1f, isUnit);
+
+        foreach (Collider _unit in _units)
+        {
+            Debug.Log("hit" + _unit.gameObject.name);
+            structureOnTile = _unit.gameObject;
+        }
+    }
     public void StateSwitch()
     {
         switch (state)
@@ -61,5 +79,7 @@ public class TileInfo : MonoBehaviour
         _tile.transform.SetParent(transform.parent);
         Destroy(gameObject); 
     }
+
+    
 
 }

@@ -1,15 +1,10 @@
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using UnityEditor;
 using UnityEngine;
 
 public class StructureInfo : MonoBehaviour
 {
     public Material playerColour;
     [SerializeField] Renderer[] baseColouredParts;
-    [SerializeField] LayerMask tile;
-    [SerializeField] bool clearTileonStart;
+    [SerializeField] LayerMask isTile;
 
     private void OnDrawGizmos()
     {
@@ -19,10 +14,7 @@ public class StructureInfo : MonoBehaviour
 
     private void Start()
     {
-        if(clearTileonStart)
-        {
-            //ClearTile(); 
-        }
+        UpdateTileDetails();
     }
 
     // Start is called before the first frame update
@@ -32,5 +24,10 @@ public class StructureInfo : MonoBehaviour
         {
             baseColouredParts[i].material = playerColour; 
         } 
+    }
+
+    public void UpdateTileDetails()
+    {
+        
     }
 }

@@ -10,6 +10,7 @@ public class SelectObjectScript : MonoBehaviour
     private RaycastHit _hit;
 
     public SelectScript highlightedObject;
+    public SelectScript selectedObject; 
 
     //check if mouse has moved 
     //bool for mouse move 
@@ -17,6 +18,23 @@ public class SelectObjectScript : MonoBehaviour
     void Update()
     {
         RayCastToObjects();
+        if(Input.GetMouseButton(0))
+        {
+            if(selectedObject != null)
+            {
+                selectedObject.Deselect(); 
+            }
+
+            if(highlightedObject != null)
+            {
+                highlightedObject.Select();
+                selectedObject = highlightedObject; 
+            }
+            else
+            {
+                selectedObject = null;
+            }
+        }
     }
 
     void RayCastToObjects()

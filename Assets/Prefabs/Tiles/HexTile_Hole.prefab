@@ -262,6 +262,14 @@ MonoBehaviour:
   isSpawn:
     serializedVersion: 2
     m_Bits: 64
+  isStructure:
+    serializedVersion: 2
+    m_Bits: 256
+  isUnit:
+    serializedVersion: 2
+    m_Bits: 512
+  structureOnTile: {fileID: 0}
+  unitOnTile: {fileID: 0}
 --- !u!64 &-4256237416674313136
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -306,7 +314,7 @@ MonoBehaviour:
   - {fileID: 1923816602160498060}
   - {fileID: 339088178692967117}
   - {fileID: 6226419834967847979}
-  selected: {r: 0, g: 0, b: 0, a: 0}
+  selected: {r: 0.78431374, g: 0.6745098, b: 0.57254905, a: 1}
   brightness: 1.5
   flashSpeed: 0.3
 --- !u!1001 &4088849471576832023
