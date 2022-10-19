@@ -14,7 +14,7 @@ public class StructureInfo : MonoBehaviour
 
     private void Start()
     {
-        UpdateTileDetails();
+        
     }
 
     // Start is called before the first frame update
@@ -24,10 +24,5 @@ public class StructureInfo : MonoBehaviour
         {
             baseColouredParts[i].material = playerColour; 
         } 
-    }
-
-    public void UpdateTileDetails()
-    {
-        
     }
 }

@@ -1,5 +1,5 @@
 using UnityEngine;
-
+using DG.Tweening;
 
 public class TileInfo : MonoBehaviour
 {
@@ -29,6 +29,7 @@ public class TileInfo : MonoBehaviour
             {
                 ClearTile();
             }
+
             StateSwitch();
         }
     }
@@ -80,6 +81,33 @@ public class TileInfo : MonoBehaviour
         Destroy(gameObject); 
     }
 
-    
+    public void CheckState()
+    {
+        switch (state)
+        {
+            case TileState.cannotFlip:
 
+
+                break;
+            case TileState.canFlip:
+
+                state = TileState.isFlipped;
+
+                transform.DORotate(Vector3.zero, 0.3f);
+                transform.DOJump(transform.position, 0.2f, 1, 0.3f).OnComplete(ClearSelectInfo);
+
+                break;
+            case TileState.isFlipped:
+
+                transform.DOScaleY(2f, 0.5f);
+
+                break;
+        } 
+    }
+
+    void ClearSelectInfo()
+    {
+        GetComponent<SelectScript>().Deselect();
+        GetComponent<SelectScript>().Unhighlight();
+    }
 }

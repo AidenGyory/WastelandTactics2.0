@@ -11,6 +11,7 @@ public class SelectScript : MonoBehaviour
     {
         tile,
         structure,
+        unit,
     }
 
     [Header("Object State Info")]
@@ -67,6 +68,7 @@ public class SelectScript : MonoBehaviour
             modelRenderer[i].material.DOColor(unselected[i], 0.5f);
             if (type == objType.tile)
             {
+                 
                 transform.DOScaleY(1f, 0.5f);
             }
         }
@@ -79,9 +81,27 @@ public class SelectScript : MonoBehaviour
         {
             DOTween.Kill(modelRenderer[i].material);
             modelRenderer[i].material.DOColor(unselected[i] * selected * brightness,0.5f).SetLoops(-1,LoopType.Yoyo);
+            switch(type)
+            {
+                case objType.tile:
+                    GetComponent<TileInfo>().CheckState();
+
+                    break;
+                case objType.structure:
+
+
+                    break;
+                case objType.unit:
+
+
+                    break; 
+
+            }
+
+
             if(type == objType.tile)
             {
-                transform.DOScaleY(2f, 0.5f);
+                
                 
             }  
         }
@@ -97,6 +117,7 @@ public class SelectScript : MonoBehaviour
             modelRenderer[i].material.DOColor(unselected[i], 0.5f);
             if (type == objType.tile)
             {
+                
                 transform.DOScaleY(1f, 0.5f);
             }
             

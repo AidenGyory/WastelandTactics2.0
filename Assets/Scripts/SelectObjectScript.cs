@@ -18,7 +18,7 @@ public class SelectObjectScript : MonoBehaviour
     void Update()
     {
         RayCastToObjects();
-        if(Input.GetMouseButton(0))
+        if(Input.GetMouseButtonDown(0))
         {
             if(selectedObject != null)
             {
