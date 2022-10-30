@@ -2,6 +2,13 @@ using UnityEngine;
 
 public class StructureInfo : MonoBehaviour
 {
+    [Header("Unit Info")]
+    public string structureName;
+    public int currentHealth;
+    public int maxHealth;
+    [Space]
+    public PlayerProfileTemplateSO factionOwner;
+
     public Material playerColour;
     [SerializeField] Renderer[] baseColouredParts;
     [SerializeField] LayerMask isTile;
@@ -22,7 +29,7 @@ public class StructureInfo : MonoBehaviour
     {
         for (int i = 0; i < baseColouredParts.Length; i++)
         {
-            baseColouredParts[i].material = playerColour; 
+            baseColouredParts[i].material = factionOwner.playerBaseColour; 
         } 
     }
 }

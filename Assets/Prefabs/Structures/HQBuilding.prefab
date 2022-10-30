@@ -47,6 +47,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1641cd04d2c92bc43a440540e815a956, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  structureName: HeadQuarters
+  currentHealth: 1000
+  maxHealth: 1000
+  factionOwner: {fileID: 0}
   playerColour: {fileID: 0}
   baseColouredParts:
   - {fileID: 2206055220914614249}
@@ -72,7 +76,7 @@ MonoBehaviour:
   - {fileID: 2206055220914614249}
   selected: {r: 1, g: 1, b: 1, a: 0}
   brightness: 1.5
-  flashSpeed: 0
+  flashSpeed: 0.3
 --- !u!65 &2827272470035316157
 BoxCollider:
   m_ObjectHideFlags: 0

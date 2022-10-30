@@ -1,20 +1,30 @@
+using MoreMountains.Tools;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
 public class SelectObjectScript : MonoBehaviour
 {
+    public static SelectObjectScript Instance;
+
+    [SerializeField] HUDManager HUD;  
     //Raycast for Object Selection
     private Ray _ray;
     private RaycastHit _hit;
 
     public SelectScript highlightedObject;
-    public SelectScript selectedObject; 
+    public SelectScript selectedObject;
 
-    //check if mouse has moved 
-    //bool for mouse move 
-    //run raycast on mouse move 
+    [SerializeField] Transform renderTextureModel; 
+
+    //     -- TO OPTIMIZE --
+    //     
+    //  check if mouse has moved 
+    //    bool for mouse move 
+    // run raycast on mouse move 
+
     void Update()
     {
         RayCastToObjects();
@@ -28,11 +38,18 @@ public class SelectObjectScript : MonoBehaviour
             if(highlightedObject != null)
             {
                 highlightedObject.Select();
-                selectedObject = highlightedObject; 
+                
+                selectedObject = highlightedObject;
+                HUD.DisplayObjectType(selectedObject);
+                renderTextureModel.gameObject.SetActive(true);
+                HUD.renderedTexture.SetActive(true);
+                renderTextureModel.position = selectedObject.transform.position; 
             }
             else
             {
                 selectedObject = null;
+                renderTextureModel.gameObject.SetActive(false);
+                HUD.renderedTexture.SetActive(false);
             }
         }
     }

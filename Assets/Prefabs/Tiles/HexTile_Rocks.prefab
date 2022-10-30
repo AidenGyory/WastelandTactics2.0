@@ -49,7 +49,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0b6178d87affe9046b54a63cace8c4b9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  state: 1
+  tileName: Rock Pile
+  tileDescription: Perfect for shelter. Easy to breakdown and bring back to base
+  isResourceTile: 1
+  resourceIcon: {fileID: -3168733581550749585, guid: f7043b7291f49844b9671b3d3dedcbb5,
+    type: 3}
+  resourceAmountLeft: 750
+  state: 2
   isClear: 0
   isSpawn:
     serializedVersion: 2

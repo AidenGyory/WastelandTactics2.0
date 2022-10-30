@@ -257,7 +257,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0b6178d87affe9046b54a63cace8c4b9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  state: 1
+  tileName: Quicksand
+  tileDescription: Impossible to walk across. you can try but you'll just sink
+  isResourceTile: 0
+  resourceIcon: {fileID: 0}
+  resourceAmountLeft: 0
+  state: 2
   isClear: 0
   isSpawn:
     serializedVersion: 2

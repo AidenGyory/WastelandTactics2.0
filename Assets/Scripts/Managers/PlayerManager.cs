@@ -6,8 +6,7 @@ public class PlayerManager : MonoBehaviour
 {
     public static PlayerManager Instance;
 
-    [Header("PlayerBaseColour")]
-    public Material[] playerBaseColour;
+    public PlayerProfileTemplateSO[] players; 
 
     void Awake()
     {
@@ -20,16 +19,5 @@ public class PlayerManager : MonoBehaviour
         {
             Destroy(gameObject);
         }
-    }
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 }

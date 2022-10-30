@@ -1,5 +1,6 @@
 using UnityEngine;
 using DG.Tweening;
+using static SelectScript;
 
 public class TileInfo : MonoBehaviour
 {
@@ -10,6 +11,15 @@ public class TileInfo : MonoBehaviour
         isFlipped,
     }
 
+    [Header("Tile Info")]
+    public string tileName;
+    public string tileDescription;
+    public bool isResourceTile;
+    public Sprite resourceIcon;
+    public int resourceAmountLeft;
+
+
+    [Header("Tile Components")]
     public TileState state;
     public bool isClear; 
     [SerializeField] LayerMask isSpawn;
@@ -100,14 +110,51 @@ public class TileInfo : MonoBehaviour
             case TileState.isFlipped:
 
                 transform.DOScaleY(2f, 0.5f);
-
+                
                 break;
         } 
+    }
+
+    public void SetTileState(TileState _state)
+    {
+        state = _state; 
+
+        switch(state)
+        {
+            case TileState.cannotFlip:
+
+
+                break;
+            case TileState.canFlip:
+
+                ChangeMaterial(GetComponent<SelectScript>()); 
+
+                break;
+            case TileState.isFlipped:
+
+
+                break; 
+        }
     }
 
     void ClearSelectInfo()
     {
         GetComponent<SelectScript>().Deselect();
         GetComponent<SelectScript>().Unhighlight();
+    }
+
+    public void ChangeMaterial(SelectScript _tile)
+    {
+        if (_tile.isHighlighted || _tile.isSelected) { return; } //don't start highlight if already highlighted
+        _tile.isHighlighted = true;
+        for (int i = 0; i < _tile.modelRenderer.Length; i++)
+        {
+            DOTween.Kill(_tile.modelRenderer[i].material);
+            _tile.modelRenderer[i].material.DOColor(Color.white, 0.5f);
+            if (_tile.type == objType.tile)
+            {
+                transform.DOScaleY(1.5f, 0.5f);
+            }
+        }
     }
 }

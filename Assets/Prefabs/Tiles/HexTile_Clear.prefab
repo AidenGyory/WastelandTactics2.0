@@ -153,7 +153,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0b6178d87affe9046b54a63cace8c4b9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  state: 1
+  tileName: Desert
+  tileDescription: Flip more of these tiles to reveal rewards swallowed by the desert...
+  isResourceTile: 0
+  resourceIcon: {fileID: 0}
+  resourceAmountLeft: 0
+  state: 2
   isClear: 0
   isSpawn:
     serializedVersion: 2

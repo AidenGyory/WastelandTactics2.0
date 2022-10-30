@@ -76,7 +76,9 @@ public class SelectScript : MonoBehaviour
     public void Select()
     {
         if (isSelected) { return; } //don't start highlight if already highlighted
+
         isSelected = true;
+
         for (int i = 0; i < modelRenderer.Length; i++)
         {
             DOTween.Kill(modelRenderer[i].material);
@@ -85,7 +87,7 @@ public class SelectScript : MonoBehaviour
             {
                 case objType.tile:
                     GetComponent<TileInfo>().CheckState();
-
+                     
                     break;
                 case objType.structure:
 
@@ -97,13 +99,6 @@ public class SelectScript : MonoBehaviour
                     break; 
 
             }
-
-
-            if(type == objType.tile)
-            {
-                
-                
-            }  
         }
     }
     public void Deselect()
