@@ -1,9 +1,5 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
-using UnityEngine.EventSystems;
-using DG.Tweening;
+
 
 public class SelectScript : MonoBehaviour
 {
@@ -13,200 +9,132 @@ public class SelectScript : MonoBehaviour
         structure,
         unit,
     }
+    public enum SelectState
+    {
+        Unselected,
+        Highlighted,
+        Selected,
+    }
 
     [Header("Object State Info")]
     public objType type;
-    [Space]
-    public bool isSelected;
-    public bool isHighlighted;
-    [Space]
-    public Renderer[] modelRenderer;
+    public SelectState currentSelectState; 
 
+    //RayCast for.....
     private Ray _ray;
     private RaycastHit _hit;
 
-    [Header("Colour Overlays")]
-    public Color selected;
-    public float brightness; 
-    private Color[] unselected;
-
-    [Tooltip("Normally set to 0.3f")]
-    public float flashSpeed;
-
-    // Start is called before the first frame update
-    void Start()
+    public void HighlightObject()
     {
-        unselected = new Color[modelRenderer.Length];
-
-        for (int i = 0; i < modelRenderer.Length; i++)
+        // guard for if state is anything other than unselected  
+        if(currentSelectState != SelectState.Unselected)
         {
-            unselected[i] = modelRenderer[i].material.color; 
+            return;
         }
-    }
-    public void Highlight()
-    {
-        if (isHighlighted || isSelected) { return; } //don't start highlight if already highlighted
-        isHighlighted = true;
-        for (int i = 0; i < modelRenderer.Length; i++)
+        // Set state to highlighted 
+        currentSelectState = SelectState.Highlighted;
+
+        // Check type and run function based on type for highlight
+        if (type == objType.tile)
         {
-            DOTween.Kill(modelRenderer[i].material);
-            modelRenderer[i].material.DOColor(unselected[i] * brightness, 0.5f);
-            if (type == objType.tile)
-            {
-                transform.DOScaleY(1.5f, 0.5f);
-            }
+            //Tile Change Materials Extras
+            GetComponent<TileInfo>().ChangeMaterialAndScale(currentSelectState, 0.5f); 
+        }
+        if (type == objType.structure)
+        {
+            //Structure Change Material Extras 
+        }
+        if (type == objType.unit)
+        {
+            //Unit Change Material Extras
+            GetComponent<UnitInfo>().ChangeMaterial(currentSelectState, 0.5f);
         }
     }
 
-    public void Unhighlight()
+    public void UnhighlightObject()
     {
-        if (!isHighlighted || isSelected) { return; } //don't start unhighlight if already highlighted
-        isHighlighted = false;
-        for (int i = 0; i < modelRenderer.Length; i++)
+        // Guard for if object is selected 
+        if (currentSelectState == SelectState.Selected)
         {
-            DOTween.Kill(modelRenderer[i].material);
-            modelRenderer[i].material.DOColor(unselected[i], 0.5f);
-            if (type == objType.tile)
-            {
-                 
-                transform.DOScaleY(1f, 0.5f);
-            }
+            return;
         }
-    }
-    public void Select()
-    {
-        if (isSelected) { return; } //don't start highlight if already highlighted
-
-        isSelected = true;
-
-        for (int i = 0; i < modelRenderer.Length; i++)
+        // if not selected then set state to unselected 
+        currentSelectState = SelectState.Unselected;
+        // check type and run function for state change to unselected. 
+        if (type == objType.tile)
         {
-            DOTween.Kill(modelRenderer[i].material);
-            modelRenderer[i].material.DOColor(unselected[i] * selected * brightness,0.5f).SetLoops(-1,LoopType.Yoyo);
-            switch(type)
-            {
-                case objType.tile:
-                    GetComponent<TileInfo>().CheckState();
-                     
-                    break;
-                case objType.structure:
-
-
-                    break;
-                case objType.unit:
-
-
-                    break; 
-
-            }
+            //Tile Change Materials Extras
+            GetComponent<TileInfo>().ChangeMaterialAndScale(currentSelectState, 0.5f);
         }
-    }
-    public void Deselect()
-    {
-        if (!isSelected) { return; } //don't start unhighlight if already highlighted
-        isSelected = false;
-        isHighlighted = false;
-        for (int i = 0; i < modelRenderer.Length; i++)
+        if (type == objType.structure)
         {
-            DOTween.Kill(modelRenderer[i].material);
-            modelRenderer[i].material.DOColor(unselected[i], 0.5f);
-            if (type == objType.tile)
-            {
-                
-                transform.DOScaleY(1f, 0.5f);
-            }
-            
+            //Structure Change Material Extras 
+        }
+        if (type == objType.unit)
+        {
+            //Unit Change Material Extras
+            GetComponent<UnitInfo>().ChangeMaterial(currentSelectState, 0.5f);
         }
     }
 
+    public void SelectObject()
+    {
+        // Guard for if object is selected 
+        if (currentSelectState == SelectState.Selected)
+        {
+            return;
+        }
+        // if not selected then set state to unselected 
+        currentSelectState = SelectState.Selected;
+        // check type and run function for state change to unselected. 
+        if (type == objType.tile)
+        {
+            //Tile Change Materials Extras
+            GetComponent<TileInfo>().ChangeMaterialAndScale(currentSelectState, 0.5f);
+            //Add code for checking tile state and flipping if able to
+        }
+        if (type == objType.structure)
+        {
+            //Structure Change Material Extras 
+        }
+        if (type == objType.unit)
+        {
+            //Unit Change Material Extras
+            // Add code for checking unit movement range and tracking movement path
+            GetComponent<UnitInfo>().ChangeMaterial(currentSelectState, 0.5f);
+            TileManager.Instance.CheckWalkableTiles(transform.position, GetComponent<UnitInfo>().moveRadius); 
+        }
+    }
 
+    public void DeselectObject()
+    {
+        // Guard for if object is selected 
+        if (currentSelectState != SelectState.Selected)
+        {
+            return;
+        }
+        // if not selected then set state to unselected 
+        currentSelectState = SelectState.Unselected;
+        // check type and run function for state change to unselected. 
+        if (type == objType.tile)
+        {
+            //Tile Change Materials Extras
+            GetComponent<TileInfo>().ChangeMaterialAndScale(currentSelectState, 0.5f);
+        }
+        if (type == objType.structure)
+        {
+            //Structure Change Material Extras 
+        }
+        if (type == objType.unit)
+        {
+            //Unit Change Material Extras
+            GetComponent<UnitInfo>().ChangeMaterial(currentSelectState, 0.5f); 
+        }
+    }
 
-    //public void SelectObject()
-    //{
-    //    isSelected = true;
-
-    //    ObjectSelectedFlashUp();
-
-
-    //    if (type == objType.tile)
-    //    {
-    //        if (GetComponent<RandomTile>() != null)
-    //        {
-    //            GetComponent<RandomTile>().FlipTile();
-    //        }
-    //        else
-    //        {
-    //            //Select Object 
-    //            SelectedObjectDisplayManager.Instance.selectedObject = this.gameObject;
-    //            SelectedObjectDisplayManager.Instance.TurnOnTileDisplay();
-
-    //            SelectedObjectActionManager.Instance.UpdateButtons();
-    //        }
-
-
-
-
-    //    }
-
-    //    if (type == objType.building)
-    //    {
-    //        //Move camera to Building View
-    //        Camera.main.GetComponent<CameraController>().SetOffset(1);
-
-    //        //Select Object
-    //        SelectedObjectDisplayManager.Instance.selectedObject = this.gameObject;
-    //        SelectedObjectDisplayManager.Instance.TurnOnBuildingDisplay();
-
-    //        SelectedObjectActionManager.Instance.UpdateButtons();
-
-
-    //    }
-    //}
-    //public void Deselect(Transform _NotThisTransform)
-    //{
-    //    Camera.main.GetComponent<CameraController>().SetOffset(0);
-
-    //    SelectScript[] obj = FindObjectsOfType<SelectScript>();
-
-    //    foreach (SelectScript _obj in obj)
-    //    {
-    //        if (_obj.transform != _NotThisTransform)
-    //        {
-    //            if (!isSelected)
-    //            {
-    //                _obj.isSelected = false;
-    //            }
-    //        }
-    //    }
-    //}
-
-
-    //public void ObjectSelectedFlashUp()
-    //{
-    //    if (isSelected)
-    //    {
-    //        foreach (Renderer _renderer in modelRenderer)
-    //        {
-    //            _renderer.material.DOColor(selected, flashSpeed);
-    //        }
-
-    //        Invoke("ObjectSelectedFlashBack", flashSpeed);
-    //    }
-
-    //}
-    //public void ObjectSelectedFlashBack()
-    //{
-    //    if (isSelected)
-    //    {
-    //        for (int i = 0; i < modelRenderer.Length; i++)
-    //        {
-    //            modelRenderer[i].material.DOColor(selected, flashSpeed);
-    //        }
-
-    //        Invoke("ObjectSelectedFlashUp", flashSpeed);
-    //    }
-
-    //}
-
-
+    public void ClearSelectInfo()
+    {
+        DeselectObject();
+        UnhighlightObject();
+    }
 }

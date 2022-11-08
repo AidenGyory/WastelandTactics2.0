@@ -51,12 +51,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   tileName: Uh-Hexium Mine
   tileDescription: An abundance of rare materials coverted by all across the galaxy
+  type: 5
+  movementCost: 2
   isResourceTile: 1
   resourceIcon: {fileID: 5524590292671962877, guid: f7043b7291f49844b9671b3d3dedcbb5,
     type: 3}
   resourceAmountLeft: 1000
   state: 2
-  isClear: 0
+  clearThisTile: 0
+  canWalk: 2
+  modelRenderer:
+  - {fileID: 6199669868800596965}
+  - {fileID: 6200313287159616497}
   isSpawn:
     serializedVersion: 2
     m_Bits: 64
@@ -95,26 +101,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   type: 0
-  isSelected: 0
-  isHighlighted: 0
-  modelRenderer:
-  - {fileID: 6199669868800596965}
-  - {fileID: 6200313287159616497}
-  - {fileID: 5972117805361207433}
-  - {fileID: 2574350124549998883}
-  - {fileID: 3635083365673143833}
-  - {fileID: 773195091572108423}
-  - {fileID: 992372916650318369}
-  - {fileID: 6885519321862153768}
-  - {fileID: 5328675489033266971}
-  - {fileID: 761040253384505772}
-  - {fileID: 5516991851782451921}
-  - {fileID: 7087789289042464881}
-  - {fileID: 8960625219512311600}
-  - {fileID: 3352516602125033942}
-  selected: {r: 0.78431374, g: 0.6745098, b: 0.57254905, a: 1}
-  brightness: 1.5
-  flashSpeed: 0.3
+  currentSelectState: 0
 --- !u!1 &6223315991575944795
 GameObject:
   m_ObjectHideFlags: 0
@@ -397,81 +384,9 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f76be463a3ba24543b7affc0bb75b730, type: 3}
---- !u!23 &761040253384505772 stripped
-MeshRenderer:
-  m_CorrespondingSourceObject: {fileID: 5395144359422694470, guid: f76be463a3ba24543b7affc0bb75b730,
-    type: 3}
-  m_PrefabInstance: {fileID: 4634385581031697898}
-  m_PrefabAsset: {fileID: 0}
---- !u!23 &773195091572108423 stripped
-MeshRenderer:
-  m_CorrespondingSourceObject: {fileID: 5398221623015571821, guid: f76be463a3ba24543b7affc0bb75b730,
-    type: 3}
-  m_PrefabInstance: {fileID: 4634385581031697898}
-  m_PrefabAsset: {fileID: 0}
---- !u!23 &992372916650318369 stripped
-MeshRenderer:
-  m_CorrespondingSourceObject: {fileID: 5590436949065152459, guid: f76be463a3ba24543b7affc0bb75b730,
-    type: 3}
-  m_PrefabInstance: {fileID: 4634385581031697898}
-  m_PrefabAsset: {fileID: 0}
---- !u!23 &2574350124549998883 stripped
-MeshRenderer:
-  m_CorrespondingSourceObject: {fileID: 7199365665174529225, guid: f76be463a3ba24543b7affc0bb75b730,
-    type: 3}
-  m_PrefabInstance: {fileID: 4634385581031697898}
-  m_PrefabAsset: {fileID: 0}
---- !u!23 &3352516602125033942 stripped
-MeshRenderer:
-  m_CorrespondingSourceObject: {fileID: 7986620705864485948, guid: f76be463a3ba24543b7affc0bb75b730,
-    type: 3}
-  m_PrefabInstance: {fileID: 4634385581031697898}
-  m_PrefabAsset: {fileID: 0}
---- !u!23 &3635083365673143833 stripped
-MeshRenderer:
-  m_CorrespondingSourceObject: {fileID: 8224360367580980211, guid: f76be463a3ba24543b7affc0bb75b730,
-    type: 3}
-  m_PrefabInstance: {fileID: 4634385581031697898}
-  m_PrefabAsset: {fileID: 0}
---- !u!23 &5328675489033266971 stripped
-MeshRenderer:
-  m_CorrespondingSourceObject: {fileID: 694653021736307441, guid: f76be463a3ba24543b7affc0bb75b730,
-    type: 3}
-  m_PrefabInstance: {fileID: 4634385581031697898}
-  m_PrefabAsset: {fileID: 0}
---- !u!23 &5516991851782451921 stripped
-MeshRenderer:
-  m_CorrespondingSourceObject: {fileID: 918998181669347131, guid: f76be463a3ba24543b7affc0bb75b730,
-    type: 3}
-  m_PrefabInstance: {fileID: 4634385581031697898}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &5791905839310622616 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1166536264397677170, guid: f76be463a3ba24543b7affc0bb75b730,
-    type: 3}
-  m_PrefabInstance: {fileID: 4634385581031697898}
-  m_PrefabAsset: {fileID: 0}
---- !u!23 &5972117805361207433 stripped
-MeshRenderer:
-  m_CorrespondingSourceObject: {fileID: 1347029980420322659, guid: f76be463a3ba24543b7affc0bb75b730,
-    type: 3}
-  m_PrefabInstance: {fileID: 4634385581031697898}
-  m_PrefabAsset: {fileID: 0}
---- !u!23 &6885519321862153768 stripped
-MeshRenderer:
-  m_CorrespondingSourceObject: {fileID: 2296521857986759618, guid: f76be463a3ba24543b7affc0bb75b730,
-    type: 3}
-  m_PrefabInstance: {fileID: 4634385581031697898}
-  m_PrefabAsset: {fileID: 0}
---- !u!23 &7087789289042464881 stripped
-MeshRenderer:
-  m_CorrespondingSourceObject: {fileID: 2453414991075212699, guid: f76be463a3ba24543b7affc0bb75b730,
-    type: 3}
-  m_PrefabInstance: {fileID: 4634385581031697898}
-  m_PrefabAsset: {fileID: 0}
---- !u!23 &8960625219512311600 stripped
-MeshRenderer:
-  m_CorrespondingSourceObject: {fileID: 4326318807663915738, guid: f76be463a3ba24543b7affc0bb75b730,
     type: 3}
   m_PrefabInstance: {fileID: 4634385581031697898}
   m_PrefabAsset: {fileID: 0}

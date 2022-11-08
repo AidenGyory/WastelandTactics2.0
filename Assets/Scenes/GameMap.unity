@@ -1857,6 +1857,7 @@ GameObject:
   m_Component:
   - component: {fileID: 189202017}
   - component: {fileID: 189202018}
+  - component: {fileID: 189202019}
   m_Layer: 10
   m_Name: SelectedObjectRendered
   m_TagString: Untagged
@@ -1900,6 +1901,21 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &189202019
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 189202016}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0dfe678714b9ab04991d4655eabb98b4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  followTarget: {fileID: 0}
+  follow: 1
+  smoothSpeed: 0.05
 --- !u!1 &206780470
 GameObject:
   m_ObjectHideFlags: 0
@@ -3543,6 +3559,7 @@ MonoBehaviour:
   tileInfo: {fileID: 546128579}
   unitInfo: {fileID: 2099454717}
   structureInfo: {fileID: 288546190}
+  renderObjectCamera: {fileID: 189202016}
   renderedTexture: {fileID: 446585609}
 --- !u!1 &327140169 stripped
 GameObject:
@@ -6181,6 +6198,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tiles: []
+  walkableTiles: []
+  isTiles:
+    serializedVersion: 2
+    m_Bits: 192
+  selected: {r: 0.8, g: 0.69803923, b: 0.50980395, a: 0}
+  walkable: {r: 0.7921569, g: 1, b: 0.6666667, a: 0}
+  unwalkable: {r: 1, g: 0.6745098, b: 0.6745098, a: 0}
+  brightness: 1.5
+  flashSpeed: 0.3
 --- !u!114 &773754824
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10437,10 +10463,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f128e48a0cc6c8c4a9759a3574e2346b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  mode: 0
   HUD: {fileID: 324896795}
   highlightedObject: {fileID: 0}
   selectedObject: {fileID: 0}
-  renderTextureModel: {fileID: 189202017}
 --- !u!4 &1394316419
 Transform:
   m_ObjectHideFlags: 0
@@ -11709,6 +11735,12 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 1030972074, guid: abc00000000000350607712256441774,
     type: 3}
   m_PrefabInstance: {fileID: 1563966060}
+  m_PrefabAsset: {fileID: 0}
+--- !u!23 &1578671083 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 1481923743, guid: 8b94fa34a25ede0428849e213ea7d76b,
+    type: 3}
+  m_PrefabInstance: {fileID: 2466691374814565110}
   m_PrefabAsset: {fileID: 0}
 --- !u!1 &1602379175
 GameObject:
@@ -16233,6 +16265,21 @@ PrefabInstance:
       propertyPath: selected.a
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6469711635262834472, guid: 8b94fa34a25ede0428849e213ea7d76b,
+        type: 3}
+      propertyPath: moveRadius
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6469711635262834472, guid: 8b94fa34a25ede0428849e213ea7d76b,
+        type: 3}
+      propertyPath: modelRenderer.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6469711635262834472, guid: 8b94fa34a25ede0428849e213ea7d76b,
+        type: 3}
+      propertyPath: modelRenderer.Array.data[0]
+      value: 
+      objectReference: {fileID: 1578671083}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8b94fa34a25ede0428849e213ea7d76b, type: 3}
 --- !u!1001 &3636232702134858026

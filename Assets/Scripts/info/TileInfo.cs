@@ -1,7 +1,7 @@
 using UnityEngine;
 using DG.Tweening;
-using static SelectScript;
 
+[RequireComponent(typeof(SelectScript))]
 public class TileInfo : MonoBehaviour
 {
     public enum TileState
@@ -11,39 +11,141 @@ public class TileInfo : MonoBehaviour
         isFlipped,
     }
 
+    public enum TileType
+    {
+        Mountain,
+        Quicksand,
+        Desert1,
+        Desert2,
+        Quarry,
+        Mine,
+        Rockpile
+    }
+
+    public enum IsWalkable
+    {
+        canWalk,
+        cantWalk,
+        unset
+    }
+
     [Header("Tile Info")]
     public string tileName;
     public string tileDescription;
+    public TileType type;
+    public int movementCost;
     public bool isResourceTile;
     public Sprite resourceIcon;
     public int resourceAmountLeft;
 
-
     [Header("Tile Components")]
     public TileState state;
-    public bool isClear; 
+    public bool clearThisTile;
+    public IsWalkable canWalk; 
+    public Renderer[] modelRenderer;
+
+    
+    private Color[] unselected;
+    
+
+    [Header("Tile Filters")]
     [SerializeField] LayerMask isSpawn;
     [SerializeField] LayerMask isStructure;
-    [SerializeField] LayerMask isUnit; 
- 
+    [SerializeField] LayerMask isUnit;
+
+    [Header("Objects Attached to Tile")]
     public GameObject structureOnTile;
     public GameObject unitOnTile; 
 
+    //PRIVATE FUNCTIONS
     void Start()
     {
-        if(!isClear)
+        if(!clearThisTile)
         {
             Collider[] _spawnTiles = Physics.OverlapSphere(transform.position, 0.5f, isSpawn);
 
             if (_spawnTiles.Length > 0)
             {
-                ClearTile();
+                ChangeTileToClearForBaseSpawn();
             }
 
-            StateSwitch();
+            RotateTileBasedOnTileState();
+        }
+
+        unselected = new Color[modelRenderer.Length];
+
+        for (int i = 0; i < modelRenderer.Length; i++)
+        {
+            unselected[i] = modelRenderer[i].material.color;
         }
     }
-    public void AttachStructure()
+    
+    void RotateTileBasedOnTileState()
+    {
+        if (state != TileState.isFlipped)
+        {
+            transform.DORotate(new Vector3(180f, 0f, 0f), 0.3f);
+            transform.DOJump(transform.position, 0.2f, 1, 0.3f).OnComplete(GetComponent<SelectScript>().ClearSelectInfo);
+        }
+        else
+        {
+            transform.DORotate(Vector3.zero, 0.3f);
+            transform.DOJump(transform.position, 0.2f, 1, 0.3f).OnComplete(GetComponent<SelectScript>().ClearSelectInfo);
+        }
+    }
+
+    void ChangeTileToClearForBaseSpawn()
+    {
+        GameObject _tile = Instantiate(Structures.Instance.clearTile[Random.Range(0,Structures.Instance.clearTile.Length)]);
+        _tile.transform.position = transform.position;
+        _tile.name = gameObject.name;
+        _tile.GetComponent<TileInfo>().state = TileState.isFlipped; 
+        _tile.GetComponent<TileInfo>().clearThisTile = true;
+        _tile.transform.SetParent(transform.parent);
+        Destroy(gameObject); 
+    }
+
+    // PUBLIC FUNCTIONS 
+    public void SetTileState(TileState _state)
+    {
+        state = _state;
+
+        switch (state)
+        {
+            case TileState.cannotFlip:
+                //Execute if State is set to cannot Flip
+                
+                break;
+            case TileState.canFlip:
+                //Execute if State is set to can Flip
+
+                break;
+            case TileState.isFlipped:
+                //Execute if State is set to isFlipped
+
+                break;
+        }
+        RotateTileBasedOnTileState(); 
+    }
+    public void SetTileWalkableStatus(bool _isWalkable)
+    {
+        if(_isWalkable)
+        {
+            if(type == TileType.Mountain || type == TileType.Quicksand)
+            {
+                canWalk = IsWalkable.cantWalk; 
+            }
+            else
+            {
+                canWalk = IsWalkable.canWalk; 
+            }
+        }
+        else
+        {
+            canWalk = IsWalkable.unset; 
+        } 
+    }
+    public void AttachStructureToThisTile()
     {
         Collider[] _structures = Physics.OverlapSphere(transform.position, 0.1f, isStructure);
 
@@ -53,8 +155,7 @@ public class TileInfo : MonoBehaviour
             structureOnTile = _structure.gameObject;
         }
     }
-
-    public void AttachUnit()
+    public void AttachUnitToThisTile()
     {
         Collider[] _units = Physics.OverlapSphere(transform.position, 0.1f, isUnit);
 
@@ -64,97 +165,78 @@ public class TileInfo : MonoBehaviour
             structureOnTile = _unit.gameObject;
         }
     }
-    public void StateSwitch()
+    public void ChangeMaterialAndScale(SelectScript.SelectState currentSelectState, float _timer)
     {
-        switch (state)
+        if(canWalk == IsWalkable.unset)
         {
-            case TileState.cannotFlip:
-                transform.eulerAngles = new Vector3(180f, 0f, 0f);
-                break;
-            case TileState.canFlip:
-                transform.eulerAngles = new Vector3(180f, 0f, 0f);
-                break;
-            case TileState.isFlipped:
-
-                break;
-        }
-    }
-
-    public void ClearTile()
-    {
-        GameObject _tile = Instantiate(Structures.Instance.clearTile[Random.Range(0,Structures.Instance.clearTile.Length)]);
-        _tile.transform.position = transform.position;
-        _tile.name = gameObject.name;
-        _tile.GetComponent<TileInfo>().state = TileState.isFlipped; 
-        _tile.GetComponent<TileInfo>().isClear = true;
-        _tile.transform.SetParent(transform.parent);
-        Destroy(gameObject); 
-    }
-
-    public void CheckState()
-    {
-        switch (state)
-        {
-            case TileState.cannotFlip:
-
-
-                break;
-            case TileState.canFlip:
-
-                state = TileState.isFlipped;
-
-                transform.DORotate(Vector3.zero, 0.3f);
-                transform.DOJump(transform.position, 0.2f, 1, 0.3f).OnComplete(ClearSelectInfo);
-
-                break;
-            case TileState.isFlipped:
-
-                transform.DOScaleY(2f, 0.5f);
-                
-                break;
-        } 
-    }
-
-    public void SetTileState(TileState _state)
-    {
-        state = _state; 
-
-        switch(state)
-        {
-            case TileState.cannotFlip:
-
-
-                break;
-            case TileState.canFlip:
-
-                ChangeMaterial(GetComponent<SelectScript>()); 
-
-                break;
-            case TileState.isFlipped:
-
-
-                break; 
-        }
-    }
-
-    void ClearSelectInfo()
-    {
-        GetComponent<SelectScript>().Deselect();
-        GetComponent<SelectScript>().Unhighlight();
-    }
-
-    public void ChangeMaterial(SelectScript _tile)
-    {
-        if (_tile.isHighlighted || _tile.isSelected) { return; } //don't start highlight if already highlighted
-        _tile.isHighlighted = true;
-        for (int i = 0; i < _tile.modelRenderer.Length; i++)
-        {
-            DOTween.Kill(_tile.modelRenderer[i].material);
-            _tile.modelRenderer[i].material.DOColor(Color.white, 0.5f);
-            if (_tile.type == objType.tile)
+            switch (currentSelectState)
             {
+                case SelectScript.SelectState.Unselected:
+                    for (int i = 0; i < modelRenderer.Length; i++)
+                    {
+                        DOTween.Kill(modelRenderer[i].material);
+                        modelRenderer[i].material.DOColor(unselected[i], _timer);
+                        transform.DOScaleY(1f, 0.5f);
+                    }
+                    break;
+                case SelectScript.SelectState.Highlighted:
+                    for (int i = 0; i < modelRenderer.Length; i++)
+                    {
+                        DOTween.Kill(modelRenderer[i].material);
+                        modelRenderer[i].material.DOColor(unselected[i] * TileManager.Instance.brightness, 0.5f);
+                        transform.DOScaleY(1.5f, 0.5f);
+                    }
+                    break;
+                case SelectScript.SelectState.Selected:
+                    for (int i = 0; i < modelRenderer.Length; i++)
+                    {
+                        DOTween.Kill(modelRenderer[i].material);
+                        modelRenderer[i].material.DOColor(unselected[i] * TileManager.Instance.selected * TileManager.Instance.brightness, 0.5f).SetLoops(-1, LoopType.Yoyo);
+                        transform.DOScaleY(1.8f, 0.5f);
+                    }
+                    break;
+            }
+        }
+        else
+        {
+            if (currentSelectState == SelectScript.SelectState.Highlighted)
+            {
+                for (int i = 0; i < modelRenderer.Length; i++)
+                {
+                    DOTween.Kill(modelRenderer[i].material);
+                    modelRenderer[i].material.DOColor(unselected[i] * TileManager.Instance.brightness, 0.5f);
+                }
+            }
+            if (currentSelectState == SelectScript.SelectState.Unselected)
+            {
+                for (int i = 0; i < modelRenderer.Length; i++)
+                {
+                    ChangeToWalkableMaterial(); 
+                }
+            }
+        }
+        
+    }
+    public void ChangeToWalkableMaterial()
+    {
+        if(canWalk == IsWalkable.canWalk)
+        {
+            for (int i = 0; i < modelRenderer.Length; i++)
+            {
+                DOTween.Kill(modelRenderer[i].material);
+                modelRenderer[i].material.DOColor(unselected[i] * TileManager.Instance.walkable * TileManager.Instance.brightness, 0.5f);
                 transform.DOScaleY(1.5f, 0.5f);
             }
         }
+        if(canWalk == IsWalkable.cantWalk)
+        {
+            for (int i = 0; i < modelRenderer.Length; i++)
+            {
+                DOTween.Kill(modelRenderer[i].material);
+                modelRenderer[i].material.DOColor(unselected[i] * TileManager.Instance.unwalkable * TileManager.Instance.brightness, 0.5f);
+                transform.DOScaleY(1.5f, 0.5f);
+            }
+        }
+        
     }
 }

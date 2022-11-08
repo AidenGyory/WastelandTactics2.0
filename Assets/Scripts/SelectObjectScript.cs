@@ -1,14 +1,15 @@
-using MoreMountains.Tools;
-using System.Collections;
-using System.Collections.Generic;
-using Unity.Mathematics;
 using UnityEngine;
-using UnityEngine.EventSystems;
 
 public class SelectObjectScript : MonoBehaviour
 {
-    public static SelectObjectScript Instance;
+    public enum PointerMode
+    {
+        SelectMode,
+        MoveMode,
+        PlacementMode,
+    }
 
+    public PointerMode mode; 
     [SerializeField] HUDManager HUD;  
     //Raycast for Object Selection
     private Ray _ray;
@@ -17,65 +18,123 @@ public class SelectObjectScript : MonoBehaviour
     public SelectScript highlightedObject;
     public SelectScript selectedObject;
 
-    [SerializeField] Transform renderTextureModel; 
-
-    //     -- TO OPTIMIZE --
-    //     
-    //  check if mouse has moved 
-    //    bool for mouse move 
-    // run raycast on mouse move 
-
     void Update()
     {
+        //Raycast down to collideable objects in scene 
         RayCastToObjects();
+
+        //When mouse left click is pressed 
         if(Input.GetMouseButtonDown(0))
         {
-            if(selectedObject != null)
+            switch (mode)   
             {
-                selectedObject.Deselect(); 
-            }
-
-            if(highlightedObject != null)
-            {
-                highlightedObject.Select();
-                
-                selectedObject = highlightedObject;
-                HUD.DisplayObjectType(selectedObject);
-                renderTextureModel.gameObject.SetActive(true);
-                HUD.renderedTexture.SetActive(true);
-                renderTextureModel.position = selectedObject.transform.position; 
-            }
-            else
-            {
-                selectedObject = null;
-                renderTextureModel.gameObject.SetActive(false);
-                HUD.renderedTexture.SetActive(false);
+                case PointerMode.SelectMode:
+                    SelectModeInput();
+                    break;
+                case PointerMode.MoveMode:
+                    MoveModeInput(); 
+                    break;
+                case PointerMode.PlacementMode:
+                    PlaceModeInput(); 
+                    break;
             }
         }
     }
-
-    void RayCastToObjects()
+    void SelectModeInput()
     {
-        _ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-
-        if (Physics.Raycast(_ray, out _hit))
+        if (selectedObject != null && selectedObject != highlightedObject)
         {
-            if (_hit.transform.GetComponent<SelectScript>() != highlightedObject)
+            selectedObject.DeselectObject();
+        }
+        // if their is a highlighted object 
+        if (highlightedObject != null)
+        {
+            //Set the Selected Object to the Highlighted Object 
+            selectedObject = highlightedObject;
+            // run the "Select" Function in the Select Script on Highlighted Object
+            highlightedObject.SelectObject();
+
+            // Display Object info from the Selected Object to the HUDManager Script
+            HUD.DisplayObjectInfoHUD(selectedObject);
+
+            if(selectedObject.type == SelectScript.objType.unit)
             {
-                if (highlightedObject != null)
+                mode = PointerMode.MoveMode; 
+            }
+        }
+        // If there is no Highlighted Object 
+        else
+        {
+            // Set the selected Object to null to Deselect anything already stored 
+            selectedObject = null;
+            //Clear Selected Object from HUD
+            HUD.ClearObjectInfoHUD();
+        }
+    }
+    void MoveModeInput()
+    {
+        //Select a tile in MoveMode (Unit Mode) 
+        if(highlightedObject.type == SelectScript.objType.tile)
+        {
+            TileInfo _tile = highlightedObject.GetComponent<TileInfo>();
+
+            if(_tile.canWalk == TileInfo.IsWalkable.unset)
+            {
+                mode = PointerMode.SelectMode;
+                selectedObject.DeselectObject();
+                SelectModeInput(); 
+                
+            }
+            else
+            {
+                if(highlightedObject.GetComponent<TileInfo>().canWalk == TileInfo.IsWalkable.canWalk)
                 {
-                    highlightedObject.Unhighlight();
-                }
-                if (_hit.transform.GetComponent<SelectScript>() != null)
-                {
-                    _hit.transform.GetComponent<SelectScript>().Highlight();
-                    highlightedObject = _hit.transform.GetComponent<SelectScript>();
+                    selectedObject.GetComponent<UnitInfo>().MoveUnit(highlightedObject.transform.position);
                 }
                 else
                 {
-                    highlightedObject = null; 
+                    Debug.Log("can't walk here"); 
                 }
-                 
+                
+            }
+        }
+        if(highlightedObject.type == SelectScript.objType.structure)
+        {
+            mode = PointerMode.SelectMode;
+            selectedObject.DeselectObject();
+            SelectModeInput();
+        }
+    }
+    void PlaceModeInput()
+    {
+
+    }
+    void RayCastToObjects()
+    {
+        // Ray equals the screen to point value of the screen to the mouse pointer 
+        _ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+
+        // CAST a ray out till it hits an object collider 
+        if (Physics.Raycast(_ray, out _hit))
+        {
+            if (_hit.transform.GetComponent<SelectScript>() != null)
+            {
+                SelectScript _object = _hit.transform.GetComponent<SelectScript>();
+
+                if(highlightedObject != null)
+                {
+                    highlightedObject.UnhighlightObject();
+                }
+                
+                _object.HighlightObject();
+                highlightedObject = _object;
+                return; 
+            }
+            
+            if (highlightedObject != null)
+            {
+                highlightedObject.UnhighlightObject();
+                highlightedObject = null;
             }
         }
     }
