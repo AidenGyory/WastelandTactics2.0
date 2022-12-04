@@ -265,7 +265,7 @@ MonoBehaviour:
   isResourceTile: 0
   resourceIcon: {fileID: 0}
   resourceAmountLeft: 0
-  state: 2
+  state: 0
   clearThisTile: 0
   canWalk: 2
   modelRenderer:

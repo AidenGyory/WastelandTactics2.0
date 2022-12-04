@@ -11736,12 +11736,6 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 1563966060}
   m_PrefabAsset: {fileID: 0}
---- !u!23 &1578671083 stripped
-MeshRenderer:
-  m_CorrespondingSourceObject: {fileID: 1481923743, guid: 8b94fa34a25ede0428849e213ea7d76b,
-    type: 3}
-  m_PrefabInstance: {fileID: 2466691374814565110}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1602379175
 GameObject:
   m_ObjectHideFlags: 0
@@ -16255,31 +16249,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: DefaultUnit
       objectReference: {fileID: 0}
-    - target: {fileID: 4296484960626218554, guid: 8b94fa34a25ede0428849e213ea7d76b,
-        type: 3}
-      propertyPath: brightness
-      value: 1.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 4296484960626218554, guid: 8b94fa34a25ede0428849e213ea7d76b,
-        type: 3}
-      propertyPath: selected.a
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6469711635262834472, guid: 8b94fa34a25ede0428849e213ea7d76b,
-        type: 3}
-      propertyPath: moveRadius
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 6469711635262834472, guid: 8b94fa34a25ede0428849e213ea7d76b,
-        type: 3}
-      propertyPath: modelRenderer.Array.size
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 6469711635262834472, guid: 8b94fa34a25ede0428849e213ea7d76b,
-        type: 3}
-      propertyPath: modelRenderer.Array.data[0]
-      value: 
-      objectReference: {fileID: 1578671083}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8b94fa34a25ede0428849e213ea7d76b, type: 3}
 --- !u!1001 &3636232702134858026
