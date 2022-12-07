@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Events;
 
 
 public class SelectScript : MonoBehaviour
@@ -18,7 +19,10 @@ public class SelectScript : MonoBehaviour
 
     [Header("Object State Info")]
     public objType type;
-    public SelectState currentSelectState; 
+    public SelectState currentSelectState;
+
+    [SerializeField] UnityEvent selectObj; 
+    [SerializeField] UnityEvent unselectObj;
 
     //RayCast for.....
     private Ray _ray;
@@ -60,6 +64,9 @@ public class SelectScript : MonoBehaviour
         }
         // if not selected then set state to unselected 
         currentSelectState = SelectState.Unselected;
+        // Unselect Object
+        unselectObj.Invoke();  
+
         // check type and run function for state change to unselected. 
         if (type == objType.tile)
         {
@@ -86,6 +93,8 @@ public class SelectScript : MonoBehaviour
         }
         // if not selected then set state to unselected 
         currentSelectState = SelectState.Selected;
+        //Invoke Unity Event in Editor
+        selectObj.Invoke();
         // check type and run function for state change to unselected. 
         if (type == objType.tile)
         {
@@ -102,6 +111,7 @@ public class SelectScript : MonoBehaviour
             //Unit Change Material Extras
             // Add code for checking unit movement range and tracking movement path
             GetComponent<UnitInfo>().ChangeMaterial(currentSelectState, 0.5f);
+            GetComponent<UnitInfo>().CalculateMovementRaduis(); 
             TileManager.Instance.CheckWalkableTiles(transform.position, GetComponent<UnitInfo>().moveRadius); 
         }
     }
@@ -115,6 +125,8 @@ public class SelectScript : MonoBehaviour
         }
         // if not selected then set state to unselected 
         currentSelectState = SelectState.Unselected;
+        // Unselect Object
+        unselectObj.Invoke();
         // check type and run function for state change to unselected. 
         if (type == objType.tile)
         {
@@ -128,7 +140,8 @@ public class SelectScript : MonoBehaviour
         if (type == objType.unit)
         {
             //Unit Change Material Extras
-            GetComponent<UnitInfo>().ChangeMaterial(currentSelectState, 0.5f); 
+            GetComponent<UnitInfo>().ChangeMaterial(currentSelectState, 0.5f);
+            TileManager.Instance.ClearWalkableTiles();
         }
     }
 

@@ -1,3 +1,4 @@
+using UnityEditor.Experimental;
 using UnityEngine;
 
 public class StructureInfo : MonoBehaviour
@@ -16,7 +17,10 @@ public class StructureInfo : MonoBehaviour
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.red;
-        Gizmos.DrawLine(transform.position + Vector3.up, transform.position + Vector3.down); 
+        Gizmos.DrawLine(transform.position + Vector3.up, transform.position + Vector3.down);
+
+        Gizmos.color = Color.green;
+        Gizmos.DrawWireSphere(transform.position, 0.8f);
     }
 
     private void Start()
@@ -31,5 +35,24 @@ public class StructureInfo : MonoBehaviour
         {
             baseColouredParts[i].material = factionOwner.playerBaseColour; 
         } 
+    }
+
+    public void CreateScout()
+    {
+        TileManager.Instance.ShowPlaceableTiles(transform.position);
+        SelectObjectScript select = FindObjectOfType<SelectObjectScript>();
+
+        select.mode = SelectObjectScript.PointerMode.PlacementMode;
+    }
+    public void heal(int amount)
+    {
+        if(currentHealth + amount > maxHealth)
+        {
+            currentHealth = maxHealth; 
+        }
+        else
+        {
+            currentHealth += amount; 
+        }
     }
 }

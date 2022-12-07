@@ -69,7 +69,10 @@ public class TileInfo : MonoBehaviour
                 ChangeTileToClearForBaseSpawn();
             }
 
-            RotateTileBasedOnTileState();
+            if (state != TileState.isFlipped)
+            {
+                transform.Rotate(180f, 0f, 0f); 
+            }
         }
 
         unselected = new Color[modelRenderer.Length];
@@ -78,6 +81,8 @@ public class TileInfo : MonoBehaviour
         {
             unselected[i] = modelRenderer[i].material.color;
         }
+
+
     }
     
     void RotateTileBasedOnTileState()
@@ -96,7 +101,7 @@ public class TileInfo : MonoBehaviour
 
     void ChangeTileToClearForBaseSpawn()
     {
-        GameObject _tile = Instantiate(Structures.Instance.clearTile[Random.Range(0,Structures.Instance.clearTile.Length)]);
+        GameObject _tile = Instantiate(StructuresManager.Instance.clearTile[Random.Range(0,StructuresManager.Instance.clearTile.Length)]);
         _tile.transform.position = transform.position;
         _tile.name = gameObject.name;
         _tile.GetComponent<TileInfo>().state = TileState.isFlipped; 
@@ -131,14 +136,15 @@ public class TileInfo : MonoBehaviour
     {
         if(_isWalkable)
         {
-            if(type == TileType.Mountain || type == TileType.Quicksand)
-            {
-                canWalk = IsWalkable.cantWalk; 
-            }
-            else
-            {
-                canWalk = IsWalkable.canWalk; 
-            }
+            canWalk = IsWalkable.canWalk;
+            //if(type == TileType.Mountain || type == TileType.Quicksand)
+            //{
+            //    canWalk = IsWalkable.cantWalk; 
+            //}
+            //else
+            //{
+            //    canWalk = IsWalkable.canWalk; 
+            //}
         }
         else
         {
@@ -238,5 +244,27 @@ public class TileInfo : MonoBehaviour
             }
         }
         
+    }
+    public void ChangeToPlaceableMaterial()
+    {
+        if (canWalk == IsWalkable.canWalk)
+        {
+            for (int i = 0; i < modelRenderer.Length; i++)
+            {
+                DOTween.Kill(modelRenderer[i].material);
+                modelRenderer[i].material.DOColor(unselected[i] * TileManager.Instance.placeable * TileManager.Instance.brightness, 0.5f);
+                transform.DOScaleY(1.5f, 0.5f);
+            }
+        }
+        if (canWalk == IsWalkable.cantWalk)
+        {
+            for (int i = 0; i < modelRenderer.Length; i++)
+            {
+                DOTween.Kill(modelRenderer[i].material);
+                modelRenderer[i].material.DOColor(unselected[i] * TileManager.Instance.unwalkable * TileManager.Instance.brightness, 0.5f);
+                transform.DOScaleY(1.5f, 0.5f);
+            }
+        }
+
     }
 }

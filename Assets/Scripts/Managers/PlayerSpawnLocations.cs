@@ -17,7 +17,7 @@ public class PlayerSpawnLocations : MonoBehaviour
         for (int i = 0; i <= (int)GameManager.Instance.amountOfPlayers +1; i++)
         { 
             Vector3 _pos = playerSpawns[index].transform.GetChild(i).position;
-            GameObject _HQ = Instantiate(Structures.Instance.HQ); 
+            GameObject _HQ = Instantiate(StructuresManager.Instance.HQ); 
             _HQ.transform.position = _pos;
             
             StructureInfo _info = _HQ.GetComponent<StructureInfo>();

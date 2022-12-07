@@ -1,6 +1,8 @@
+using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 public class TileManager : MonoBehaviour
 {
@@ -15,6 +17,7 @@ public class TileManager : MonoBehaviour
     public Color selected;
     public Color walkable; 
     public Color unwalkable;
+    public Color placeable;
     public float brightness;
     [Tooltip("Flash Speed is normally set to 0.3f for flashing white on tiles")]
     public float flashSpeed;
@@ -84,7 +87,7 @@ public class TileManager : MonoBehaviour
             TileInfo _info = _tiles[i].GetComponent<TileInfo>();
 
             //Guard for tile state
-            if (_info.state != TileInfo.TileState.isFlipped) { return; }
+            //if (_info.state != TileInfo.TileState.isFlipped) { return; }
 
             _info.SetTileWalkableStatus(true);
             _info.ChangeToWalkableMaterial();
@@ -105,5 +108,64 @@ public class TileManager : MonoBehaviour
         }
 
         walkableTiles.Clear();
+    }
+
+    public void FlipTiles(Vector3 _position, float _radius)
+    {
+        // Clear previous list of walkable tiles 
+        ClearWalkableTiles();
+
+        // find the tiles within unit movement radius 
+        Collider[] _tiles = Physics.OverlapSphere(_position, _radius, isTiles);
+
+        for (int i = 0; i < _tiles.Length; i++)
+        {
+            TileInfo _info = _tiles[i].GetComponent<TileInfo>();
+
+            //Guard for tile state
+            //if(_info.state == TileInfo.TileState.isFlipped) { return; }
+
+            _info.SetTileWalkableStatus(false);
+            walkableTiles.Add(_info);
+        }
+
+        Invoke("WaitAndFlip", 0.2f); 
+    }
+
+    public void WaitAndFlip()
+    {
+        int rand = Random.Range(0, walkableTiles.Count);
+        walkableTiles[rand].SetTileState(TileInfo.TileState.isFlipped);
+        walkableTiles.Remove(walkableTiles[rand]);
+
+        if(walkableTiles.Count > 0)
+        {
+            Invoke("WaitAndFlip", 0.05f);
+        }
+        
+    }
+
+    public void ShowPlaceableTiles(Vector3 _position)
+    {
+        float _radius = 0.8f; 
+        // Clear previous list of walkable tiles 
+        ClearWalkableTiles();
+
+        // find the tiles within radius 
+        Collider[] _tiles = Physics.OverlapSphere(_position, _radius, isTiles);
+
+        for (int i = 0; i < _tiles.Length; i++)
+        {
+            TileInfo _info = _tiles[i].GetComponent<TileInfo>();
+
+            //Guard for tile state
+            if (_info.state != TileInfo.TileState.isFlipped) { return; }
+
+            _info.SetTileWalkableStatus(true);
+            _info.ChangeToPlaceableMaterial();
+
+            walkableTiles.Add(_info);
+        }
+
     }
 }

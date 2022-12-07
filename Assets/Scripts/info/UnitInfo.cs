@@ -1,4 +1,5 @@
 using DG.Tweening;
+using Unity.VisualScripting;
 using UnityEngine;
 
 [RequireComponent(typeof(SelectScript))]
@@ -21,14 +22,33 @@ public class UnitInfo : MonoBehaviour
     [SerializeField] Renderer[] modelRenderer;
     Color[] unselected;
     [SerializeField] LayerMask isTile;
+    [SerializeField] float tileSize; 
 
-    private void OnDrawGizmos()
+    //private void OnDrawGizmos()
+    //{
+    //    Gizmos.color = Color.red;
+    //    Gizmos.DrawLine(transform.position + Vector3.up, transform.position + Vector3.down);
+
+    //    Gizmos.color = Color.green;
+    //    Gizmos.DrawWireSphere(transform.position, moveRadius);
+    //}
+
+    public void AddMovement(int amount)
     {
-        Gizmos.color = Color.red;
-        Gizmos.DrawLine(transform.position + Vector3.up, transform.position + Vector3.down);
+        if(currentMovement + amount > maxMovement)
+        {
+            currentMovement = maxMovement;
+        }
+        else
+        {
+            currentMovement += amount;
+        }
+    }
 
-        Gizmos.color = Color.green;
-        Gizmos.DrawWireSphere(transform.position, moveRadius);
+    public void ScanArea()
+    {
+        Debug.Log("Scanning Terrain");
+        TileManager.Instance.FlipTiles(transform.position,tileSize); 
     }
 
     private void Awake()
@@ -62,8 +82,7 @@ public class UnitInfo : MonoBehaviour
                 for (int i = 0; i < modelRenderer.Length; i++)
                 {
                     DOTween.Kill(modelRenderer[i].material);
-                    modelRenderer[i].material.DOColor(unselected[i], _timer);
-                    TileManager.Instance.ClearWalkableTiles(); 
+                    modelRenderer[i].material.DOColor(unselected[i], _timer); 
                 }
                 break;
             case SelectScript.SelectState.Highlighted:
@@ -85,6 +104,19 @@ public class UnitInfo : MonoBehaviour
     }
     public void MoveUnit(Vector3 position)
     {
+        //Calculate Movement 
+        float temp_distance = Vector3.Distance(transform.position, position);
+
+        moveRadius -= temp_distance;
+        //Debug.Log("Movement left is " + moveRadius);
+
+        temp_distance /= tileSize;
+        //Debug.Log("Distance is " + temp_distance);
+
+        currentMovement -= Mathf.RoundToInt(temp_distance);
+        
+        //Debug.Log("Rounded to " + Mathf.RoundToInt(temp_distance) + "Tiles"); 
+        //Debug.Log("Current Moves Left = " + currentMovement);
 
         transform.DOLookAt(position, 0.2f).OnComplete(Move);
         void Move()
@@ -95,6 +127,13 @@ public class UnitInfo : MonoBehaviour
                 TileManager.Instance.CheckWalkableTiles(transform.position, moveRadius);
             }
         }
+    }
+
+    public void CalculateMovementRaduis()
+    {
+        moveRadius = currentMovement * tileSize; 
+        
+
     }
 
 

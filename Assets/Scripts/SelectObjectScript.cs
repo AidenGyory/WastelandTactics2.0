@@ -9,8 +9,7 @@ public class SelectObjectScript : MonoBehaviour
         PlacementMode,
     }
 
-    public PointerMode mode; 
-    [SerializeField] HUDManager HUD;  
+    public PointerMode mode;   
     //Raycast for Object Selection
     private Ray _ray;
     private RaycastHit _hit;
@@ -54,9 +53,6 @@ public class SelectObjectScript : MonoBehaviour
             // run the "Select" Function in the Select Script on Highlighted Object
             highlightedObject.SelectObject();
 
-            // Display Object info from the Selected Object to the HUDManager Script
-            HUD.DisplayObjectInfoHUD(selectedObject);
-
             if(selectedObject.type == SelectScript.objType.unit)
             {
                 mode = PointerMode.MoveMode; 
@@ -67,13 +63,12 @@ public class SelectObjectScript : MonoBehaviour
         {
             // Set the selected Object to null to Deselect anything already stored 
             selectedObject = null;
-            //Clear Selected Object from HUD
-            HUD.ClearObjectInfoHUD();
         }
     }
     void MoveModeInput()
     {
-        //Select a tile in MoveMode (Unit Mode) 
+        if(highlightedObject == null) { return;  } 
+        //Select a tile in MoveMode (Unit Mode)
         if(highlightedObject.type == SelectScript.objType.tile)
         {
             TileInfo _tile = highlightedObject.GetComponent<TileInfo>();
@@ -107,7 +102,39 @@ public class SelectObjectScript : MonoBehaviour
     }
     void PlaceModeInput()
     {
+         
+        //Select a tile in Placement Mode
+        if (highlightedObject.type == SelectScript.objType.tile)
+        {
+            TileInfo _tile = highlightedObject.GetComponent<TileInfo>();
 
+            if (_tile.canWalk == TileInfo.IsWalkable.unset)
+            {
+                mode = PointerMode.SelectMode;
+                selectedObject.DeselectObject();
+                SelectModeInput();
+
+            }
+            else
+            {
+                if (highlightedObject.GetComponent<TileInfo>().canWalk == TileInfo.IsWalkable.canWalk)
+                {
+                    Debug.Log("Place Unit");
+                    UnitManager.Instance.CreateUnit(UnitManager.unitTypes.Scout, highlightedObject.transform);
+                }
+                else
+                {
+                    Debug.Log("can't walk here");
+                }
+
+            }
+        }
+        if (highlightedObject.type == SelectScript.objType.structure)
+        {
+            mode = PointerMode.SelectMode;
+            selectedObject.DeselectObject();
+            SelectModeInput();
+        }
     }
     void RayCastToObjects()
     {

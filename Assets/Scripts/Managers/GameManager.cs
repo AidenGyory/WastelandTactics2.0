@@ -20,10 +20,23 @@ public class GameManager : MonoBehaviour
         fourPlayer = 2,
     }
 
+    public enum PlayerTurn
+    {
+        wait = 0,
+        player1 = 1,
+        player2 = 2, 
+        player3 = 3, 
+        player4 = 4,
+    }
+
     
     [Header("Game Settings")]
     public MapIndex mapType;
     public PlayerSpawns amountOfPlayers;
+
+    int players;
+    PlayerTurn turn; 
+
 
     void Awake()
     {
@@ -35,6 +48,26 @@ public class GameManager : MonoBehaviour
         else if (Instance != this)
         {
             Destroy(gameObject);
+        }
+    }
+    private void Start()
+    {
+        players = (int)amountOfPlayers + 2;
+        turn = PlayerTurn.player1; 
+        
+    }
+    public void SetPlayerTurn(bool local_nextPlayer)
+    {
+        if(local_nextPlayer)
+        {
+            if ((int)turn >= players)
+            {
+                turn = PlayerTurn.player1; 
+            }
+            else
+            {
+                turn += 1; 
+            }
         }
     }
 }

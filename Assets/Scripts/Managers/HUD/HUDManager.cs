@@ -7,15 +7,8 @@ public class HUDManager : MonoBehaviour
     [SerializeField] HUDUnitInfoDisplay unitInfo;
     [SerializeField] HUDStructureInfoDisplay structureInfo;
 
-    [Header("Display Model on HUD References")]
-    [SerializeField] GameObject renderObjectCamera;
-    [SerializeField] GameObject renderedTexture; 
     public void DisplayObjectInfoHUD(SelectScript _selected)
     {
-        
-        renderObjectCamera.SetActive(true);
-        renderObjectCamera.GetComponent<FollowScript>().SetTarget(_selected.transform); 
-        renderedTexture.SetActive(true); 
 
         tileInfo.gameObject.SetActive(false); 
         unitInfo.gameObject.SetActive(false);
@@ -42,8 +35,6 @@ public class HUDManager : MonoBehaviour
     
     public void ClearObjectInfoHUD()
     {
-        renderObjectCamera.SetActive(false); 
-        renderedTexture.SetActive(false);
         tileInfo.gameObject.SetActive(false);
         unitInfo.gameObject.SetActive(false);
         structureInfo.gameObject.SetActive(false);
