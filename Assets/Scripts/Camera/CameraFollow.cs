@@ -65,4 +65,10 @@ public class CameraFollow : MonoBehaviour
             }
         }
     }
+
+    public void StartShake(float duration, float magnitude)
+    {
+        CameraShake cameraShake = GetComponent<CameraShake>();
+        StartCoroutine(cameraShake.Shake(magnitude, duration));
+    }
 }

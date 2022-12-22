@@ -13,7 +13,7 @@ public class MapShaper : MonoBehaviour
     void Start()
     {
         index = (int)GameManager.Instance.mapType;
-        playerSpawns = (int)GameManager.Instance.amountOfPlayers; 
+        playerSpawns = (int)GameManager.Instance.amountOfPlayers - 2; 
 
         foreach(GameObject shape in shapes)
         {

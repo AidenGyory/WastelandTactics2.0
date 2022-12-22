@@ -14,15 +14,13 @@ public class PlayerSpawnLocations : MonoBehaviour
 
         playerSpawns[index].SetActive(true);
 
-        for (int i = 0; i <= (int)GameManager.Instance.amountOfPlayers +1; i++)
+        for (int i = 0; i <= (int)GameManager.Instance.amountOfPlayers-1; i++)
         { 
             Vector3 _pos = playerSpawns[index].transform.GetChild(i).position;
-            GameObject _HQ = Instantiate(StructuresManager.Instance.HQ); 
+            GameObject _HQ = Instantiate(GameManager.Instance.HQPrefab);
             _HQ.transform.position = _pos;
-            
-            StructureInfo _info = _HQ.GetComponent<StructureInfo>();
-            _info.factionOwner = PlayerManager.Instance.players[i];
-            _info.UpdatePlayerDetails(); 
+            _HQ.GetComponent<StructureInfo>().owner = GameManager.Instance.playerInfo[i];
+            _HQ.GetComponent<StructureInfo>().UpdatePlayerDetails(); 
         }
     }
 }

@@ -4,15 +4,24 @@ using UnityEngine;
 
 public class MoveScript : MonoBehaviour
 {
-    public bool canUseArrows;
+    public enum Direction
+    {
+        Up,
+        Right,
+        Left,   
+        Down,
+    } 
 
+    public bool canUseArrows;
 
     public float moveSpeed;
 
-    bool hoverEnterMoveUp;
-    bool hoverEnterMoveDown;
-    bool hoverEnterMoveLeft;
-    bool hoverEnterMoveRight;
+
+
+    public bool hoverEnterMoveUp;
+    public bool hoverEnterMoveDown;
+    public bool hoverEnterMoveLeft;
+    public bool hoverEnterMoveRight;
 
     public bool moveFollowTarget;
     public Vector3 targetPosition;
@@ -22,6 +31,48 @@ public class MoveScript : MonoBehaviour
     void Start()
     {
 
+    }
+
+    public void AddDirection(int _newDirection)
+    {
+        switch ((Direction)_newDirection)
+        {
+            case Direction.Up:
+                hoverEnterMoveUp = true; 
+                break;
+            case Direction.Right:
+                hoverEnterMoveRight = true;
+                break;
+            case Direction.Left:
+                hoverEnterMoveLeft = true;
+                break;
+            case Direction.Down:
+                hoverEnterMoveDown = true;
+                break;
+            default:
+                break;
+        }
+    }
+
+    public void RemoveDirection(int _newDirection)
+    {
+        switch ((Direction)_newDirection)
+        {
+            case Direction.Up:
+                hoverEnterMoveUp = false;
+                break;
+            case Direction.Right:
+                hoverEnterMoveRight = false;
+                break;
+            case Direction.Left:
+                hoverEnterMoveLeft = false;
+                break;
+            case Direction.Down:
+                hoverEnterMoveDown = false;
+                break;
+            default:
+                break;
+        }
     }
 
     // Update is called once per frame
@@ -66,6 +117,12 @@ public class MoveScript : MonoBehaviour
 
         if (moveFollowTarget)
         {
+            if(hoverEnterMoveUp || hoverEnterMoveDown || hoverEnterMoveRight || hoverEnterMoveLeft)
+            {
+                moveFollowTarget = false;
+            }
+
+
             Vector3 _currentPosition = transform.position;
             Vector3 _targetPosition = targetPosition;
 
@@ -77,31 +134,13 @@ public class MoveScript : MonoBehaviour
                 moveFollowTarget = false;
             }
         }
+
     }
 
     public void SetDestination(Vector3 target)
     {
         targetPosition = target; 
         moveFollowTarget = true;
-    }
-
-    public void SetMoveDirection(int direction)
-    {
-        switch (direction)
-        {
-            case 0: hoverEnterMoveUp = true; break;
-            case 1: hoverEnterMoveRight = true; break;
-            case 2: hoverEnterMoveDown = true; break;
-            case 3: hoverEnterMoveLeft = true; break;
-        }
-    }
-
-    public void stopMoving()
-    {
-        hoverEnterMoveUp = false;
-        hoverEnterMoveDown = false;
-        hoverEnterMoveLeft = false;
-        hoverEnterMoveRight = false;
     }
 
     void MoveUp()
@@ -120,5 +159,7 @@ public class MoveScript : MonoBehaviour
     {
         transform.position = transform.position + Vector3.left * moveSpeed * Time.deltaTime;
     }
+
+
 
 }

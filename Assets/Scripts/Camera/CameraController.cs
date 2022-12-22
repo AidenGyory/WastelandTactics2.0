@@ -4,6 +4,16 @@ using UnityEngine;
 
 public class CameraController : MonoBehaviour
 {
+    public enum CameraMode
+    {
+        Unfocused,
+        Focused,
+        Topdown,
+        Zoomed,
+    }
+
+    public CameraMode mode;
+
     public bool debug;
     [Space]
     public Vector3[] cameraPosition;
@@ -31,5 +41,11 @@ public class CameraController : MonoBehaviour
             if (Input.GetKeyDown(KeyCode.Alpha8)) SetOffset(8);
             if (Input.GetKeyDown(KeyCode.Alpha9)) SetOffset(9);
         }
+    }
+
+    public void SetCameraMode(CameraMode _cameraMode)
+    {
+        mode = _cameraMode;
+        SetOffset((int)mode); 
     }
 }

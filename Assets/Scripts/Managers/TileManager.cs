@@ -1,171 +1,221 @@
-using DG.Tweening;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Rendering;
+using DG.Tweening; 
 
 public class TileManager : MonoBehaviour
 {
-    public static TileManager Instance;
+    // Singleton instance of this class
+    public static TileManager instance;
 
-    public TileInfo[] tiles;
+    public float tileSize;
+    // Array of all TileInfo objects in the scene
+    public List<TileInfo> allTiles;
 
-    public List<TileInfo> walkableTiles;
+    // List of TileInfo objects within a given radius of a given position
+    public List<TileInfo> tileList;
+
+    // LayerMask used to detect colliders within a given radius
     public LayerMask isTiles;
 
-    [Header("Colour Overlays")]
+    // Prefab used to clear tiles during play
+    public GameObject clearTilePrefab;
+
+    // Colours used for different types of tiles
     public Color selected;
-    public Color walkable; 
+    public Color walkable;
     public Color unwalkable;
     public Color placeable;
+    public Color flippable;
+
+    // Brightness of the flashing white colour
     public float brightness;
-    [Tooltip("Flash Speed is normally set to 0.3f for flashing white on tiles")]
+
+    // Speed at which tiles flash white (normally set to 0.3f
     public float flashSpeed;
 
-    // Create Instance on Awake 
-    void Awake()
+    // Initialize the singleton instance on Awake
+    private void Awake()
     {
-        if (Instance == null)
+        if (instance == null)
         {
             DontDestroyOnLoad(gameObject);
-            Instance = this;
+            instance = this;
         }
-        else if (Instance != this)
+        else if (instance != this)
         {
             Destroy(gameObject);
         }
     }
-    void Start()
+
+    private void Start()
     {
-        Invoke("InitialiseAllTiles", 1f); 
+        // Load Game Order
+        Invoke(nameof(InitialiseAllTiles), 1f);
+        Invoke(nameof(SetTileOwners), 1.1f);
+        Invoke(nameof(StartGame), 2f);
     }
+    public void StartGame()
+    {
+        // Officially make the game start and playable. 
+        GameManager.Instance.StartGame();
+    }
+    // Populate the tiles array with all TileInfo objects in the scene
     public void InitialiseAllTiles()
     {
-        TileInfo[] obj = FindObjectsOfType<TileInfo>();
-        tiles = new TileInfo[obj.Length];
-        tiles = obj;
-        
-        UpdateStructuresOnTiles();
-        UpdateUnitsOnTiles();
-    }
-    void UpdateStructuresOnTiles()
-    {
-        foreach (TileInfo _tile in tiles)
-        {
-            if(_tile.state != TileInfo.TileState.isFlipped) { return; }
+        //Clear previous all tiles list 
+        allTiles.Clear();
 
-            if(_tile.structureOnTile == null)
-            {
-                _tile.AttachStructureToThisTile();
-            }
+        // Find all objects with TileInfo script. 
+        var findTiles = FindObjectsOfType<TileInfo>();
+
+        // Add each tile in findTiles group to allTiles List.  
+        foreach (var t in findTiles)
+        {
+            allTiles.Add(t);
         }
     }
-    void UpdateUnitsOnTiles()
+
+    //Set the owners of the tiles surounding each headquarters on the map 
+    public void SetTileOwners()
     {
-        foreach (TileInfo _tile in tiles)
+        //Find all headquarters on the map. 
+        var hq = FindObjectsOfType<HeadQuarters>();
+
+        // run the "Update tile Ownership" function from all headquarters
+        foreach (var headQuarters in hq)
         {
-            if (_tile.state != TileInfo.TileState.isFlipped) { return; }
-
-            if (_tile.unitOnTile == null)
-            {
-                _tile.AttachUnitToThisTile();
-            }
-        }
-    }
-    public void CheckWalkableTiles(Vector3 _position, float _radius)
-    {
-        // Clear previous list of walkable tiles 
-        ClearWalkableTiles();
-
-        // find the tiles within unit movement radius 
-        Collider[] _tiles = Physics.OverlapSphere(_position, _radius, isTiles);
-
-        Debug.Log("Check for Walkable Tiles at " + _position + " for " + _radius + "tiles"); 
-
-        for (int i = 0; i < _tiles.Length; i++)
-        {
-            TileInfo _info = _tiles[i].GetComponent<TileInfo>();
-
-            //Guard for tile state
-            //if (_info.state != TileInfo.TileState.isFlipped) { return; }
-
-            _info.SetTileWalkableStatus(true);
-            _info.ChangeToWalkableMaterial();
-
-            walkableTiles.Add(_info);
+            headQuarters.UpdateTileOwnership();
         }
 
     }
-    public void ClearWalkableTiles()
-    {
-        Debug.Log("Clear Walkable Tiles"); 
 
-        foreach(TileInfo _info in walkableTiles)
+    // Set up the tileList with TileInfo objects within a given radius of a given position
+    public List<TileInfo> SetTileList(Vector3 position, int radiusInTiles)
+    {
+        // execute Clear Functions for all tiles in tileList; 
+        if (tileList.Count > 0)
         {
-            _info.SetTileWalkableStatus(false);
+            ClearTilesList();
+        }
+
+        // Find all colliders within the given radius and isTiles layermask
+        Collider[] tiles = Physics.OverlapSphere(position, radiusInTiles * tileSize, isTiles);
+
+        for (int i = 0; i < tiles.Length; i++)
+        {
+            TileInfo _info = tiles[i].GetComponent<TileInfo>();
+            tileList.Add(_info);
+        }
+
+        return tileList;
+    }
+
+    // Clear the tileList
+    public void ClearTilesList()
+    {
+        // Clear the select info for each TileInfo object in the list
+        foreach (TileInfo _info in tileList)
+        {
             _info.GetComponent<SelectScript>().ClearSelectInfo();
-            _info.ChangeMaterialAndScale(_info.GetComponent<SelectScript>().currentSelectState, 0.5f); 
         }
 
-        walkableTiles.Clear();
+        // Clear the list itself
+        tileList.Clear();
     }
 
-    public void FlipTiles(Vector3 _position, float _radius)
+    // Flip tiles within a given radius of a given position
+    public void FlipTiles(List<TileInfo> _tilesToFlip)
     {
-        // Clear previous list of walkable tiles 
-        ClearWalkableTiles();
+        // Set up the tileList with TileInfo objects within the given radius of the given position
+        ClearTilesList();
 
-        // find the tiles within unit movement radius 
-        Collider[] _tiles = Physics.OverlapSphere(_position, _radius, isTiles);
+        tileList = _tilesToFlip; 
 
-        for (int i = 0; i < _tiles.Length; i++)
-        {
-            TileInfo _info = _tiles[i].GetComponent<TileInfo>();
-
-            //Guard for tile state
-            //if(_info.state == TileInfo.TileState.isFlipped) { return; }
-
-            _info.SetTileWalkableStatus(false);
-            walkableTiles.Add(_info);
-        }
-
-        Invoke("WaitAndFlip", 0.2f); 
+        // Wait 0.2 seconds before flipping the first tile
+        Invoke(nameof(WaitAndFlip), 0.2f);
     }
 
+    // Wait a short period of time before flipping a random tile in the tileList
     public void WaitAndFlip()
     {
-        int rand = Random.Range(0, walkableTiles.Count);
-        walkableTiles[rand].SetTileState(TileInfo.TileState.isFlipped);
-        walkableTiles.Remove(walkableTiles[rand]);
-
-        if(walkableTiles.Count > 0)
+        if (tileList.Count < 1)
         {
-            Invoke("WaitAndFlip", 0.05f);
+            return;
         }
-        
+
+        // Choose a random tile from the list
+        int rand = Random.Range(0, tileList.Count);
+
+        // Flip the chosen tile
+        tileList[rand].DOFlip();
+
+        // Remove the flipped tile from the list
+        tileList.Remove(tileList[rand]);
+
+        //loop around
+        Invoke(nameof(WaitAndFlip), 0.05f);
     }
 
-    public void ShowPlaceableTiles(Vector3 _position)
+    // Find tiles close to flipped tiles and set their canFlip property to true
+    public void FindAdjacentFlippableTiles(Vector3 _position, int _radiusInTiles)
     {
-        float _radius = 0.8f; 
-        // Clear previous list of walkable tiles 
-        ClearWalkableTiles();
+        // Set up the tileList with TileInfo objects within the given radius of the given position
+        List<TileInfo> _tilesToSetToCanFlip = SetTileList(_position, _radiusInTiles);
 
-        // find the tiles within radius 
-        Collider[] _tiles = Physics.OverlapSphere(_position, _radius, isTiles);
-
-        for (int i = 0; i < _tiles.Length; i++)
+        // Iterate through the tileList
+        foreach (TileInfo _tile in _tilesToSetToCanFlip)
         {
-            TileInfo _info = _tiles[i].GetComponent<TileInfo>();
+            // Check if the tile has already been flipped
+            if (_tile.state == TileInfo.TileState.CannotFlip)
+            {
+                //Set tile state to can flip
+                _tile.SetasCanFlip();
 
-            //Guard for tile state
-            if (_info.state != TileInfo.TileState.isFlipped) { return; }
+            }
+        }
+    }
 
-            _info.SetTileWalkableStatus(true);
-            _info.ChangeToPlaceableMaterial();
+    //method to find all tiles that are owned by the current player
+    public void FindPlayerOwnedTilesForFlipCheck(PlayerInfo _currentPlayer)
+    {
 
-            walkableTiles.Add(_info);
+        //Clear the state of all "CanFlip" tiles
+        ClearCanFlipStateOnAllTiles();
+
+        //Create a local list of vector 3 positions 
+        List<Vector3> _tilePositions = new List<Vector3>();
+
+        //iterate through the list of tiles on on the gameboard
+        for (int i = 0; i < allTiles.Count-1; i++)
+        {
+            //check if the tile belongs to the current player
+            if (allTiles[i].GetComponent<TileInfo>().Owner == _currentPlayer)
+            {
+                //add the tile to the local list 
+                _tilePositions.Add(allTiles[i].transform.position);
+            }
         }
 
+        //Once the local list is populated 
+        for (int i = 0; i < _tilePositions.Count; i++)
+        {
+            FindAdjacentFlippableTiles(_tilePositions[i], 1);
+        }
+
+    }
+    public void ClearCanFlipStateOnAllTiles()
+    {
+        //Iterate through all tiles in the list of tiles 
+        foreach (TileInfo _tile in allTiles)
+        {
+            //Guard clause for call tiles that are not canFlip tiles. 
+            if (_tile.state == TileInfo.TileState.CanFlip)
+            {
+                _tile.state = TileInfo.TileState.CannotFlip;
+                _tile.UnselectTile();
+            }
+
+
+        }
     }
 }

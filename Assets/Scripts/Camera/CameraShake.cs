@@ -5,26 +5,35 @@ using UnityEngine;
 public class CameraShake : MonoBehaviour
 {
 
-    public IEnumerator Shake(float duration, float magnitude)
+    // The original position of the camera.
+    Vector3 originalPos;
+
+    public IEnumerator Shake(float shakeAmount, float shakeDuration)
     {
-        Vector3 _originalPosition = transform.position;
-
-        float _elapsed = 0f;
-
-        GetComponent<CameraFollow>().follow = false;
-
-        while (_elapsed < duration)
+        if(GetComponent<CameraFollow>().follow)
         {
-            float x = Random.Range(-1f,1f) * magnitude;
-            float y = Random.Range(-1f,1f) * magnitude;
+            originalPos = transform.position;
+            GetComponent<CameraFollow>().follow = false;
+        }
 
-            transform.position = new Vector3(_originalPosition.x + x, _originalPosition.y + y, _originalPosition.z);
+        
+        // Set the shake timer to the shake duration.
+        float shakeTimer = shakeDuration;
 
-            _elapsed += Time.deltaTime;
+        // While the shake timer is greater than zero, we are shaking.
+        while (shakeTimer > 0)
+        {
+            // Set the camera's position to a random point within a sphere with radius equal to shakeAmount.
+            transform.localPosition = originalPos + Random.insideUnitSphere * shakeAmount;
+
+            // Decrement the timer.
+            shakeTimer -= Time.deltaTime;
 
             yield return null;
         }
 
+        // Reset the camera's position.
+        transform.localPosition = originalPos;
         GetComponent<CameraFollow>().follow = true;
     }
 }

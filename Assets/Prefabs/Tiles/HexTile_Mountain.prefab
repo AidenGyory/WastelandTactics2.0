@@ -130,7 +130,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 9183360989592328119}
-  m_LocalRotation: {x: 0.000000021855694, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: -0.043, z: -0.000000002794}
   m_LocalScale: {x: 1, y: 1.8, z: 1}
   m_ConstrainProportionsScale: 0
@@ -217,9 +217,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 9185820953436292195}
-  - component: {fileID: -4820908894437907352}
   - component: {fileID: 1606992499223965725}
-  - component: {fileID: 7199326498411449249}
+  - component: {fileID: 186099383086339148}
+  - component: {fileID: -6633729721939123186}
   m_Layer: 7
   m_Name: HexTile_Mountain
   m_TagString: Untagged
@@ -241,47 +241,9 @@ Transform:
   m_Children:
   - {fileID: 9186107636126823297}
   - {fileID: 9179491906058045903}
-  - {fileID: 8873865035930336083}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &-4820908894437907352
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9183377527264780351}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0b6178d87affe9046b54a63cace8c4b9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  tileName: Mountains
-  tileDescription: This looks impassable by foot, maybe if we could get a birdseye
-    view we could find a way across this.
-  type: 0
-  movementCost: 99
-  isResourceTile: 0
-  resourceIcon: {fileID: 0}
-  resourceAmountLeft: 0
-  state: 0
-  clearThisTile: 0
-  canWalk: 2
-  modelRenderer:
-  - {fileID: 9160454464809139077}
-  - {fileID: 9160613748757297969}
-  isSpawn:
-    serializedVersion: 2
-    m_Bits: 64
-  isStructure:
-    serializedVersion: 2
-    m_Bits: 256
-  isUnit:
-    serializedVersion: 2
-    m_Bits: 512
-  structureOnTile: {fileID: 0}
-  unitOnTile: {fileID: 0}
 --- !u!64 &1606992499223965725
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -296,7 +258,87 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: 4300000, guid: 3078ae27edb66534787d012b1bf9b1ff, type: 3}
---- !u!114 &7199326498411449249
+--- !u!114 &186099383086339148
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9183377527264780351}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e134b7f244bc0d54f9271d17acf3345a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Owner: {fileID: 0}
+  isFlagged: 0
+  flagPrefab: {fileID: 9001811830997793115, guid: fe565dc16bd3fed41aa710544ecd50b7,
+    type: 3}
+  state: 1
+  tileName: Mountain
+  tileDescription: This Mountain is too tall to traverse
+  TileHasFlipped:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 186099383086339148}
+        m_TargetAssemblyTypeName: MountainTileScript, Assembly-CSharp
+        m_MethodName: PrintTileTypeLog
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 186099383086339148}
+        m_TargetAssemblyTypeName: TileInfo, Assembly-CSharp
+        m_MethodName: ShakeCamera
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 186099383086339148}
+        m_TargetAssemblyTypeName: TileInfo, Assembly-CSharp
+        m_MethodName: CreateDustParticle
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  TileHasFlippedBack:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 186099383086339148}
+        m_TargetAssemblyTypeName: TileInfo, Assembly-CSharp
+        m_MethodName: ShakeCamera
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  modelMaterials:
+  - {fileID: 9160454464809139077}
+  - {fileID: 9160613748757297969}
+  originalColour: []
+  dustPrefab: {fileID: 942627054682476470, guid: 62c1a51c120defd4f992446aabaa521c,
+    type: 3}
+  particlePrefabOffset: {x: 0, y: 0, z: 0}
+--- !u!114 &-6633729721939123186
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -308,115 +350,65 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1e72519d7a2022a42bb70058f1f83742, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  type: 0
+  objectType: 0
   currentSelectState: 0
---- !u!1001 &7716376663724529953
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    m_TransformParent: {fileID: 9185820953436292195}
-    m_Modifications:
-    - target: {fileID: 262814994730007876, guid: f76be463a3ba24543b7affc0bb75b730,
-        type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0.112
-      objectReference: {fileID: 0}
-    - target: {fileID: 350583356885269013, guid: f76be463a3ba24543b7affc0bb75b730,
-        type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0.112
-      objectReference: {fileID: 0}
-    - target: {fileID: 694592209747706233, guid: f76be463a3ba24543b7affc0bb75b730,
-        type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0.112
-      objectReference: {fileID: 0}
-    - target: {fileID: 1166536264397677170, guid: f76be463a3ba24543b7affc0bb75b730,
-        type: 3}
-      propertyPath: m_RootOrder
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 1166536264397677170, guid: f76be463a3ba24543b7affc0bb75b730,
-        type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1166536264397677170, guid: f76be463a3ba24543b7affc0bb75b730,
-        type: 3}
-      propertyPath: m_LocalPosition.y
-      value: -0.018
-      objectReference: {fileID: 0}
-    - target: {fileID: 1166536264397677170, guid: f76be463a3ba24543b7affc0bb75b730,
-        type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1166536264397677170, guid: f76be463a3ba24543b7affc0bb75b730,
-        type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1166536264397677170, guid: f76be463a3ba24543b7affc0bb75b730,
-        type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1166536264397677170, guid: f76be463a3ba24543b7affc0bb75b730,
-        type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1166536264397677170, guid: f76be463a3ba24543b7affc0bb75b730,
-        type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1166536264397677170, guid: f76be463a3ba24543b7affc0bb75b730,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1166536264397677170, guid: f76be463a3ba24543b7affc0bb75b730,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1166536264397677170, guid: f76be463a3ba24543b7affc0bb75b730,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6109113143497231761, guid: f76be463a3ba24543b7affc0bb75b730,
-        type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0.112
-      objectReference: {fileID: 0}
-    - target: {fileID: 7480364208469772377, guid: f76be463a3ba24543b7affc0bb75b730,
-        type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0.112
-      objectReference: {fileID: 0}
-    - target: {fileID: 9076470542775273627, guid: f76be463a3ba24543b7affc0bb75b730,
-        type: 3}
-      propertyPath: m_Name
-      value: BorderFrame
-      objectReference: {fileID: 0}
-    - target: {fileID: 9076470542775273627, guid: f76be463a3ba24543b7affc0bb75b730,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 9111712783532941072, guid: f76be463a3ba24543b7affc0bb75b730,
-        type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0.112
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: f76be463a3ba24543b7affc0bb75b730, type: 3}
---- !u!4 &8873865035930336083 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 1166536264397677170, guid: f76be463a3ba24543b7affc0bb75b730,
-    type: 3}
-  m_PrefabInstance: {fileID: 7716376663724529953}
-  m_PrefabAsset: {fileID: 0}
+  selectObj:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 186099383086339148}
+        m_TargetAssemblyTypeName: TileInfo, Assembly-CSharp
+        m_MethodName: SelectTile
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  unselectObj:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 186099383086339148}
+        m_TargetAssemblyTypeName: TileInfo, Assembly-CSharp
+        m_MethodName: UnselectTile
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  highlightObj:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 186099383086339148}
+        m_TargetAssemblyTypeName: TileInfo, Assembly-CSharp
+        m_MethodName: HighlightTile
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  unhighlightObj:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 186099383086339148}
+        m_TargetAssemblyTypeName: TileInfo, Assembly-CSharp
+        m_MethodName: UnselectTile
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
