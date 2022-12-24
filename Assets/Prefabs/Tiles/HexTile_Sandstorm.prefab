@@ -316,6 +316,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 5334883892374813245}
+        m_TargetAssemblyTypeName: SandstormTileScript, Assembly-CSharp
+        m_MethodName: CreateSandstormParticle
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   TileHasFlippedBack:
     m_PersistentCalls:
       m_Calls:
@@ -347,6 +359,8 @@ MonoBehaviour:
   sandstormUIPrefab: {fileID: 9001811830997793115, guid: 8425c50cf54f8844da337aee3cc0aa49,
     type: 3}
   distanceOffset: 0
+  sandstormParticlePrefab: {fileID: 4435873657049822240, guid: 4e99e2d2a9d7bb34ba05dd0d73baad99,
+    type: 3}
 --- !u!114 &-39595394733009606
 MonoBehaviour:
   m_ObjectHideFlags: 0

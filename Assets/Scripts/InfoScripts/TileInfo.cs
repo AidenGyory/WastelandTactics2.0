@@ -67,6 +67,8 @@ public class TileInfo: MonoBehaviour
     {
         if (CheckIfTileCanFlip())
         {
+            TIleAudioManager.instance.PlayTileAudio(tileAudioType.swipe);
+
             SelectObjectScript.Instance.canSelect = false;
             int currentPlayerTurn = (int)GameManager.Instance.currentPlayerTurn;
 
@@ -91,6 +93,7 @@ public class TileInfo: MonoBehaviour
     }
     public void FlipTileBack()
     {
+        TIleAudioManager.instance.PlayTileAudio(tileAudioType.swipe);
         Owner = null; 
         SelectObjectScript.Instance.canSelect = false; 
         DOTween.Kill(transform); 
@@ -101,7 +104,9 @@ public class TileInfo: MonoBehaviour
 
     public void ToggleFlagState()
     {
-        isFlagged = !isFlagged; 
+        isFlagged = !isFlagged;
+
+        TIleAudioManager.instance.PlayTileAudio(tileAudioType.ping); 
 
         if(isFlagged)
         {
@@ -128,13 +133,17 @@ public class TileInfo: MonoBehaviour
 
     public void DestroyFlag()
     {
+        TIleAudioManager.instance.PlayTileAudio(tileAudioType.ping);
+
         Destroy(flag);
         flag = null;
     }
 
     [Tooltip("Add Actions that are in scripts INSIDE the prefab")] 
     public void TriggerTileHasFlipped()
-    { 
+    {
+        TIleAudioManager.instance.PlayTileAudio(tileAudioType.flip);
+
         SelectObjectScript.Instance.canSelect = true;
         TileHasFlipped.Invoke(); 
     }

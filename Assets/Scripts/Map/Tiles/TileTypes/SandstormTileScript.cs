@@ -13,6 +13,7 @@ public class SandstormTileScript : TileInfo
     [Header("Prefab Element")]
     [SerializeField] GameObject sandstormUIPrefab;
     [SerializeField] float distanceOffset;
+    [SerializeField] GameObject sandstormParticlePrefab; 
 
     public void UnFlipTiles()
     {
@@ -56,6 +57,10 @@ public class SandstormTileScript : TileInfo
         Invoke("WaitAndFlip", 0.05f);
     }
 
-    
+    public void CreateSandstormParticle()
+    {
+        GameObject _dust = Instantiate(sandstormParticlePrefab);
+        _dust.transform.position = transform.position;
+    }
 
 }

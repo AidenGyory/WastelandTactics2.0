@@ -28,6 +28,10 @@ public class SelectScript : MonoBehaviour
 
     public void HighlightObject()
     {
+        if(objectType == objType.tile)
+        {
+            TIleAudioManager.instance.PlayTileAudio(tileAudioType.click);
+        }
         // guard for if state is anything other than unselected  
         if(currentSelectState != SelectState.Unselected) { return; }
 
@@ -50,8 +54,24 @@ public class SelectScript : MonoBehaviour
 
     public void SelectObject()
     {
+         
         // Guard for if object is selected 
         if (currentSelectState == SelectState.Selected) { return; }
+
+        if (objectType == objType.tile)
+        {
+            if(GetComponent<TileInfo>().state == TileInfo.TileState.IsFlipped)
+            {
+                TIleAudioManager.instance.PlayTileAudio(tileAudioType.select);
+
+            }
+        }
+        if(objectType == objType.structure)
+        {
+            TIleAudioManager.instance.PlayTileAudio(tileAudioType.select);
+
+        }
+
 
         // if not selected then set state to unselected 
         currentSelectState = SelectState.Selected;

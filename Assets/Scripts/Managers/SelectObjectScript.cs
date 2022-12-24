@@ -124,6 +124,8 @@ public class SelectObjectScript : MonoBehaviour
     }
     void SelectModeInput()
     {
+        //TIleAudioManager.instance.PlayTileAudio(tileAudioType.select); 
+
         //once left click is pressed check if there is already an object selected. 
         if(selectedObject != null)
         {
@@ -146,6 +148,7 @@ public class SelectObjectScript : MonoBehaviour
         {
             selectedObject = highlightedObject;
             selectedObject.SelectObject();
+
             
         }
 

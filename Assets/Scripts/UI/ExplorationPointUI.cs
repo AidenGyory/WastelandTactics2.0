@@ -11,13 +11,25 @@ public class ExplorationPointUI : MonoBehaviour
     [SerializeField] TMP_Text[] uiTextElements;
 
     [SerializeField] Vector3 moveDistance; 
-    [SerializeField] float movetimer; 
+    [SerializeField] float movetimer;
+
+    [SerializeField] bool positive; 
 
 
 
     // Start is called before the first frame update
     void Start()
     {
+        if(positive)
+        {
+            TIleAudioManager.instance.PlayTileAudio(tileAudioType.posflip);
+        }
+        else
+        {
+            TIleAudioManager.instance.PlayTileAudio(tileAudioType.negflip);
+        }
+
+
         foreach (Image _ui in uiImageElements)
         {
             _ui.DOColor(_ui.color, 0.5f);

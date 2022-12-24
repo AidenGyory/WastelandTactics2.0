@@ -199,12 +199,9 @@ MonoBehaviour:
   - {fileID: 9001811831926192938}
   uiTextElements:
   - {fileID: 1091251845618985927}
-  fadeIn: 1
-  fadeOut: 0
-  fadeTimer: 1
-  moveUI: 1
   moveDistance: {x: 0, y: 10, z: 0}
   movetimer: 2
+  positive: 1
 --- !u!1 &9001811831926192936
 GameObject:
   m_ObjectHideFlags: 0
