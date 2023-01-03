@@ -1,3 +1,4 @@
+using DG.Tweening;
 using UnityEngine;
 
 public class SelectObjectScript : MonoBehaviour
@@ -23,7 +24,9 @@ public class SelectObjectScript : MonoBehaviour
     public bool canSelect;
 
     public MoveScript moveScript;
-    public CameraController camScript; 
+    public CameraController camScript;
+
+    public MoveLineScript _line; 
     void Awake()
     {
         if (Instance == null)
@@ -58,9 +61,10 @@ public class SelectObjectScript : MonoBehaviour
                         SelectModeInput();
                         break;
                     case PointerMode.MoveMode:
-                        //MoveModeInput(); 
+                        MoveModeInput(); 
                         break;
                     case PointerMode.PlacementMode:
+                        PlacementModeInput(); 
                         //PlaceModeInput(); 
                         break;
                 }
@@ -81,6 +85,7 @@ public class SelectObjectScript : MonoBehaviour
                     camScript.SetCameraMode(CameraController.CameraMode.Focused); 
                 }
             }
+            
         }
 
 
@@ -121,6 +126,7 @@ public class SelectObjectScript : MonoBehaviour
                 return; 
             }
         }
+        
     }
     void SelectModeInput()
     {
@@ -159,5 +165,23 @@ public class SelectObjectScript : MonoBehaviour
         {
             selectedObject.GetComponent<TileInfo>().TryToFlipTile();
         }
+    }
+
+    public void PlacementModeInput()
+    {
+        
+    }
+
+    public void MoveModeInput()
+    {
+       if(highlightedObject.objectType == SelectScript.objType.tile)
+       {
+            TileInfo _tile = highlightedObject.GetComponent<TileInfo>(); 
+
+            if(_tile.state == TileInfo.TileState.walkable)
+            {
+                selectedObject.transform.DOMove(_tile.transform.position,1f); 
+            }
+       }
     }
 }

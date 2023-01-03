@@ -135,12 +135,36 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 5887856068276835333}
+        m_TargetAssemblyTypeName: HeadQuarters, Assembly-CSharp
+        m_MethodName: OpenRadialMenu
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   unselectObj:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 5887856068276835333}
         m_TargetAssemblyTypeName: StructureInfo, Assembly-CSharp
         m_MethodName: UnselectStructure
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 5887856068276835333}
+        m_TargetAssemblyTypeName: HeadQuarters, Assembly-CSharp
+        m_MethodName: CloseRadialMenu
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -261,7 +285,8 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: 992aa84b8ce158c44a87529a79a40f38, type: 2}
+      objectReference: {fileID: -5251124690851080145, guid: 8a3b6f3708776b9408cc6eec7cd8d009,
+        type: 3}
     - target: {fileID: -302264156160712043, guid: 8a3b6f3708776b9408cc6eec7cd8d009,
         type: 3}
       propertyPath: m_LocalScale.x

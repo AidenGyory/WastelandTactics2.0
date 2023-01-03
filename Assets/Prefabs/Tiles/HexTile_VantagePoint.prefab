@@ -275,6 +275,7 @@ MonoBehaviour:
   flagPrefab: {fileID: 9001811830997793115, guid: fe565dc16bd3fed41aa710544ecd50b7,
     type: 3}
   state: 1
+  isEmpty: 1
   tileName: Mountain
   tileDescription: 'Looks like I can get a pretty clear view from up here! (Vantage
     Points are great finds! they even grant you an additional Exploration point!) '

@@ -30,7 +30,7 @@ public class SelectScript : MonoBehaviour
     {
         if(objectType == objType.tile)
         {
-            TIleAudioManager.instance.PlayTileAudio(tileAudioType.click);
+            TileAudioManager.instance.PlayTileAudio(tileAudioType.click);
         }
         // guard for if state is anything other than unselected  
         if(currentSelectState != SelectState.Unselected) { return; }
@@ -62,13 +62,13 @@ public class SelectScript : MonoBehaviour
         {
             if(GetComponent<TileInfo>().state == TileInfo.TileState.IsFlipped)
             {
-                TIleAudioManager.instance.PlayTileAudio(tileAudioType.select);
+                TileAudioManager.instance.PlayTileAudio(tileAudioType.select);
 
             }
         }
         if(objectType == objType.structure)
         {
-            TIleAudioManager.instance.PlayTileAudio(tileAudioType.select);
+            TileAudioManager.instance.PlayTileAudio(tileAudioType.select);
 
         }
 

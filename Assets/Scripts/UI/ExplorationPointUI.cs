@@ -22,11 +22,11 @@ public class ExplorationPointUI : MonoBehaviour
     {
         if(positive)
         {
-            TIleAudioManager.instance.PlayTileAudio(tileAudioType.posflip);
+            TileAudioManager.instance.PlayTileAudio(tileAudioType.posflip);
         }
         else
         {
-            TIleAudioManager.instance.PlayTileAudio(tileAudioType.negflip);
+            TileAudioManager.instance.PlayTileAudio(tileAudioType.negflip);
         }
 
 

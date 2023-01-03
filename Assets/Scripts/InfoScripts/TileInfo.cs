@@ -15,12 +15,16 @@ public class TileInfo: MonoBehaviour
         CanFlip,
         CannotFlip,
         IsFlipped, 
+        CanPlace, 
+        walkable,
+        unwalkable,
     }
     [SerializeField] bool isFlagged;
     [SerializeField] GameObject flagPrefab;
     GameObject flag; 
     
-    public TileState state; 
+    public TileState state;
+    public bool isEmpty; 
 
     [SerializeField] string tileName;
     [TextArea]
@@ -31,7 +35,6 @@ public class TileInfo: MonoBehaviour
 
     public Renderer[] modelMaterials;
 
-    
     public List<Color> originalColour;
 
     [Header("dust prefab")]
@@ -67,7 +70,7 @@ public class TileInfo: MonoBehaviour
     {
         if (CheckIfTileCanFlip())
         {
-            TIleAudioManager.instance.PlayTileAudio(tileAudioType.swipe);
+            TileAudioManager.instance.PlayTileAudio(tileAudioType.swipe);
 
             SelectObjectScript.Instance.canSelect = false;
             int currentPlayerTurn = (int)GameManager.Instance.currentPlayerTurn;
@@ -93,7 +96,7 @@ public class TileInfo: MonoBehaviour
     }
     public void FlipTileBack()
     {
-        TIleAudioManager.instance.PlayTileAudio(tileAudioType.swipe);
+        TileAudioManager.instance.PlayTileAudio(tileAudioType.swipe);
         Owner = null; 
         SelectObjectScript.Instance.canSelect = false; 
         DOTween.Kill(transform); 
@@ -106,7 +109,7 @@ public class TileInfo: MonoBehaviour
     {
         isFlagged = !isFlagged;
 
-        TIleAudioManager.instance.PlayTileAudio(tileAudioType.ping); 
+        TileAudioManager.instance.PlayTileAudio(tileAudioType.ping); 
 
         if(isFlagged)
         {
@@ -133,7 +136,7 @@ public class TileInfo: MonoBehaviour
 
     public void DestroyFlag()
     {
-        TIleAudioManager.instance.PlayTileAudio(tileAudioType.ping);
+        TileAudioManager.instance.PlayTileAudio(tileAudioType.ping);
 
         Destroy(flag);
         flag = null;
@@ -142,7 +145,7 @@ public class TileInfo: MonoBehaviour
     [Tooltip("Add Actions that are in scripts INSIDE the prefab")] 
     public void TriggerTileHasFlipped()
     {
-        TIleAudioManager.instance.PlayTileAudio(tileAudioType.flip);
+        TileAudioManager.instance.PlayTileAudio(tileAudioType.flip);
 
         SelectObjectScript.Instance.canSelect = true;
         TileHasFlipped.Invoke(); 
@@ -229,11 +232,44 @@ public class TileInfo: MonoBehaviour
                     transform.DOScaleY(1f, 0.3f);
                 }
                 break;
-            default:
+            case TileState.CanPlace:
+                for (int i = 0; i < modelMaterials.Length; i++)
+                {
+                    DOTween.Kill(modelMaterials[i].material);
+                    modelMaterials[i].material.DOColor(TileManager.instance.placeable, 0.3f);
+                }
+                break;
+            case TileState.walkable:
+                for (int i = 0; i < modelMaterials.Length; i++)
+                {
+                    DOTween.Kill(modelMaterials[i].material);
+                    modelMaterials[i].material.DOColor(TileManager.instance.walkable, 0.3f);
+                }
+                break;
+            case TileState.unwalkable:
+                for (int i = 0; i < modelMaterials.Length; i++)
+                {
+                    DOTween.Kill(modelMaterials[i].material);
+                    modelMaterials[i].material.DOColor(TileManager.instance.unwalkable, 0.3f);
+                }
                 break;
         }
     }
 
+    public void SetTileToPlaceable()
+    {
+        if(isEmpty && state == TileState.IsFlipped)
+        {
+            state = TileState.CanPlace;
+
+            foreach (Renderer _model in modelMaterials)
+            {
+                _model.material.DOColor(TileManager.instance.placeable, 0.3f);
+            }
+        }
+    }
+
+   
 
     //Used to clear tiles once used. 
     public void SetToClearTile()

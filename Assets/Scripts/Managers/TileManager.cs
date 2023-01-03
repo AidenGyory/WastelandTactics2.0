@@ -75,6 +75,25 @@ public class TileManager : MonoBehaviour
         }
     }
 
+    public TileInfo GetTile(Vector3 _targetPosition)
+    {
+        // Create a ray that points downward from the target position
+        Ray ray = new Ray(_targetPosition, Vector3.down * Mathf.Infinity);
+
+        // Perform a raycast from the target position downward
+        RaycastHit hitInfo;
+        if (Physics.Raycast(ray, out hitInfo))
+        {
+            // Check if the raycast hit an object with the TileInfo component
+            TileInfo tileInfo = hitInfo.collider.GetComponent<TileInfo>();
+            if (tileInfo != null)
+            {
+                return tileInfo;
+            }
+        }
+        return null;
+    }
+
     //Set the owners of the tiles surounding each headquarters on the map 
     public void SetTileOwners()
     {
@@ -98,8 +117,15 @@ public class TileManager : MonoBehaviour
             ClearTilesList();
         }
 
+        //Check Radius is more than 0 
+        float _radius = radiusInTiles * tileSize; 
+        if(_radius <= 0)
+        {
+            _radius = 0.1f;  
+        }
+
         // Find all colliders within the given radius and isTiles layermask
-        Collider[] tiles = Physics.OverlapSphere(position, radiusInTiles * tileSize, isTiles);
+        Collider[] tiles = Physics.OverlapSphere(position, _radius, isTiles);
 
         for (int i = 0; i < tiles.Length; i++)
         {
@@ -133,6 +159,55 @@ public class TileManager : MonoBehaviour
 
         // Wait 0.2 seconds before flipping the first tile
         Invoke(nameof(WaitAndFlip), 0.2f);
+    }
+
+    public void SetTilesAsMoveable(List<TileInfo> _tiles, bool _ignoreMovementCost)
+    {
+        foreach (TileInfo _tile in _tiles)
+        {
+             
+
+            if(!_tile.isEmpty)
+            {
+                _tile.state = TileInfo.TileState.unwalkable;
+                foreach (Renderer _model in _tile.modelMaterials)
+                {
+                    _model.material.DOColor(TileManager.instance.unwalkable, 0.3f);
+                }
+                return;
+            }
+
+            if (_tile.state == TileInfo.TileState.IsFlipped)
+            {
+                _tile.state = TileInfo.TileState.walkable;
+                foreach (Renderer _model in _tile.modelMaterials)
+                {
+                    _model.material.DOColor(TileManager.instance.walkable, 0.3f);
+                }
+            }
+            else
+            {
+                if(_ignoreMovementCost)
+                {
+                    _tile.state = TileInfo.TileState.walkable;
+                    foreach (Renderer _model in _tile.modelMaterials)
+                    {
+                        _model.material.DOColor(TileManager.instance.walkable, 0.3f);
+                    }
+                }
+                else
+                {
+                    _tile.state = TileInfo.TileState.unwalkable;
+                    foreach (Renderer _model in _tile.modelMaterials)
+                    {
+                        _model.material.DOColor(TileManager.instance.unwalkable, 0.3f);
+                    }
+                }
+                
+            }
+        }
+
+        
     }
 
     // Wait a short period of time before flipping a random tile in the tileList
@@ -216,6 +291,20 @@ public class TileManager : MonoBehaviour
             }
 
 
+        }
+    }
+
+    public void ClearPlaceableStateOnAllTiles()
+    {
+        //Iterate through all tiles in the list of tiles 
+        foreach (TileInfo _tile in allTiles)
+        {
+            //Guard clause for call tiles that are not canFlip tiles. 
+            if (_tile.state == TileInfo.TileState.CanPlace)
+            {
+                _tile.state = TileInfo.TileState.IsFlipped;
+                _tile.UnselectTile();
+            }
         }
     }
 }

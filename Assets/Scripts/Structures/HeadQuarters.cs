@@ -34,14 +34,16 @@ public class HeadQuarters : StructureInfo
 
     public void UpdateTileOwnership()
     {
+        List<TileInfo> _tileList = TileManager.instance.SetTileList(transform.position, 0);
 
-
-
-        //create a tile list of the tiles surrounding the Headquarters
-        ;
+        if (_tileList.Count > 0) 
+        {
+            _tileList[0].isEmpty = false;
+            _tileList.Clear();
+        }
 
         //create a list of tiles 
-        List<TileInfo> _tileList = TileManager.instance.SetTileList(transform.position,sightRangeInTiles);
+        _tileList = TileManager.instance.SetTileList(transform.position,sightRangeInTiles);
 
         //check if there are tiles in the list 
         if (_tileList.Count < 1) { return;  }
@@ -60,12 +62,8 @@ public class HeadQuarters : StructureInfo
     }
     public void UpdateTileOwnership(List<TileInfo> tilesToSet)
     {
-
-
-
         //create a tile list of the tiles surrounding the Headquarters
         TileManager.instance.SetTileList(transform.position, 1);
-
 
         //check if there are tiles in the list 
         if (tilesToSet.Count < 1) { return; }
@@ -81,6 +79,18 @@ public class HeadQuarters : StructureInfo
             }
 
         }
+    }
+
+    public void OpenRadialMenu()
+    {
+        SelectObjectScript.Instance.CameraScreenCanvas.GetComponent<RadialMenuController>().OpenRadialMenu();
+        SelectObjectScript.Instance.canSelect = false; 
+    }
+
+    public void CloseRadialMenu()
+    {
+        SelectObjectScript.Instance.CameraScreenCanvas.GetComponent<RadialMenuController>().CloseRadialMenu();
+        SelectObjectScript.Instance.canSelect = true;
     }
 
 }

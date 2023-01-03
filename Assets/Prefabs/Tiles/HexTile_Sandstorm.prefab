@@ -275,6 +275,7 @@ MonoBehaviour:
   flagPrefab: {fileID: 9001811830997793115, guid: fe565dc16bd3fed41aa710544ecd50b7,
     type: 3}
   state: 1
+  isEmpty: 1
   tileName: Desert
   tileDescription: Sandstorm!! Now we are going to have to explore the area again!
   TileHasFlipped:

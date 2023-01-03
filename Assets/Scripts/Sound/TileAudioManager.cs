@@ -14,9 +14,9 @@ public enum tileAudioType
     select,
 }
 
-public class TIleAudioManager : MonoBehaviour
+public class TileAudioManager : MonoBehaviour
 {
-    public static TIleAudioManager instance;
+    public static TileAudioManager instance;
 
     [SerializeField] AudioClip tileClick;
     [SerializeField] AudioClip tileSwipe; 

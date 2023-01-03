@@ -1,6 +1,9 @@
 using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using System.Net.Sockets;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -39,6 +42,7 @@ public class UnitInfo : MonoBehaviour
         {
             _model.material.DOColor(_model.material.color * TileManager.instance.brightness, TileManager.instance.flashSpeed).SetLoops(-1, LoopType.Yoyo);
         }
+        FocusOnTarget();
 
     }
 

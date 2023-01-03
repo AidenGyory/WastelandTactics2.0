@@ -59,6 +59,7 @@ public class SandstormTileScript : TileInfo
 
     public void CreateSandstormParticle()
     {
+        TileAudioManager.instance.PlayTileAudio(tileAudioType.sandstorm);
         GameObject _dust = Instantiate(sandstormParticlePrefab);
         _dust.transform.position = transform.position;
     }
