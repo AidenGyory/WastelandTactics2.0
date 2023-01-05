@@ -26,61 +26,26 @@ public class PlaceUnitController : MonoBehaviour
 
     public int cost;
 
-    bool spawned = false; 
+    bool spawned = false;
 
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetMouseButton(0))
+        SelectScript _highlighted = SelectObjectScript.Instance.highlightedObject;
+
+        if (_highlighted == null) { return; }
+
+        if (_highlighted.objectType == SelectScript.objType.tile)
         {
-            if (canSpawn && !spawned)
+            if (_highlighted.GetComponent<TileInfo>().state == TileInfo.TileState.CanPlace)
             {
-                spawned = true ;
-                //Spawn Unit and set position
-                Debug.Log("Spawn Unit");
-                GameObject _unit = Instantiate(unitType[(int)type]);
-                _unit.transform.position = transform.position;
-
-                //Set Player Owner
-                _unit.GetComponent<UnitInfo>().owner = GameManager.Instance.playerInfo[(int)GameManager.Instance.currentPlayerTurn];
-                _unit.GetComponent<UnitInfo>().UpdatePlayerDetails();
-
-                //Remove Resources 
-                GameManager.Instance.playerInfo[(int)GameManager.Instance.currentPlayerTurn].MetalScrapAmount -= cost;
-
-                //Reset back to Select Mode 
-                SelectObjectScript.Instance.mode = SelectObjectScript.PointerMode.SelectMode;
-                Camera.main.GetComponent<CameraController>().SetCameraMode(CameraController.CameraMode.Unfocused);
-
-                //Reset Tiles 
-                TileManager.instance.ClearPlaceableStateOnAllTiles();
-                TileManager.instance.FindPlayerOwnedTilesForFlipCheck(GameManager.Instance.playerInfo[(int)GameManager.Instance.currentPlayerTurn]);  
-
-                //Set Tile as not empty 
-                SelectScript _tile = SelectObjectScript.Instance.highlightedObject;
-                if (_tile == null) { return; }
-                _tile.GetComponent<TileInfo>().isEmpty = false;
-
-                Destroy(gameObject);
-            }
-
-        }
-
-        SelectScript _highlighted = SelectObjectScript.Instance.highlightedObject; 
-
-        if(_highlighted == null) { return;  }
-
-        if(_highlighted.objectType == SelectScript.objType.tile)
-        {
-            if(_highlighted.GetComponent<TileInfo>().state == TileInfo.TileState.CanPlace)
-            {
-                canSpawn = true; 
+                canSpawn = true;
                 transform.position = SelectObjectScript.Instance.highlightedObject.transform.position + positionOffset;
             }
             else
             {
                 canSpawn = false;
-                transform.position = Vector3.zero; 
+                transform.position = Vector3.zero;
             }
         }
         else
@@ -88,6 +53,41 @@ public class PlaceUnitController : MonoBehaviour
             canSpawn = false;
             transform.position = Vector3.zero;
         }
+
+        if (Input.GetMouseButton(0))
+        {
+            if (canSpawn && !spawned)
+            {
+                //Get TileInfo reference  
+                TileInfo _tileInfo = _highlighted.GetComponent<TileInfo>();
+
+                // Instantiate Unit at position
+                GameObject _unit = Instantiate(unitType[(int)type]);
+                _unit.transform.position = transform.position;
+
+                //Set player owner and initalise setup
+                UnitInfo _unitInfo = _unit.GetComponent<UnitInfo>();
+                _unitInfo.owner = GameManager.Instance.playerInfo[(int)GameManager.Instance.currentPlayerTurn];
+                _unitInfo.UpdatePlayerDetails();
+                _unitInfo.occuipedTile = _tileInfo;
+                _tileInfo.isOccupied = true;
+
+                //Remove Player Resources 
+                GameManager.Instance.playerInfo[(int)GameManager.Instance.currentPlayerTurn].MetalScrapAmount -= cost;
+
+                //Reset Camera and OjectSelectionManager
+                TileManager.instance.ClearPlaceableStateOnAllTiles();
+                SelectObjectScript.Instance.SetModeToSelect();
+                SelectObjectScript.Instance.camScript.SetCameraMode(CameraController.CameraMode.Unfocused); 
+
+                //spawned = true;
+                Destroy(gameObject);
+
+            }
+
+        }
+
+        
 
 
         

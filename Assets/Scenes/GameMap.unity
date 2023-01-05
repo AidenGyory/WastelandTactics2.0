@@ -2877,7 +2877,7 @@ MonoBehaviour:
   cameraPosition:
   - {x: 0, y: 5, z: -5}
   - {x: 0, y: 3, z: -3}
-  - {x: 0, y: 8, z: -3}
+  - {x: 0, y: 4, z: -0.5}
   - {x: 0, y: 2, z: -5}
   cameraIndex: 0
 --- !u!1 &344286215
@@ -5513,8 +5513,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   currentPlayerTurn: 0
-  mapType: 1
-  amountOfPlayers: 2
+  mapType: 0
+  amountOfPlayers: 3
   playerInfo:
   - {fileID: 865910794}
   - {fileID: 512827327}
@@ -9325,6 +9325,7 @@ MonoBehaviour:
   canSelect: 0
   moveScript: {fileID: 0}
   camScript: {fileID: 0}
+  _line: {fileID: 0}
 --- !u!4 &1394316419
 Transform:
   m_ObjectHideFlags: 0
@@ -9808,7 +9809,7 @@ AudioSource:
   m_PlayOnAwake: 1
   m_Volume: 0.7
   m_Pitch: 1
-  Loop: 0
+  Loop: 1
   Mute: 0
   Spatialize: 0
   SpatializePostEffects: 0
@@ -10030,6 +10031,7 @@ MonoBehaviour:
   moveFollowTarget: 0
   targetPosition: {x: 0, y: 0, z: 0}
   movementSpeed: 4
+  offset: {x: 0, y: 0.5, z: 0}
 --- !u!4 &1481437363
 Transform:
   m_ObjectHideFlags: 0

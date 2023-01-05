@@ -129,7 +129,8 @@ public class RadialMenuController : MonoBehaviour
                 {
                     if (GameManager.Instance.playerInfo[(int)GameManager.Instance.currentPlayerTurn].MetalScrapAmount >= options[optionSelected].GetComponent<RadialOptionScript>().resourceCost)
                     {
-                        Invoke(nameof(PlaceUnit), 0.2f);  
+                        PlaceUnit(); 
+                        //Invoke(nameof(PlaceUnit), 0.2f);  
                     }
                     else
                     {
@@ -152,7 +153,7 @@ public class RadialMenuController : MonoBehaviour
         switch (optionSelected)
         {
             case 0: //Scout Unit
-                Debug.Log("Spawn Scout Unit");
+                //Debug.Log("Spawn Scout Unit");
                 _placeable.GetComponent<PlaceUnitController>().type = PlaceUnitController.UnitTypes.Scout_NewEden;
 
 
@@ -190,6 +191,7 @@ public class RadialMenuController : MonoBehaviour
         SelectObjectScript.Instance.mode = SelectObjectScript.PointerMode.PlacementMode;
         TileManager.instance.ClearCanFlipStateOnAllTiles();
         List<TileInfo> _placementTiles = TileManager.instance.SetTileList(GameManager.Instance.playerInfo[(int)GameManager.Instance.currentPlayerTurn].transform.position, 1);
+
         foreach (TileInfo _tile in _placementTiles)
         {
             _tile.SetTileToPlaceable();

@@ -49,5 +49,6 @@ public class PlayerSettingsTemplate : ScriptableObject
     [Header("Structure Materials")]
     public Material[] HQMaterial;
     [Header("Unit Materials")]
-    public Material[] ScoutUnitMaterial; 
+    public Material[] ScoutUnitMaterial;
+    public Material[] WorkerUnitMaterial; 
 }

@@ -1,6 +1,9 @@
 using System.Collections.Generic;
 using UnityEngine;
-using DG.Tweening; 
+using DG.Tweening;
+using System.Linq;
+using Unity.VisualScripting;
+using UnityEditor.Experimental.GraphView;
 
 public class TileManager : MonoBehaviour
 {
@@ -75,23 +78,50 @@ public class TileManager : MonoBehaviour
         }
     }
 
-    public TileInfo GetTile(Vector3 _targetPosition)
+    public TileInfo GetClosestTile(Transform _origin, Transform _target, int _radiusInTiles, bool _ignoreOccupied)
     {
-        // Create a ray that points downward from the target position
-        Ray ray = new Ray(_targetPosition, Vector3.down * Mathf.Infinity);
+        // Tiles to check 
+        List<TileInfo> _TilesToCheck = TileManager.instance.SetTileList(_origin.position, _radiusInTiles);
 
-        // Perform a raycast from the target position downward
-        RaycastHit hitInfo;
-        if (Physics.Raycast(ray, out hitInfo))
+        // distance from tile to target tile 
+        List<float> _tileDistance = new List<float>();
+
+        for (int i = 0; i < _TilesToCheck.Count - 1; i++)
         {
-            // Check if the raycast hit an object with the TileInfo component
-            TileInfo tileInfo = hitInfo.collider.GetComponent<TileInfo>();
-            if (tileInfo != null)
+            if(_ignoreOccupied)
             {
-                return tileInfo;
+                if(_TilesToCheck[i].state == TileInfo.TileState.walkable)
+                {
+                    _tileDistance.Add(Vector3.Distance(_TilesToCheck[i].transform.position, _target.position));
+                }
+                else
+                {
+                    _tileDistance.Add(999);
+                }
             }
+            else
+            {
+                if (_TilesToCheck[i].state == TileInfo.TileState.walkable && !_TilesToCheck[i].isOccupied)
+                {
+                    _tileDistance.Add(Vector3.Distance(_TilesToCheck[i].transform.position, _target.position));
+                }
+                else
+                {
+                    _tileDistance.Add(999);
+                }
+            } 
+            //Debug.Log("Tile: " + _TilesToCheck[i] + " distance from target: " + _tileDistance[i]);
         }
-        return null;
+
+        float _minDistance = _tileDistance.Min();
+        int _tileindex = _tileDistance.IndexOf(_minDistance);
+        
+
+        TileInfo _unitTile = _TilesToCheck[_tileindex];
+        //Debug.Log("Closest Tile: " + _unitTile);
+
+
+        return _unitTile;
     }
 
     //Set the owners of the tiles surounding each headquarters on the map 
@@ -161,53 +191,45 @@ public class TileManager : MonoBehaviour
         Invoke(nameof(WaitAndFlip), 0.2f);
     }
 
-    public void SetTilesAsMoveable(List<TileInfo> _tiles, bool _ignoreMovementCost)
+    public void SetTilesAsMoveable(List<TileInfo> _tiles, bool _ignoreTerrainType)
     {
-        foreach (TileInfo _tile in _tiles)
+        // Reset Modeable State on all tiles
+        ClearMoveableStateOnAllTiles();
+
+        // Reset Flipstate on all tiles 
+        ClearCanFlipStateOnAllTiles(); 
+
+        // Check all tiles in _tiles list 
+        for (int i = 0; i < _tiles.Count; i++)
         {
-             
+            // Set reference to tile info 
+            TileInfo _tile = _tiles[i];
 
-            if(!_tile.isEmpty)
+            // Set unwalkable if occupied 
+            if (_tile.isOccupied)
             {
-                _tile.state = TileInfo.TileState.unwalkable;
-                foreach (Renderer _model in _tile.modelMaterials)
-                {
-                    _model.material.DOColor(TileManager.instance.unwalkable, 0.3f);
-                }
-                return;
+                _tile.SetTileToUnwalkable();
             }
-
-            if (_tile.state == TileInfo.TileState.IsFlipped)
+            // if not occupied check if we are ignoring terrain like mountains and flipped tiles 
+            else if(_ignoreTerrainType)
             {
-                _tile.state = TileInfo.TileState.walkable;
-                foreach (Renderer _model in _tile.modelMaterials)
-                {
-                    _model.material.DOColor(TileManager.instance.walkable, 0.3f);
-                }
+                _tile.SetTileToWalkable();
             }
-            else
+            // If not ignoring terrain check if tile is flipped 
+            else if (_tile.state == TileInfo.TileState.IsFlipped)
             {
-                if(_ignoreMovementCost)
+                //if tile is flipped check if unwalkable is true 
+                if (_tile.unwalkable)
                 {
-                    _tile.state = TileInfo.TileState.walkable;
-                    foreach (Renderer _model in _tile.modelMaterials)
-                    {
-                        _model.material.DOColor(TileManager.instance.walkable, 0.3f);
-                    }
+                    _tile.SetTileToUnwalkable();
                 }
+                //If not unwalkable then set as walkable
                 else
                 {
-                    _tile.state = TileInfo.TileState.unwalkable;
-                    foreach (Renderer _model in _tile.modelMaterials)
-                    {
-                        _model.material.DOColor(TileManager.instance.unwalkable, 0.3f);
-                    }
+                    _tile.SetTileToWalkable();
                 }
-                
             }
         }
-
-        
     }
 
     // Wait a short period of time before flipping a random tile in the tileList
@@ -280,6 +302,7 @@ public class TileManager : MonoBehaviour
     }
     public void ClearCanFlipStateOnAllTiles()
     {
+        ClearMoveableStateOnAllTiles();
         //Iterate through all tiles in the list of tiles 
         foreach (TileInfo _tile in allTiles)
         {
@@ -289,8 +312,6 @@ public class TileManager : MonoBehaviour
                 _tile.state = TileInfo.TileState.CannotFlip;
                 _tile.UnselectTile();
             }
-
-
         }
     }
 
@@ -303,6 +324,27 @@ public class TileManager : MonoBehaviour
             if (_tile.state == TileInfo.TileState.CanPlace)
             {
                 _tile.state = TileInfo.TileState.IsFlipped;
+                _tile.UnselectTile();
+            }
+        }
+    }
+
+    public void ClearMoveableStateOnAllTiles()
+    {
+        //Iterate through all tiles in the list of tiles 
+        foreach (TileInfo _tile in allTiles)
+        { 
+            if (_tile.state == TileInfo.TileState.walkable || _tile.state == TileInfo.TileState.unwalkable)
+            {
+                if(_tile.Owner == null)
+                {
+                    _tile.state = TileInfo.TileState.CannotFlip;
+                }
+                else
+                {
+                    _tile.state = TileInfo.TileState.IsFlipped; 
+                }
+                
                 _tile.UnselectTile();
             }
         }

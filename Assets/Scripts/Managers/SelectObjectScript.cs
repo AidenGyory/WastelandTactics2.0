@@ -1,4 +1,5 @@
 using DG.Tweening;
+using UnityEditor;
 using UnityEngine;
 
 public class SelectObjectScript : MonoBehaviour
@@ -174,14 +175,56 @@ public class SelectObjectScript : MonoBehaviour
 
     public void MoveModeInput()
     {
-       if(highlightedObject.objectType == SelectScript.objType.tile)
-       {
-            TileInfo _tile = highlightedObject.GetComponent<TileInfo>(); 
 
-            if(_tile.state == TileInfo.TileState.walkable)
+        //Check that the highlighted object is a tile 
+        if(highlightedObject != null && highlightedObject.objectType == SelectScript.objType.tile)
+        {
+            // Get reference to highlighted tile 
+            TileInfo _tile = highlightedObject.GetComponent<TileInfo>();
+
+            //If tile is walkable 
+            if (_tile.state == TileInfo.TileState.walkable)
             {
-                selectedObject.transform.DOMove(_tile.transform.position,1f); 
+                //get reference to Unit
+                UnitInfo _unit = selectedObject.GetComponent<UnitInfo>();
+
+                // Execute "Move to tile" function 
+                _unit.MoveToTile(_tile);
+
+                // turn off selectable 
+                canSelect = false;
             }
-       }
+            else if (_tile.state == TileInfo.TileState.IsFlipped || _tile.state == TileInfo.TileState.CannotFlip)
+            {
+                SetModeToSelect();
+            }
+
+
+
+
+            if (selectedObject != null)
+            {
+                
+
+            }
+        }
+        else
+        {
+            SetModeToSelect();
+        }
+    }
+
+    public void SetModeToSelect()
+    {
+        canSelect = true;
+        mode = PointerMode.SelectMode;
+        camScript.mode = CameraController.CameraMode.Unfocused;  
+        selectedObject.DeselectObject(); 
+
+        if (GameManager.Instance.playerInfo[(int)GameManager.Instance.currentPlayerTurn].ExplorationPointsLeft > 0)
+        {
+            TileManager.instance.FindPlayerOwnedTilesForFlipCheck(GameManager.Instance.playerInfo[(int)GameManager.Instance.currentPlayerTurn]); 
+        }
+
     }
 }

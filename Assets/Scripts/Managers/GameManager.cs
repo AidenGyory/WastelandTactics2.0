@@ -136,6 +136,13 @@ public class GameManager : MonoBehaviour
 
         // Refresh the player's exploration points.
         _currentPlayer.AddPoints(ResourcesType.ExplorationPoints, _currentPlayer.ExplorationPointsMax);
+
+        UnitInfo[] _units = FindObjectsOfType<UnitInfo>();
+
+        foreach (UnitInfo _unit in _units)
+        {
+            _unit.currentMovementTiles = _unit.maxMovementTiles; 
+        }
         
     }
 }

@@ -38,7 +38,7 @@ public class HeadQuarters : StructureInfo
 
         if (_tileList.Count > 0) 
         {
-            _tileList[0].isEmpty = false;
+            _tileList[0].isOccupied = true;
             _tileList.Clear();
         }
 

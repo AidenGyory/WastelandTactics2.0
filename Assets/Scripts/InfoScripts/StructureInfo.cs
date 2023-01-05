@@ -36,6 +36,7 @@ public class StructureInfo : MonoBehaviour
     {
         foreach (Renderer _model in modelMaterials)
         {
+            DOTween.Kill(_model);
             _model.material.DOColor(_model.material.color * TileManager.instance.brightness, TileManager.instance.flashSpeed).SetLoops(-1, LoopType.Yoyo);
         }
         

@@ -25,12 +25,13 @@ public class MoveScript : MonoBehaviour
 
     public bool moveFollowTarget;
     public Vector3 targetPosition;
-    public float movementSpeed; 
+    public float movementSpeed;
+    public Vector3 offset; 
 
-    // Start is called before the first frame update
-    void Start()
+    private void OnDrawGizmos()
     {
-
+        Gizmos.color = Color.white;
+        //Gizmos.DrawSphere(transform.position, 1f); 
     }
 
     public void AddDirection(int _newDirection)
@@ -124,12 +125,12 @@ public class MoveScript : MonoBehaviour
 
 
             Vector3 _currentPosition = transform.position;
-            Vector3 _targetPosition = targetPosition;
+            Vector3 _targetPosition = targetPosition + offset;
 
             _currentPosition = Vector3.Lerp(_currentPosition, _targetPosition, movementSpeed * Time.deltaTime);
 
             transform.position = _currentPosition;
-            if (Vector3.Distance(transform.position, targetPosition) < 0.5f)
+            if (Vector3.Distance(transform.position, targetPosition + offset) < 0.01f)
             {
                 moveFollowTarget = false;
             }

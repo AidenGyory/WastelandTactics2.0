@@ -20,7 +20,11 @@ public class RadialOptionScript : MonoBehaviour
     }
     public void HighlightSegment(Color _color)
     {
-        transform.DOScale(1.1f, 0.5f); 
+        DOTween.Kill(transform); 
+        transform.DOScale(1.1f, 0.5f);
+        DOTween.Kill(segmentBackgroundImage);
+        DOTween.Kill(icon);
+        DOTween.Kill(iconSpotlight);
         segmentBackgroundImage.DOColor(_color, 0.5f);
         icon.DOColor(Color.white, 0.5f);
         iconSpotlight.DOColor(new Color(0.8f, 0.8f, 0.8f, 0.5f), 0.5f); 
@@ -29,7 +33,11 @@ public class RadialOptionScript : MonoBehaviour
 
     public void UnHighlightSegment(Color _color)
     {
+        DOTween.Kill(transform);
         transform.DOScale(1f, 0.5f);
+        DOTween.Kill(segmentBackgroundImage);
+        DOTween.Kill(icon);
+        DOTween.Kill(iconSpotlight);
         segmentBackgroundImage.DOColor(_color, 0.5f);
         icon.DOColor(new Color(1,1,1,0.5f), 0.5f);
         iconSpotlight.DOColor(Color.clear, 0.5f);

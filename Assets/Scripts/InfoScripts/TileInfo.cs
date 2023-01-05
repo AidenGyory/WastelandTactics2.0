@@ -2,7 +2,6 @@
 using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
@@ -24,7 +23,8 @@ public class TileInfo: MonoBehaviour
     GameObject flag; 
     
     public TileState state;
-    public bool isEmpty; 
+    public bool unwalkable; 
+    public bool isOccupied; 
 
     [SerializeField] string tileName;
     [TextArea]
@@ -258,7 +258,7 @@ public class TileInfo: MonoBehaviour
 
     public void SetTileToPlaceable()
     {
-        if(isEmpty && state == TileState.IsFlipped)
+        if(!isOccupied && state == TileState.IsFlipped)
         {
             state = TileState.CanPlace;
 
@@ -269,6 +269,33 @@ public class TileInfo: MonoBehaviour
         }
     }
 
+    public void SetTileToWalkable()
+    {
+        if(!isOccupied)
+        {
+            state = TileState.walkable;
+            for (int i = 0; i < modelMaterials.Length; i++)
+            {
+                DOTween.Kill(modelMaterials[i].material);
+                modelMaterials[i].material.DOColor(TileManager.instance.walkable, 0.3f);
+            }
+        }
+        else
+        {
+            SetTileToUnwalkable(); 
+        }
+        
+    }
+
+    public void SetTileToUnwalkable()
+    {
+        state = TileState.unwalkable;
+        for (int i = 0; i < modelMaterials.Length; i++)
+        {
+            DOTween.Kill(modelMaterials[i].material);
+            modelMaterials[i].material.DOColor(TileManager.instance.unwalkable, 0.3f);
+        }
+    }
    
 
     //Used to clear tiles once used. 
