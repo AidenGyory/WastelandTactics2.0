@@ -3254,7 +3254,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!82 &410674569
 AudioSource:
   m_ObjectHideFlags: 0
@@ -5513,8 +5513,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   currentPlayerTurn: 0
-  mapType: 0
-  amountOfPlayers: 3
+  mapType: 1
+  amountOfPlayers: 2
   playerInfo:
   - {fileID: 865910794}
   - {fileID: 512827327}

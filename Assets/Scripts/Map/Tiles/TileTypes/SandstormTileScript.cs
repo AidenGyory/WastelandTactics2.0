@@ -1,7 +1,5 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 public class SandstormTileScript : TileInfo
 {
@@ -9,34 +7,47 @@ public class SandstormTileScript : TileInfo
     [SerializeField] float flipRadius;
     [SerializeField] LayerMask isTiles;
     [SerializeField] List<TileInfo> tilesToFlipBack;
+    [SerializeField] bool canSandstorm;
+    [SerializeField] GameObject sandstormMesh;
+    [SerializeField] GameObject emptyMesh; 
 
     [Header("Prefab Element")]
     [SerializeField] GameObject sandstormUIPrefab;
     [SerializeField] float distanceOffset;
-    [SerializeField] GameObject sandstormParticlePrefab; 
+    [SerializeField] GameObject sandstormParticlePrefab;
 
     public void UnFlipTiles()
     {
-        GameObject _ui = Instantiate(sandstormUIPrefab, SelectObjectScript.Instance.CameraScreenCanvas);
-        _ui.transform.position = Camera.main.WorldToScreenPoint(transform.position) + Vector3.up * distanceOffset;
-
-        //Debug.Log("Uh oh! Sandstorm!");
-        //Run Tile Manager Flip Tiles back
-
-        // find the tiles within unit movement radius 
-        Collider[] _tiles = Physics.OverlapSphere(transform.position, flipRadius, isTiles);
-
-        for (int i = 0; i < _tiles.Length; i++)
+        if(canSandstorm)
         {
-            TileInfo _info = _tiles[i].GetComponent<TileInfo>();
+            GameObject _ui = Instantiate(sandstormUIPrefab, SelectObjectScript.Instance.CameraScreenCanvas);
+            _ui.transform.position = Camera.main.WorldToScreenPoint(transform.position) + Vector3.up * distanceOffset;
 
-            if(_info.state == TileState.IsFlipped)
+            // find the tiles within unit movement radius 
+            Collider[] _tiles = Physics.OverlapSphere(transform.position, flipRadius, isTiles);
+
+            for (int i = 0; i < _tiles.Length; i++)
             {
-                tilesToFlipBack.Add(_info);
-            }
+                TileInfo _info = _tiles[i].GetComponent<TileInfo>();
 
+                if (_info.state == TileState.IsFlipped)
+                {
+                    tilesToFlipBack.Add(_info);
+                }
+
+            }
+            ClearSandstorm(); 
+            Invoke("WaitAndFlip", 0.2f);
         }
-        Invoke("WaitAndFlip", 0.2f);
+
+        
+    }
+    public void ClearSandstorm()
+    {
+        CreateSandstormParticle(); 
+        canSandstorm = false;
+        sandstormMesh.SetActive(false);
+        emptyMesh.SetActive(true); 
     }
 
     public void WaitAndFlip()

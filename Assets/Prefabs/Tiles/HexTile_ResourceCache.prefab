@@ -274,8 +274,9 @@ MonoBehaviour:
   isFlagged: 0
   flagPrefab: {fileID: 9001811830997793115, guid: fe565dc16bd3fed41aa710544ecd50b7,
     type: 3}
-  state: 1
-  isEmpty: 1
+  state: 2
+  unwalkable: 0
+  isOccupied: 0
   tileName: Desert
   tileDescription: It looks like some resources can be scavenged from this location..
     Might be wirth exploring with your Scouts or Workers..

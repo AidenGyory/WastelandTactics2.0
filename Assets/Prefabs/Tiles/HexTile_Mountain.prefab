@@ -274,7 +274,7 @@ MonoBehaviour:
   isFlagged: 0
   flagPrefab: {fileID: 9001811830997793115, guid: fe565dc16bd3fed41aa710544ecd50b7,
     type: 3}
-  state: 1
+  state: 2
   unwalkable: 1
   isOccupied: 0
   tileName: Mountain
