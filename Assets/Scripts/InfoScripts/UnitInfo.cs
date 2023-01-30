@@ -130,50 +130,10 @@ public class UnitInfo : MonoBehaviour
 
     public void MoveToTile(TileInfo _targetTile)
     {
-        //Debug.Log("Target Tile is: " + _targetTile); 
-        //Make next tile the occupied tile 
-        TileInfo _nextTile = occuipedTile; 
-
         //Clear Tiles 
-        _tilePath.Clear(); 
+        _tilePath = PathfindingManager.Instance.GetPath(occuipedTile, _targetTile); 
 
-        int failsafe = 0; 
-
-        // if this does not execute 
-        while (_nextTile != _targetTile && failsafe < 10)
-        {
-            failsafe++;
-            List<TileInfo> _tiles = TileManager.instance.SetTileList(_nextTile.transform.position, 1);
-
-            //Check if tile in list is the target tile 
-            for (int i = 0; i < _tiles.Count; i++)
-            {
-                if (_tiles[i] == _targetTile)
-                {
-                    _tilePath.Add(_tiles[i]);
-                    _nextTile = _tiles[i];
-                    //Debug.Log("TARGET TILE FOUND "); 
-                }
-            }
-            if(_nextTile != _targetTile)
-            {
-                _tilePath.Add(TileManager.instance.GetClosestTile(_nextTile.transform, _targetTile.transform, 1, false));
-                int lastIndex = _tilePath.Count;
-                _nextTile = _tilePath[lastIndex - 1];
-            }
-
-             
-        }
-
-        if(failsafe > 10)
-        {
-            Debug.Log("PATH FAILED: " + occuipedTile + " to: " + _targetTile);
-            for (int i = 0; i < _tilePath.Count; i++)
-            {
-                Debug.Log("tile path: " + _tilePath[i]);
-            }
-        }
-        else
+        if(_tilePath != null)
         {
             SelectObjectScript.Instance.canSelect = false;
             GetComponent<SelectScript>().DeselectObject();
@@ -184,8 +144,6 @@ public class UnitInfo : MonoBehaviour
             occuipedTile = _targetTile;
             occuipedTile.isOccupied = true;
         }
-        
-
     }
 
     private void Update()
