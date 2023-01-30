@@ -45,6 +45,7 @@ public class GameManager : MonoBehaviour
     public PlayerSpawns amountOfPlayers;
     public PlayerInfo[] playerInfo;
     public bool randomiseFirstPlayer;
+    public int turnTimer; 
 
     // This variable holds a reference to the headquarters game object.
     [Header("Structure Prefabs")]
@@ -97,6 +98,7 @@ public class GameManager : MonoBehaviour
         // If the current player is the last player, set the index to 0 (start with the first player again).
         if (_currentPlayer >= players)
         {
+            turnTimer += 1; 
             _currentPlayer = 0;
         }
 
@@ -131,6 +133,9 @@ public class GameManager : MonoBehaviour
         //set camera to focus on player headquarters
         SelectObjectScript.Instance.moveScript.SetDestination(playerInfo[(int)currentPlayerTurn].transform.position);
 
+        // Add Production
+        _currentPlayer.MetalScrapAmount += _currentPlayer.MetalScrapProduction; 
+
         //Find all flipable tiles for current player
         TileManager.instance.FindPlayerOwnedTilesForFlipCheck(_currentPlayer); 
 
@@ -141,7 +146,8 @@ public class GameManager : MonoBehaviour
 
         foreach (UnitInfo _unit in _units)
         {
-            _unit.currentMovementTiles = _unit.maxMovementTiles; 
+            _unit.currentMovementTiles = _unit.maxMovementTiles;
+            _unit.canAttack = true; 
         }
         
     }

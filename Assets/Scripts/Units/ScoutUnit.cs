@@ -8,29 +8,23 @@ public class ScoutUnit : UnitInfo
 
     public void UpdateMaterials()
     {
-        for (int i = 0; i < modelMaterials.Length; i++)
+        for (int i = 0; i < models.Length; i++)
         {
-            if (owner.settings.ScoutUnitMaterial[i] != null)
+            if (owner.settings.ScoutUnitMaterial != null)
             {
-                modelMaterials[i].material = owner.settings.ScoutUnitMaterial[i];
+                Renderer[] _modelRenderers = GetComponentsInChildren<Renderer>();
+
+                foreach (Renderer _renderer in _modelRenderers)
+                {
+                    _renderer.material = owner.settings.ScoutUnitMaterial; 
+                }
             }
             else
-                modelMaterials[i].material = owner.settings.baseMaterial;
+                models[i].GetComponentInChildren<Renderer>().material = owner.settings.baseMaterial;
         }
     }
 
-    public void CheckMovement()
-    {
-        //Set Selection Mode (Move unit Mode) 
-        SelectObjectScript.Instance.mode = SelectObjectScript.PointerMode.MoveMode;
-
-        //Create a list of all "moveable" tiles. 
-        List<TileInfo> _moveableTiles = TileManager.instance.SetTileList(transform.position, currentMovementTiles);
-        
-        // set tiles to moveable from list ignoring terrain
-        TileManager.instance.SetTilesAsMoveable(_moveableTiles,canFly);
-
-    }
+    
 
     
 }

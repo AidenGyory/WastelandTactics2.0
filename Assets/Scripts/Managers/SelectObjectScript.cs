@@ -10,6 +10,7 @@ public class SelectObjectScript : MonoBehaviour
         SelectMode,
         MoveMode,
         PlacementMode,
+        AttackMode,
     }
 
     public PointerMode mode;   
@@ -26,8 +27,6 @@ public class SelectObjectScript : MonoBehaviour
 
     public MoveScript moveScript;
     public CameraController camScript;
-
-    public MoveLineScript _line; 
     void Awake()
     {
         if (Instance == null)
@@ -68,6 +67,9 @@ public class SelectObjectScript : MonoBehaviour
                         PlacementModeInput(); 
                         //PlaceModeInput(); 
                         break;
+                    case PointerMode.AttackMode:
+                        AttackUnitInput();
+                        break; 
                 }
             }
             //Right-click for flagging locations
@@ -77,6 +79,22 @@ public class SelectObjectScript : MonoBehaviour
                 {
                     highlightedObject.GetComponent<TileInfo>().ToggleFlagState();
                 }
+                else
+                if (highlightedObject == selectedObject)
+                {
+                    //Attack Options
+                    if (highlightedObject.objectType == SelectScript.objType.unit)
+                    {
+                        Debug.Log("Check Attack");
+                        highlightedObject.GetComponent<UnitInfo>().CheckAttack();
+                    }
+                }
+                else
+                {
+                    SetModeToSelect(); 
+                }
+
+
             }
             if(Input.GetKeyDown(KeyCode.Space))
             {
@@ -219,12 +237,46 @@ public class SelectObjectScript : MonoBehaviour
         canSelect = true;
         mode = PointerMode.SelectMode;
         camScript.mode = CameraController.CameraMode.Unfocused;  
-        selectedObject.DeselectObject(); 
+        selectedObject.DeselectObject();
+
+        UnitInfo[] _units = FindObjectsOfType<UnitInfo>();
+        foreach (UnitInfo _unit in _units)
+        {
+            _unit.AttackCanvas.SetActive(false); 
+            _unit.isTarget = false;
+        }
 
         if (GameManager.Instance.playerInfo[(int)GameManager.Instance.currentPlayerTurn].ExplorationPointsLeft > 0)
         {
             TileManager.instance.FindPlayerOwnedTilesForFlipCheck(GameManager.Instance.playerInfo[(int)GameManager.Instance.currentPlayerTurn]); 
         }
 
+    }
+
+    public void AttackUnitInput()
+    {
+        if(highlightedObject.objectType == SelectScript.objType.unit)
+        {
+            if(highlightedObject.GetComponent<UnitInfo>().isTarget)
+            {
+                UnitInfo _unit = selectedObject.GetComponent<UnitInfo>();
+                UnitInfo _target = highlightedObject.GetComponent<UnitInfo>(); 
+
+                Debug.Log(_unit.unitName + " is Deals" + _unit.baseDamage + " to Unit: " + _target.unitName);
+
+                _target.currentHealth -= _unit.baseDamage; 
+                if(_target.currentHealth < 1)
+                {
+                    Debug.Log(_target.unitName + " is Destroyed!");
+                    Destroy(_target.gameObject); 
+                }
+                _unit.canAttack = false; 
+                SetModeToSelect(); 
+
+
+
+
+            }
+        }
     }
 }

@@ -2,8 +2,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
 using System.Linq;
-using Unity.VisualScripting;
-using UnityEditor.Experimental.GraphView;
 
 public class TileManager : MonoBehaviour
 {
@@ -35,6 +33,8 @@ public class TileManager : MonoBehaviour
 
     // Speed at which tiles flash white (normally set to 0.3f
     public float flashSpeed;
+
+    public LayerMask isUnit; 
 
     // Initialize the singleton instance on Awake
     private void Awake()
@@ -81,7 +81,7 @@ public class TileManager : MonoBehaviour
     public TileInfo GetClosestTile(Transform _origin, Transform _target, int _radiusInTiles, bool _ignoreOccupied)
     {
         // Tiles to check 
-        List<TileInfo> _TilesToCheck = TileManager.instance.SetTileList(_origin.position, _radiusInTiles);
+        List<TileInfo> _TilesToCheck = SetTileList(_origin.position, _radiusInTiles);
 
         // distance from tile to target tile 
         List<float> _tileDistance = new List<float>();
@@ -279,24 +279,26 @@ public class TileManager : MonoBehaviour
         //Clear the state of all "CanFlip" tiles
         ClearCanFlipStateOnAllTiles();
 
-        //Create a local list of vector 3 positions 
-        List<Vector3> _tilePositions = new List<Vector3>();
+        //Create local List of Ownder Tiles 
+        List<TileInfo> _ownedTiles = new List<TileInfo>();
 
-        //iterate through the list of tiles on on the gameboard
-        for (int i = 0; i < allTiles.Count-1; i++)
+        //iterate through list of tiles to find owned tiles 
+        for (int i = 0; i < allTiles.Count - 1; i++)
         {
-            //check if the tile belongs to the current player
             if (allTiles[i].GetComponent<TileInfo>().Owner == _currentPlayer)
             {
-                //add the tile to the local list 
-                _tilePositions.Add(allTiles[i].transform.position);
+                _ownedTiles.Add(allTiles[i]);
+                //Debug.Log("Tile: " + allTiles[i] + " Added to list");
             }
         }
 
-        //Once the local list is populated 
-        for (int i = 0; i < _tilePositions.Count; i++)
+        //iterate through the list of tiles on on the gameboard
+        for (int i = 0; i < _ownedTiles.Count; i++)
         {
-            FindAdjacentFlippableTiles(_tilePositions[i], 1);
+            if (_ownedTiles[i].Checkable)
+            {
+                FindAdjacentFlippableTiles(_ownedTiles[i].transform.position, 1);
+            }
         }
 
     }

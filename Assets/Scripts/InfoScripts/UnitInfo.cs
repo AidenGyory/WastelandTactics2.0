@@ -3,33 +3,48 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.UI;
 
 public class UnitInfo : MonoBehaviour
 {
+    
     public PlayerInfo owner;
+    [Space]
+    public string unitName;
+    public Sprite unitImage;
     [Header("Unit Components")]
     public int maxHealth;
     public int currentHealth;
+    public bool canFly;
     public int maxMovementTiles;
     public int currentMovementTiles;
     public int baseDamage;
-    public int baseDefence; 
-    
+    public int attackRange; 
+    public int prestigeLevel;
+
     [Header("Model Info")]
-    public Renderer[] modelMaterials;
-    public List<Color> originalColour;
+    public GameObject[] models;
+    public Color originalColour;
 
     [SerializeField] UnityEvent UpdatePlayer;
 
     [Header("Movement Components")]
     [SerializeField] float speed;
+    
     public TileInfo occuipedTile;
-    public bool canFly; 
+    public LayerMask isUnits;
 
+    [Header("Attack Components")]
+    public bool canAttack;
+    public bool isTarget; 
+    public GameObject AttackCanvas;
+    public GameObject HealthCanvas; 
+    public Image healthBarUI; 
 
     bool canMove;
     public int moveindex;
     public List<TileInfo> _tilePath;
+    public List<Material> _ModelMaterials;
 
     private void OnDrawGizmos()
     {
@@ -38,25 +53,37 @@ public class UnitInfo : MonoBehaviour
         {
             Gizmos.DrawSphere(_tilePath[i].transform.position,0.5f); 
         }
+
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(transform.position, attackRange); 
     }
 
+    private void Start()
+    {
+        _ModelMaterials.Clear(); 
+    }
     public void UpdatePlayerDetails()
     {
         UpdatePlayer.Invoke();
 
-        for (int i = 0; i < modelMaterials.Length; i++)
+        Renderer[] _modelAmount = GetComponentsInChildren<Renderer>();
+
+        for (int i = 0; i < _modelAmount.Length; i++)
         {
-            originalColour.Add(modelMaterials[i].material.color);
+            _ModelMaterials.Add(_modelAmount[i].material); 
         }
+
+        originalColour = _ModelMaterials[0].color;
     }
 
 
     public void SelectUnit()
     {
-        foreach (Renderer _model in modelMaterials)
+
+        foreach (Material _material in _ModelMaterials)
         {
-            DOTween.Kill(_model);
-            _model.material.DOColor(_model.material.color * TileManager.instance.brightness, TileManager.instance.flashSpeed).SetLoops(-1, LoopType.Yoyo);
+            DOTween.Kill(_material);
+            _material.DOColor(_material.color * TileManager.instance.brightness, TileManager.instance.flashSpeed).SetLoops(-1, LoopType.Yoyo);
         }
         FocusOnTarget();
 
@@ -71,36 +98,39 @@ public class UnitInfo : MonoBehaviour
 
     public void UnselectUnit()
     {
-        for (int i = 0; i < modelMaterials.Length; i++)
+
+        foreach (Material _material in _ModelMaterials)
         {
-            DOTween.Kill(modelMaterials[i].material);
-            modelMaterials[i].material.DOColor(originalColour[i], 0.3f);
+            DOTween.Kill(_material);
+            _material.DOColor(originalColour, 0.3f);
         }
     }
 
     public void HighlightUnit()
     {
-        foreach (Renderer _model in modelMaterials)
+
+        foreach (Material _material in _ModelMaterials)
         {
 
-            Color _highlight = _model.material.color * TileManager.instance.brightness;
-            DOTween.Kill(_model);
-            _model.material.DOColor(_highlight, 0.3f);
+            Color _highlight = _material.color * TileManager.instance.brightness;
+            DOTween.Kill(_material);
+            _material.DOColor(_highlight, 0.3f);
         }
     }
 
     public void unhighlightUnit()
     {
-        for (int i = 0; i < modelMaterials.Length; i++)
+
+        foreach (Material _material in _ModelMaterials)
         {
-            DOTween.Kill(modelMaterials[i].material);
-            modelMaterials[i].material.DOColor(originalColour[i], 0.3f);
+            DOTween.Kill(_material);
+            _material.DOColor(originalColour, 0.3f);
         }
     }
 
     public void MoveToTile(TileInfo _targetTile)
     {
-        Debug.Log("Target Tile is: " + _targetTile); 
+        //Debug.Log("Target Tile is: " + _targetTile); 
         //Make next tile the occupied tile 
         TileInfo _nextTile = occuipedTile; 
 
@@ -190,7 +220,51 @@ public class UnitInfo : MonoBehaviour
             }
             
         }
+        if(currentHealth < maxHealth)
+        {
+            HealthCanvas.SetActive(true);
+            float _targetHealth = (float)currentHealth / (float)maxHealth;
+            healthBarUI.fillAmount = Mathf.Lerp(healthBarUI.fillAmount, _targetHealth, Time.deltaTime * 8); 
+        }
     }
 
+    public void CheckMovement()
+    {
+        if (owner == GameManager.Instance.playerInfo[(int)GameManager.Instance.currentPlayerTurn])
+        {
+            //Set Selection Mode (Move unit Mode) 
+            SelectObjectScript.Instance.mode = SelectObjectScript.PointerMode.MoveMode;
+
+            //Create a list of all "moveable" tiles. 
+            List<TileInfo> _moveableTiles = TileManager.instance.SetTileList(transform.position, currentMovementTiles);
+
+            // set tiles to moveable from list ignoring terrain
+            TileManager.instance.SetTilesAsMoveable(_moveableTiles, canFly);
+        }
+    }
+
+    public void CheckAttack()
+    {
+        if(owner == GameManager.Instance.playerInfo[(int)GameManager.Instance.currentPlayerTurn] && canAttack)
+        {
+            SelectObjectScript.Instance.mode = SelectObjectScript.PointerMode.AttackMode;
+
+            Collider[] _units = Physics.OverlapSphere(transform.position, attackRange, isUnits);
+
+            for (int i = 0; i < _units.Length; i++)
+            {
+                if (_units[i].GetComponent<UnitInfo>().owner != GameManager.Instance.playerInfo[(int)GameManager.Instance.currentPlayerTurn])
+                {
+                    Debug.Log("Can Attack" + _units[i].GetComponent<UnitInfo>().unitName);
+                    _units[i].GetComponent<UnitInfo>().AttackCanvas.SetActive(true);
+                    _units[i].GetComponent<UnitInfo>().isTarget = true; 
+                }
+            }
+        }
+        else
+        {
+            Debug.Log("Can't attack"); 
+        }
+    }
 
 }

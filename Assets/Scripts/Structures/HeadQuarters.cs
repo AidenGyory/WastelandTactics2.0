@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+ 
 
 public class HeadQuarters : StructureInfo
 {
@@ -34,16 +35,13 @@ public class HeadQuarters : StructureInfo
 
     public void UpdateTileOwnership()
     {
-        List<TileInfo> _tileList = TileManager.instance.SetTileList(transform.position, 0);
 
-        if (_tileList.Count > 0) 
-        {
-            _tileList[0].isOccupied = true;
-            _tileList.Clear();
-        }
+        TileInfo _HQTile = TileManager.instance.GetClosestTile(transform, transform, 1, true);
+
+        _HQTile.isOccupied = true;
 
         //create a list of tiles 
-        _tileList = TileManager.instance.SetTileList(transform.position,sightRangeInTiles);
+        List<TileInfo> _tileList = TileManager.instance.SetTileList(transform.position,sightRangeInTiles);
 
         //check if there are tiles in the list 
         if (_tileList.Count < 1) { return;  }
@@ -56,6 +54,7 @@ public class HeadQuarters : StructureInfo
             {
                 //set the owner of the tile to match the owner of the building.  
                 _tile.Owner = owner;
+                _tile.Checkable = true; 
             }
 
         }

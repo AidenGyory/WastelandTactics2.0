@@ -1,6 +1,5 @@
 using UnityEngine;
 using UnityEngine.Events;
-using System.Linq; 
 
 
 public class SelectScript : MonoBehaviour

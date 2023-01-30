@@ -5,29 +5,104 @@ using UnityEngine;
 public class WorkerUnit : UnitInfo
 {
 
+    public enum StructureType
+    {
+        Outpost,
+        Factory,
+        PowerCell,
+        Research,
+        Headquarters
+    }
+
+    public GameObject[] PlaceableStructures; 
+
     public void UpdateMaterials()
     {
-        for (int i = 0; i < modelMaterials.Length; i++)
+        for (int i = 0; i < models.Length; i++)
         {
-            if (owner.settings.WorkerUnitMaterial[i] != null)
+            if (owner.settings.WorkerUnitMaterial != null)
             {
-                modelMaterials[i].material = owner.settings.WorkerUnitMaterial[i];
+                Renderer[] _modelRenderers = GetComponentsInChildren<Renderer>();
+
+                foreach (Renderer _renderer in _modelRenderers)
+                {
+                    _renderer.material = owner.settings.WorkerUnitMaterial;
+                }
             }
             else
-                modelMaterials[i].material = owner.settings.baseMaterial;
+                models[i].GetComponentInChildren<Renderer>().material = owner.settings.baseMaterial;
         }
     }
 
-    public void CheckMovement()
+    public bool CheckIfSuitablePlaceForStructure(StructureType index)
     {
-        //Set Selection Mode (Move unit Mode) 
-        SelectObjectScript.Instance.mode = SelectObjectScript.PointerMode.MoveMode;
+        bool _suitable = false;
 
-        //Create a list of all "moveable" tiles. 
-        List<TileInfo> _moveableTiles = TileManager.instance.SetTileList(transform.position, currentMovementTiles);
+        if(occuipedTile.state == TileInfo.TileState.walkable || occuipedTile.state == TileInfo.TileState.unwalkable)
+        {
+            TileInfo.TileType _tileType = occuipedTile.type;
 
-        // set tiles to moveable from list ignoring terrain
-        TileManager.instance.SetTilesAsMoveable(_moveableTiles, canFly);
+            Debug.Log("Occupied Tile is " + _tileType); 
 
+            switch (index)
+            {
+                case StructureType.Outpost: //Outpost can be placed on anything 
+                    {
+                        if (_tileType != TileInfo.TileType.Mountain)
+                        {
+                            _suitable = true;
+                        }
+                    }
+                    break;
+                case StructureType.Factory: //Factory can be placed on Metal or Unhexium nodes 
+                    {
+                        if (_tileType == TileInfo.TileType.MetalMine || _tileType == TileInfo.TileType.Unhexium)
+                        {
+                            _suitable = true;
+                        }
+                    }
+                    break;
+                case StructureType.PowerCell: //Powercell can be placed on Unhexium nodes 
+                    {
+                        if (_tileType == TileInfo.TileType.Unhexium)
+                        {
+                            _suitable = true;
+                        }
+                    }
+                    break;
+                case StructureType.Research: //Research can be placed anywhere 
+                    {
+                        if (_tileType != TileInfo.TileType.Mountain)
+                        {
+                            _suitable = true;
+                        }
+                    }
+                    break;
+                case StructureType.Headquarters: //Headquarters can be placed anywhere 
+                    {
+                        if (_tileType != TileInfo.TileType.Mountain)
+                        {
+                            _suitable = true;
+                        }
+                    }
+                    break;
+            }
+        }
+        Debug.Log("Location is suitable?: " + _suitable); 
+        return _suitable; 
     }
+
+    //public void OpenRadialMenu()
+    //{
+    //    SelectObjectScript.Instance.CameraScreenCanvas.GetComponent<RadialBuildMenu>().OpenRadialMenu();
+    //    SelectObjectScript.Instance.CameraScreenCanvas.GetComponent<RadialBuildMenu>().SelectedWorkerUnit = this.gameObject; 
+    //    SelectObjectScript.Instance.canSelect = false;
+    //}
+
+    //public void CloseRadialMenu()
+    //{
+    //    SelectObjectScript.Instance.CameraScreenCanvas.GetComponent<RadialBuildMenu>().SelectedWorkerUnit = null;
+    //    SelectObjectScript.Instance.CameraScreenCanvas.GetComponent<RadialBuildMenu>().CloseRadialMenu();
+    //    SelectObjectScript.Instance.canSelect = true;
+    //}
 }

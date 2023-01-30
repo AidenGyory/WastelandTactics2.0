@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
 
@@ -19,7 +18,8 @@ public class PlaceUnitController : MonoBehaviour
     public UnitTypes type; 
 
     [SerializeField] GameObject[] unitType;
-
+    [SerializeField] GameObject[] placeholderModel;
+    [SerializeField] bool Active; 
     [SerializeField] bool canSpawn;
 
     [SerializeField] Vector3 positionOffset;
@@ -28,68 +28,81 @@ public class PlaceUnitController : MonoBehaviour
 
     bool spawned = false;
 
-    // Update is called once per frame
+    private void Start()
+    {
+        foreach (GameObject model in placeholderModel)
+        {
+            model.SetActive(false); 
+        }
+
+        placeholderModel[(int)type].SetActive(true);
+
+        Invoke(nameof(SetAsPlaceable), 0.5f); 
+    }
+
+    public void SetAsPlaceable()
+    {
+        Active = true; 
+    }
+
     void Update()
     {
-        SelectScript _highlighted = SelectObjectScript.Instance.highlightedObject;
-
-        if (_highlighted == null) { return; }
-
-        if (_highlighted.objectType == SelectScript.objType.tile)
+        if(Active)
         {
-            if (_highlighted.GetComponent<TileInfo>().state == TileInfo.TileState.CanPlace)
+            SelectScript _highlighted = SelectObjectScript.Instance.highlightedObject;
+
+            if (_highlighted == null) { return; }
+
+            if (_highlighted.objectType == SelectScript.objType.tile)
             {
-                canSpawn = true;
-                transform.position = SelectObjectScript.Instance.highlightedObject.transform.position + positionOffset;
+                if (_highlighted.GetComponent<TileInfo>().state == TileInfo.TileState.CanPlace)
+                {
+                    canSpawn = true;
+                    transform.position = SelectObjectScript.Instance.highlightedObject.transform.position + positionOffset;
+                }
+                else
+                {
+                    canSpawn = false;
+                    transform.position = Vector3.zero;
+                }
             }
             else
             {
                 canSpawn = false;
                 transform.position = Vector3.zero;
             }
-        }
-        else
-        {
-            canSpawn = false;
-            transform.position = Vector3.zero;
-        }
 
-        if (Input.GetMouseButton(0))
-        {
-            if (canSpawn && !spawned)
+            if (Input.GetMouseButton(0))
             {
-                //Get TileInfo reference  
-                TileInfo _tileInfo = _highlighted.GetComponent<TileInfo>();
+                if (canSpawn && !spawned)
+                {
+                    //Get TileInfo reference  
+                    TileInfo _tileInfo = _highlighted.GetComponent<TileInfo>();
 
-                // Instantiate Unit at position
-                GameObject _unit = Instantiate(unitType[(int)type]);
-                _unit.transform.position = transform.position;
+                    // Instantiate Unit at position
+                    GameObject _unit = Instantiate(unitType[(int)type]);
+                    _unit.transform.position = transform.position;
 
-                //Set player owner and initalise setup
-                UnitInfo _unitInfo = _unit.GetComponent<UnitInfo>();
-                _unitInfo.owner = GameManager.Instance.playerInfo[(int)GameManager.Instance.currentPlayerTurn];
-                _unitInfo.UpdatePlayerDetails();
-                _unitInfo.occuipedTile = _tileInfo;
-                _tileInfo.isOccupied = true;
+                    //Set player owner and initalise setup
+                    UnitInfo _unitInfo = _unit.GetComponent<UnitInfo>();
+                    _unitInfo.owner = GameManager.Instance.playerInfo[(int)GameManager.Instance.currentPlayerTurn];
+                    _unitInfo.UpdatePlayerDetails();
+                    _unitInfo.occuipedTile = _tileInfo;
+                    _tileInfo.isOccupied = true;
 
-                //Remove Player Resources 
-                GameManager.Instance.playerInfo[(int)GameManager.Instance.currentPlayerTurn].MetalScrapAmount -= cost;
+                    //Remove Player Resources 
+                    GameManager.Instance.playerInfo[(int)GameManager.Instance.currentPlayerTurn].MetalScrapAmount -= cost;
 
-                //Reset Camera and OjectSelectionManager
-                TileManager.instance.ClearPlaceableStateOnAllTiles();
-                SelectObjectScript.Instance.SetModeToSelect();
-                SelectObjectScript.Instance.camScript.SetCameraMode(CameraController.CameraMode.Unfocused); 
+                    //Reset Camera and OjectSelectionManager
+                    TileManager.instance.ClearPlaceableStateOnAllTiles();
+                    SelectObjectScript.Instance.SetModeToSelect();
+                    SelectObjectScript.Instance.camScript.SetCameraMode(CameraController.CameraMode.Unfocused);
 
-                //spawned = true;
-                Destroy(gameObject);
+                    //spawned = true;
+                    Destroy(gameObject);
 
+                }
             }
-
         }
-
-        
-
-
-        
     }
 }

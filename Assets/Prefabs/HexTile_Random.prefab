@@ -887,7 +887,7 @@ MonoBehaviour:
   - tile: {fileID: 6223190072437659451, guid: 70a7c4db0e900a241be950f8e27773e9, type: 3}
     weight: 1
   - tile: {fileID: 590754554551721599, guid: ed1f61a75e533c14db74dafe7c43b435, type: 3}
-    weight: 1
+    weight: 0
   - tile: {fileID: 8394699317491117650, guid: 2fca24325f36edd4f84f740ad4b25df2, type: 3}
     weight: 1
   mapShaperLayer:

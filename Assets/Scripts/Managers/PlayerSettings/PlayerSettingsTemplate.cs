@@ -48,7 +48,14 @@ public class PlayerSettingsTemplate : ScriptableObject
     public Material baseMaterial;
     [Header("Structure Materials")]
     public Material[] HQMaterial;
+    public Material[] OutpostMaterial;
+    public Material[] FactoryMaterial;
+    public Material[] PowerMaterial;
+    public Material[] ResearchMaterial;
     [Header("Unit Materials")]
-    public Material[] ScoutUnitMaterial;
-    public Material[] WorkerUnitMaterial; 
+    public Material ScoutUnitMaterial;
+    public Material WorkerUnitMaterial; 
+    public Material SoldierUnitMaterial;
+    public Material TankUnitMaterial;
+    public Material AntitankUnitMaterial;
 }

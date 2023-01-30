@@ -14,9 +14,68 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   settingsName: Default Player 2
   playerName: SPAI-3N
-  faction: 1
-  superPower: 3
+  faction: 0
+  superPower: 1
   playerColor: {r: 1, g: 0.08880368, b: 0, a: 0}
   baseMaterial: {fileID: 2100000, guid: dcb663cf1f9aa694c90b2b923c857a18, type: 2}
-  HQMaterial: {fileID: 2100000, guid: dcb663cf1f9aa694c90b2b923c857a18, type: 2}
-  ScoutUnitMaterial: {fileID: 2100000, guid: dcb663cf1f9aa694c90b2b923c857a18, type: 2}
+  HQMaterial:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  OutpostMaterial:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  FactoryMaterial:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  PowerMaterial:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  ResearchMaterial:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  ScoutUnitMaterial: {fileID: 2100000, guid: 4013c1f270b07724fb2305c98de4d28d, type: 2}
+  WorkerUnitMaterial: {fileID: 2100000, guid: fb4b025e91451ed4eba0e769ea5183c3, type: 2}
+  SoldierUnitMaterial: {fileID: 2100000, guid: c614cf79997aab04a9efc999b9643279, type: 2}
+  TankUnitMaterial: {fileID: 2100000, guid: b59a96a47611a274888b18a29160050f, type: 2}
+  AntitankUnitMaterial: {fileID: 2100000, guid: 2451be8be5a5f2345a37f2dfdf6216a5,
+    type: 2}

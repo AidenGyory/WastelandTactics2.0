@@ -1,9 +1,5 @@
-using DG.Tweening;
-using System.Collections;
 using System.Collections.Generic;
 using TMPro;
-using Unity.VisualScripting;
-using UnityEditor.Search;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -159,14 +155,14 @@ public class RadialMenuController : MonoBehaviour
 
                 break;
             case 1: //Soldier Unit 
-                Debug.Log("Spawn Soldier Unit");
+                //Debug.Log("Spawn Soldier Unit");
                 _placeable.GetComponent<PlaceUnitController>().type = PlaceUnitController.UnitTypes.Soldier_NewEden;
 
 
 
                 break;
             case 2: //Tank Unit
-                Debug.Log("Spawn Tank Unit");
+                //Debug.Log("Spawn Tank Unit");
                 _placeable.GetComponent<PlaceUnitController>().type = PlaceUnitController.UnitTypes.Tank_NewEden;
 
 
@@ -187,13 +183,16 @@ public class RadialMenuController : MonoBehaviour
 
                 break;
         }
+
         SelectObjectScript.Instance.canSelect = true;
         SelectObjectScript.Instance.mode = SelectObjectScript.PointerMode.PlacementMode;
         TileManager.instance.ClearCanFlipStateOnAllTiles();
-        List<TileInfo> _placementTiles = TileManager.instance.SetTileList(GameManager.Instance.playerInfo[(int)GameManager.Instance.currentPlayerTurn].transform.position, 1);
+
+        List<TileInfo> _placementTiles = TileManager.instance.SetTileList(SelectObjectScript.Instance.selectedObject.transform.position, 1);
 
         foreach (TileInfo _tile in _placementTiles)
         {
+            Debug.Log("Tile: " + _tile.name); 
             _tile.SetTileToPlaceable();
         }
 

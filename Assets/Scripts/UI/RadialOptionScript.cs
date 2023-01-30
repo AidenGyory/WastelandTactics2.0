@@ -1,7 +1,4 @@
 using DG.Tweening;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEditor.Search;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -41,9 +38,5 @@ public class RadialOptionScript : MonoBehaviour
         segmentBackgroundImage.DOColor(_color, 0.5f);
         icon.DOColor(new Color(1,1,1,0.5f), 0.5f);
         iconSpotlight.DOColor(Color.clear, 0.5f);
-
-
-
-
     }
 }

@@ -275,10 +275,14 @@ MonoBehaviour:
   isFlagged: 0
   flagPrefab: {fileID: 9001811830997793115, guid: fe565dc16bd3fed41aa710544ecd50b7,
     type: 3}
-  state: 2
+  state: 1
   unwalkable: 0
   isOccupied: 0
+  neighbours: []
+  Checkable: 0
   tileName: Desert
+  type: 2
+  tileImage: {fileID: 21300000, guid: 8cf962398145d0c428af8c9b119d16a4, type: 3}
   tileDescription: Sandstorm!! Now we are going to have to explore the area again!
   TileHasFlipped:
     m_PersistentCalls:
@@ -337,6 +341,7 @@ MonoBehaviour:
   modelMaterials:
   - {fileID: 603720963668327421}
   - {fileID: 605183092103019933}
+  - {fileID: 8847177922853851875}
   originalColour: []
   dustPrefab: {fileID: 942627054682476470, guid: 62c1a51c120defd4f992446aabaa521c,
     type: 3}

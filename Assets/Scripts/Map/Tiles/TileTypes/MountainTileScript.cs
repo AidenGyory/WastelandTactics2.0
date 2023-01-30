@@ -7,6 +7,6 @@ public class MountainTileScript : TileInfo
 {
     public void PrintTileTypeLog()
     {
-        Debug.Log("Tile is a tall Mountain");
+        //Debug.Log("Tile is a tall Mountain");
     }
 }

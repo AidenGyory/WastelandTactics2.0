@@ -8,6 +8,17 @@ using UnityEngine.UI;
 
 public class TileInfo: MonoBehaviour
 {
+    public enum TileType
+    {
+        Empty,
+        Reward,
+        Sandstorm,
+        Mountain,
+        MetalMine,
+        Unhexium,
+        Vantage,
+        Exhaust
+    }
     public PlayerInfo Owner; 
     public enum TileState
     {
@@ -24,11 +35,15 @@ public class TileInfo: MonoBehaviour
     
     public TileState state;
     public bool unwalkable; 
-    public bool isOccupied; 
+    public bool isOccupied;
+    public List<TileInfo> neighbours; 
+    public bool Checkable;
 
-    [SerializeField] string tileName;
+    public string tileName;
+    public TileType type; 
+    public Sprite tileImage;
     [TextArea]
-    [SerializeField] string tileDescription;
+    public string tileDescription;
 
     [SerializeField] UnityEvent TileHasFlipped;
     [SerializeField] UnityEvent TileHasFlippedBack;
@@ -40,6 +55,7 @@ public class TileInfo: MonoBehaviour
     [Header("dust prefab")]
     [SerializeField] GameObject dustPrefab;
     [SerializeField] Vector3 particlePrefabOffset;
+
 
     private void Start()
     {
@@ -56,8 +72,53 @@ public class TileInfo: MonoBehaviour
         {
             originalColour.Add(modelMaterials[i].material.color); 
         }
+
+        Invoke(nameof(EstablishNeighbours), 1.2f); 
     }
     //bool to check if you can flip this tile 
+    public void EstablishNeighbours()
+    {
+        //Debug.Log("Initialise Neighbours");
+
+        float _tileSize = TileManager.instance.tileSize;
+        LayerMask _isTiles = TileManager.instance.isTiles;
+
+        // Find all colliders within the given radius and isTiles layermask
+        Collider[] tiles = Physics.OverlapSphere(transform.position, _tileSize, _isTiles);
+
+        for (int i = 0; i < tiles.Length; i++)
+        {
+            TileInfo _info = tiles[i].GetComponent<TileInfo>();
+            neighbours.Add(_info);
+        }
+
+        if(neighbours.Contains(this))
+        {
+            //Debug.Log("List Contains This Tile");  
+            neighbours.Remove(this);
+        }
+        
+    }
+
+    public void CheckNeighbours()
+    {
+        if (Checkable && state == TileState.IsFlipped)
+        {
+            bool canFlipAdjacentTiles = false;
+
+            for (int i = 0; i < neighbours.Count -1; i++)
+            {
+                if (neighbours[i].state != TileState.IsFlipped)
+                {
+                    canFlipAdjacentTiles = true;
+                }
+            }
+
+            Checkable = canFlipAdjacentTiles;
+        }
+
+    }
+
     public bool CheckIfTileCanFlip()
     {
         //Check if the player has enough EP and the tilestate is "canFlip"
@@ -82,6 +143,12 @@ public class TileInfo: MonoBehaviour
             transform.DOJump(transform.position, 0.25f, 1, 0.2f); 
             transform.DORotate(new Vector3(0f, 0, 0), 0.25f).OnComplete(TriggerTileHasFlipped);
             state = TileState.IsFlipped;
+            Checkable = true;
+            foreach (TileInfo _tile in neighbours)
+            {
+                Checkable = true;
+                _tile.CheckNeighbours();
+            }
             UnselectTile();
             TileManager.instance.FindPlayerOwnedTilesForFlipCheck(Owner);
             
@@ -102,6 +169,12 @@ public class TileInfo: MonoBehaviour
         DOTween.Kill(transform); 
         transform.DOJump(transform.position, 0.25f, 1, 0.2f);
         transform.DORotate(new Vector3(180f, 0, 0), 0.25f).OnComplete(TriggerTileHasFlippedBack);
+        Checkable = false;
+        foreach(TileInfo _tile in neighbours)
+        {
+            _tile.Checkable = true; 
+            _tile.CheckNeighbours();
+        }
         state = TileState.CannotFlip;
     }
 
@@ -145,14 +218,18 @@ public class TileInfo: MonoBehaviour
     [Tooltip("Add Actions that are in scripts INSIDE the prefab")] 
     public void TriggerTileHasFlipped()
     {
+        foreach (TileInfo _tile in neighbours)
+        {
+            _tile.CheckNeighbours();
+        }
         TileAudioManager.instance.PlayTileAudio(tileAudioType.flip);
-
         SelectObjectScript.Instance.canSelect = true;
         TileHasFlipped.Invoke(); 
     }
     [Tooltip("Add Actions that are in scripts INSIDE the prefab")]
     public void TriggerTileHasFlippedBack()
     {
+        
         SelectObjectScript.Instance.canSelect = true;
         TileHasFlippedBack.Invoke();
     }
