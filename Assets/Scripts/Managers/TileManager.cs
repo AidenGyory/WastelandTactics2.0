@@ -191,7 +191,7 @@ public class TileManager : MonoBehaviour
         Invoke(nameof(WaitAndFlip), 0.2f);
     }
 
-    public void SetTilesAsMoveable(List<TileInfo> _tiles, bool _ignoreTerrainType)
+    public void SetTilesAsMoveable(TileInfo _start, List<TileInfo> _tiles, bool _ignoreTerrainType)
     {
         // Reset Modeable State on all tiles
         ClearMoveableStateOnAllTiles();
@@ -227,6 +227,22 @@ public class TileManager : MonoBehaviour
                 else
                 {
                     _tile.SetTileToWalkable();
+                }
+            }
+
+            
+        }
+
+        // CAN CAUSE LAG WILL PATHFIND ON ALL REMAINING TILES 
+        for (int j = 0; j < _tiles.Count; j++)
+        {
+            TileInfo _tile = _tiles[j]; 
+
+            if (_tile.state == TileInfo.TileState.walkable)
+            {
+                if (PathfindingManager.Instance.GetPath(_start, _tile, _ignoreTerrainType) == null)
+                {
+                    _tile.SetTileToUnwalkable();
                 }
             }
         }

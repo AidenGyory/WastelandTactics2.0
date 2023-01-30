@@ -13,7 +13,7 @@ public class PathfindingManager : MonoBehaviour
         Instance = this; 
     }
 
-    public List<TileInfo> GetPath(TileInfo _start, TileInfo _end)
+    public List<TileInfo> GetPath(TileInfo _start, TileInfo _end, bool canFly)
     {
 
         List<TileInfo> _tilepath = new List<TileInfo>();
@@ -46,7 +46,9 @@ public class PathfindingManager : MonoBehaviour
 
             foreach(TileInfo _tile in _walkableTiles)
             {
-                if (_tile.state == TileInfo.TileState.unwalkable)
+                // Check with Flippable Tiles for correct statement
+                if (_tile.state == TileInfo.TileState.unwalkable || 
+                    (!canFly && _tile.state == TileInfo.TileState.CannotFlip))
                 {
                     _visitedTiles.Add(_tile);
                     continue; 

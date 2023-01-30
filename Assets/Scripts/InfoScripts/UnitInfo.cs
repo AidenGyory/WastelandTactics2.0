@@ -131,7 +131,7 @@ public class UnitInfo : MonoBehaviour
     public void MoveToTile(TileInfo _targetTile)
     {
         //Clear Tiles 
-        _tilePath = PathfindingManager.Instance.GetPath(occuipedTile, _targetTile); 
+        _tilePath = PathfindingManager.Instance.GetPath(occuipedTile, _targetTile, canFly); 
 
         if(_tilePath != null)
         {
@@ -197,7 +197,7 @@ public class UnitInfo : MonoBehaviour
             List<TileInfo> _moveableTiles = TileManager.instance.SetTileList(transform.position, currentMovementTiles);
 
             // set tiles to moveable from list ignoring terrain
-            TileManager.instance.SetTilesAsMoveable(_moveableTiles, canFly);
+            TileManager.instance.SetTilesAsMoveable(occuipedTile,_moveableTiles, canFly);
         }
     }
 
