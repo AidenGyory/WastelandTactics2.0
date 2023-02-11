@@ -44,14 +44,17 @@ public class PlayerSettingsTemplate : ScriptableObject
     public FactionType faction;
     public SuperPowerType superPower;
     [Space]
-    public Color playerColor;
+    public Color primaryColour;
+    public Color secondaryColour;
+    public Sprite factionLeader;
+    public Sprite factionLogo; 
     public Material baseMaterial;
     [Header("Structure Materials")]
-    public Material[] HQMaterial;
-    public Material[] OutpostMaterial;
-    public Material[] FactoryMaterial;
-    public Material[] PowerMaterial;
-    public Material[] ResearchMaterial;
+    public Material HQMaterial;
+    public Material OutpostMaterial;
+    public Material FactoryMaterial;
+    public Material PowerMaterial;
+    public Material ResearchMaterial;
     [Header("Unit Materials")]
     public Material ScoutUnitMaterial;
     public Material WorkerUnitMaterial; 

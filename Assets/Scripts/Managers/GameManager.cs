@@ -1,5 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
+using UnityEditor;
 using UnityEngine;
 
 //REMINDER: THIS SCRIPT SHOULD BE CREATED BEFORE ENTERING THE GAME SCENE
@@ -149,6 +151,82 @@ public class GameManager : MonoBehaviour
             _unit.currentMovementTiles = _unit.maxMovementTiles;
             _unit.canAttack = true; 
         }
-        
+
+        StructureInfo[] _structures = FindObjectsOfType<StructureInfo>();
+
+        List<Factory> _factories = new List<Factory>(); 
+
+        foreach(StructureInfo _structure in _structures)
+        {
+            if(_structure.owner == _currentPlayer)
+            {
+                if(_structure.GetComponent<Factory>())
+                {
+                    _factories.Add(_structure.GetComponent<Factory>());
+                }
+            }
+        }
+
+        ProduceFactoryResources(_factories);
+        CheckPowerLevel(); 
+    }
+
+    public void ProduceFactoryResources(List<Factory> _factories)
+    {
+        PlayerInfo _currentPlayer = playerInfo[(int)currentPlayerTurn];
+
+        for (int i = 0; i < _factories.Count; i++)
+        {
+            if (_factories[i].active)
+            {
+                if (_factories[i].resource == Factory.ResourceType.Metal)
+                {
+                    _currentPlayer.MetalScrapAmount += _factories[i].resourceAmount; 
+                }
+            }
+        }
+    }
+
+    public void CheckPowerLevel()
+    {
+        PlayerInfo _currentPlayer = playerInfo[(int)currentPlayerTurn];
+
+        _currentPlayer.PowerSupplyTotal = _currentPlayer.UnhexiumNodesCaptured;
+
+        List<UnitInfo> _playerUnits = new List<UnitInfo>();
+        List<StructureInfo> _playerStructures = new List<StructureInfo>();
+
+        UnitInfo[] _allunits = FindObjectsOfType<UnitInfo>();
+        StructureInfo[] _allStructures = FindObjectsOfType<StructureInfo>();
+
+        for (int i = 0; i < _allunits.Length; i++)
+        {
+            if (_allunits[i].owner == _currentPlayer)
+            {
+                _playerUnits.Add(_allunits[i]);
+            }
+        }
+
+        for (int i = 0; i < _allStructures.Length; i++)
+        {
+            if(!_allStructures[i].GetComponent<HeadQuarters>())
+            {
+                if(_allStructures[i].GetComponent<Factory>() && _allStructures[i].GetComponent<Factory>().resource == Factory.ResourceType.UnHexium)
+                {
+
+                }
+                else
+                {
+                    if (_allStructures[i].owner == _currentPlayer)
+                    {
+                        _playerStructures.Add(_allStructures[i]);
+                    }
+                }
+                
+            }
+        }
+
+        Debug.Log("Player has " + _playerUnits.Count + " Units and " + _playerStructures.Count + " Structures");
+        _currentPlayer.PowerSupplyUsed = _playerStructures.Count + _playerUnits.Count; 
     }
 }

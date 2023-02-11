@@ -287,11 +287,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 6212615410849823559, guid: fd4e460c4cd7cc8458550cb8346d8ca4,
-        type: 3}
-      propertyPath: m_Materials.Array.data[0]
-      value: 
-      objectReference: {fileID: 2100000, guid: 56fb78c9385f305469c51c8c5d08a659, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: fd4e460c4cd7cc8458550cb8346d8ca4, type: 3}
 --- !u!1 &96588681
@@ -2654,11 +2649,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 8659410841228228835, guid: 8c16871ee55c54c41a6df036525d7dca,
-        type: 3}
-      propertyPath: m_Materials.Array.data[0]
-      value: 
-      objectReference: {fileID: 2100000, guid: 6cb42f629ea37b94693adb7cc9b740f4, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8c16871ee55c54c41a6df036525d7dca, type: 3}
 --- !u!1 &1053391874
@@ -7832,11 +7822,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: ScoutUnit
-      objectReference: {fileID: 0}
-    - target: {fileID: 6078516230412906988, guid: 8b94fa34a25ede0428849e213ea7d76b,
-        type: 3}
-      propertyPath: m_LocalPosition.y
-      value: -0.686
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8b94fa34a25ede0428849e213ea7d76b, type: 3}
@@ -14987,11 +14972,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 7097716087249543964, guid: b9da5e8b8f3a07047b31506fb5eb19ae,
-        type: 3}
-      propertyPath: m_Materials.Array.data[0]
-      value: 
-      objectReference: {fileID: 2100000, guid: baa2fe9f1f6ed2e4987aebff1659eba6, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b9da5e8b8f3a07047b31506fb5eb19ae, type: 3}
 --- !u!1 &3080429348890089402

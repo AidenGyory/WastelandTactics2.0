@@ -24,7 +24,27 @@ public class ScoutUnit : UnitInfo
         }
     }
 
-    
+    public void DropBeacon()
+    {
+        if(occuipedTile.state != TileInfo.TileState.IsFlipped)
+        {
+            if(occuipedTile.type == TileInfo.TileType.Sandstorm && !occuipedTile.isFlagged)
+            {
+                occuipedTile.ToggleFlagState(); 
+            }
+        }
+
+        for (int i = 0; i < occuipedTile.neighbours.Count; i++)
+        {
+            if (occuipedTile.neighbours[i].state != TileInfo.TileState.IsFlipped)
+            {
+                if (occuipedTile.neighbours[i].type == TileInfo.TileType.Sandstorm && !occuipedTile.neighbours[i].isFlagged)
+                {
+                    occuipedTile.neighbours[i].ToggleFlagState();
+                }
+            }
+        }
+    }
 
     
 }

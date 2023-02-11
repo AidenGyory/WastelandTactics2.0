@@ -33,12 +33,21 @@ public class RadialBuildMenu : MonoBehaviour
     public void OpenRadialMenu()
     {
         RadialMenu.SetActive(true);
+        //CheckOption(); 
     }
 
     public void CloseRadialMenu()
     {
         SelectObjectScript.Instance.SetModeToSelect();
         RadialMenu.SetActive(false);
+    }
+
+    void CheckOption(WorkerUnit.StructureType option)
+    {
+        if (SelectedWorkerUnit.GetComponent<WorkerUnit>().CheckIfSuitablePlaceForStructure(option))
+        {
+            PlaceStructure(WorkerUnit.StructureType.Outpost);
+        }
     }
 
     // Update is called once per frame
@@ -68,14 +77,6 @@ public class RadialBuildMenu : MonoBehaviour
                     _angle += 360;
                 }
 
-                if (_distance < 90 || _distance > 220)
-                {
-
-                    optionSelected = 0;
-                    selectedIcon.color = Color.clear;
-                }
-
-
                 //Debug.Log(_angle);
 
                 for (int i = 0; i < options.Length; i++)
@@ -85,21 +86,76 @@ public class RadialBuildMenu : MonoBehaviour
                     {
                         //select option
                         optionSelected = i;
-                        options[i].GetComponent<RadialOptionScript>().HighlightSegment(highlight);
-                        structureSelectedText.text = "" + options[i].GetComponent<RadialOptionScript>().unitName;
 
-                        selectedIcon.sprite = options[i].GetComponent<RadialOptionScript>().icon.sprite;
-                        selectedIcon.color = new Color(1, 1, 1, 0.7f);
+                        if(i == 2)
+                        {
+                            options[2].GetComponent<RadialOptionScript>().HighlightSegment(highlight);
+                            structureSelectedText.text = "Cancel";
+                            structureSelectedText.color = Color.white;
 
+                            selectedIcon.sprite = options[2].GetComponent<RadialOptionScript>().icon.sprite;
+                            selectedIcon.color = new Color(1, 1, 1, 0.7f);
+                        }
+                        else
+                        {
+                            WorkerUnit.StructureType _placeable = WorkerUnit.StructureType.Headquarters;
 
+                            switch (optionSelected)
+                            {
+                                //Outpost
+                                case 0:
+                                    _placeable = WorkerUnit.StructureType.Outpost;
+                                    break;
+                                //Factory
+                                case 1:
+                                    _placeable = WorkerUnit.StructureType.Factory;
+                                    break;
+                                //Cancel Button
+                                case 2:
+                                    _placeable = WorkerUnit.StructureType.Headquarters;
+                                    break;
+                                //Power Generator
+                                case 3:
+                                    _placeable = WorkerUnit.StructureType.PowerCell;
+                                    break;
+                                //Research
+                                case 4:
+                                    _placeable = WorkerUnit.StructureType.Research;
+                                    break;
+                            }
+
+                            options[i].GetComponent<RadialOptionScript>().HighlightSegment(highlight);
+                            structureSelectedText.text = "" + options[i].GetComponent<RadialOptionScript>().unitName;
+                            selectedIcon.sprite = options[i].GetComponent<RadialOptionScript>().icon.sprite;
+
+                            if (SelectedWorkerUnit.GetComponent<WorkerUnit>().CheckIfSuitablePlaceForStructure(_placeable))
+                            {
+                                structureSelectedText.color = Color.white;
+                                selectedIcon.color = new Color(1, 1, 1, 0.7f);
+                            }
+                            else
+                            {
+                                structureSelectedText.color = Color.red;
+                                selectedIcon.color = Color.red;
+                            } 
+                        }
                     }
-                    else
+                    else // Cancel Option
                     {
                         options[i].GetComponent<RadialOptionScript>().UnHighlightSegment(standard);
+
+                        if (_distance < 90 || _distance > 220)
+                        {
+                            structureSelectedText.text = "Cancel";
+                            structureSelectedText.color = Color.white;
+
+                            selectedIcon.sprite = options[2].GetComponent<RadialOptionScript>().icon.sprite;
+                            selectedIcon.color = new Color(1, 1, 1, 0.7f);
+                        }
                     }
                 }
 
-
+                
             }
             if (Input.GetMouseButtonDown(0))
             {
@@ -114,19 +170,23 @@ public class RadialBuildMenu : MonoBehaviour
                     switch (optionSelected)
                     {
                         case 0: // Outpost 
-                            PlaceStructure(WorkerUnit.StructureType.Outpost); 
+                            PlaceStructure(WorkerUnit.StructureType.Outpost);
+
                             break;
                         case 1: // Factory
-                            PlaceStructure(WorkerUnit.StructureType.Factory); 
+                            PlaceStructure(WorkerUnit.StructureType.Factory);
+
                             break;
                         case 2: // Cancel 
                             CloseRadialMenu();
                             break;
                         case 3: // PowerCell
-                            PlaceStructure(WorkerUnit.StructureType.PowerCell); 
+                            PlaceStructure(WorkerUnit.StructureType.PowerCell);
+
                             break;
                         case 4: // Research
-                            PlaceStructure(WorkerUnit.StructureType.Research); 
+                            PlaceStructure(WorkerUnit.StructureType.Research);
+
                             break;
                     }
                 }
@@ -141,12 +201,11 @@ public class RadialBuildMenu : MonoBehaviour
             GameObject _placeable = Instantiate(SelectedWorkerUnit.GetComponent<WorkerUnit>().PlaceableStructures[(int)_structureIndex]);
             _placeable.GetComponent<StructureInfo>().owner = GameManager.Instance.playerInfo[(int)GameManager.Instance.currentPlayerTurn];
             _placeable.transform.position = SelectedWorkerUnit.transform.position;
+            _placeable.GetComponent<StructureInfo>().occupiedTile = SelectedWorkerUnit.GetComponent<UnitInfo>().occuipedTile; 
             _placeable.transform.parent = null;
             _placeable.GetComponent<StructureInfo>().UpdatePlayerDetails();
-
+            Destroy(SelectedWorkerUnit.gameObject);
             CloseRadialMenu();
-            Destroy(SelectedWorkerUnit);
-           
         }
         else
         {

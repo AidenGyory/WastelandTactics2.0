@@ -1,4 +1,5 @@
 using DG.Tweening;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
@@ -23,6 +24,9 @@ public class StructureInfo : MonoBehaviour
     public List<Color> originalColour;
 
     [SerializeField] UnityEvent UpdatePlayer;
+    [SerializeField] UnityEvent runTurnStart;
+
+    public TileInfo occupiedTile; 
     
 
     public void UpdatePlayerDetails()
@@ -35,6 +39,10 @@ public class StructureInfo : MonoBehaviour
         }
     }
 
+    public void StartTurn()
+    {
+        runTurnStart.Invoke(); 
+    }
 
     public void SelectStructure()
     {

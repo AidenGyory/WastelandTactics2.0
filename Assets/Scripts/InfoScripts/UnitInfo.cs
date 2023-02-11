@@ -27,6 +27,7 @@ public class UnitInfo : MonoBehaviour
     public Color originalColour;
 
     [SerializeField] UnityEvent UpdatePlayer;
+    [SerializeField] UnityEvent PlayAction; 
 
     [Header("Movement Components")]
     [SerializeField] float speed;
@@ -151,7 +152,7 @@ public class UnitInfo : MonoBehaviour
         if (canMove && moveindex < _tilePath.Count)
         {
 
-            if (Vector3.Distance(transform.position, _tilePath[moveindex].transform.position) > 0.1f)
+            if (Vector3.Distance(transform.position, _tilePath[moveindex].transform.position) > 0.05f)
             {
                 transform.DODynamicLookAt(_tilePath[moveindex].transform.position,0.2f); 
                 transform.position += transform.forward * (Time.deltaTime * speed);
@@ -198,6 +199,14 @@ public class UnitInfo : MonoBehaviour
 
             // set tiles to moveable from list ignoring terrain
             TileManager.instance.SetTilesAsMoveable(occuipedTile,_moveableTiles, canFly);
+        }
+    }
+
+    public void CheckAction()
+    {
+        if(PlayAction != null)
+        { 
+            PlayAction.Invoke();
         }
     }
 

@@ -1,8 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
 using TMPro;
-using Unity.VisualScripting;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
@@ -42,17 +38,24 @@ public class DisplayHUDInfoScript : MonoBehaviour
     [SerializeField] TMP_Text tileDescription;
 
     [Header("Player Resources")]
-    [SerializeField] TMP_Text UnhexiumAmount;
+    [SerializeField] GameObject PowerBar;
+    [SerializeField] GameObject[] UnhexiumAmount;
     [SerializeField] TMP_Text MetalScrapAmount;
     [SerializeField] TMP_Text TurnTimer;
-    [SerializeField] GameObject PowerPointer;
-    [SerializeField] GameObject PowerBar;
+    [SerializeField] TMP_Text playerName; 
     [SerializeField] Image PlayerFlag;
     [SerializeField] Image PlayerIcon; 
 
     [Header("Game Menu Buttons")]
     [SerializeField] UnityEvent GlossaryButton;
     [SerializeField] UnityEvent GameMenuButton;
+
+    [Header("Additional UI Elements")]
+    [SerializeField] Image nameplate;
+    [SerializeField] Image metalIcon; 
+    [SerializeField] Image metalIconBG;
+    [SerializeField] Image metalIconTextBG;
+    [SerializeField] Image powerIconBG;
 
     PlayerInfo _player;
     SelectScript _selected; 
@@ -73,7 +76,29 @@ public class DisplayHUDInfoScript : MonoBehaviour
             ObjInfoHUD.SetActive(false); 
         }
 
-        UpdateResources(); 
+        UpdateResources();
+
+        UpdateUI();
+
+    }
+
+    void UpdateUI()
+    {
+        PlayerIcon.sprite = _player.settings.factionLogo; 
+
+        Color primary = _player.settings.primaryColour;
+        Color secondary = _player.settings.secondaryColour;
+
+        PlayerFlag.color = primary;
+        PlayerIcon.color = secondary;
+
+        nameplate.color = secondary;
+
+        metalIcon.color = secondary;
+        metalIconBG.color = primary;
+        metalIconTextBG.color = secondary;
+        
+        powerIconBG.color = secondary;
     }
 
     void UpdateSelectedInfo()
@@ -194,11 +219,37 @@ public class DisplayHUDInfoScript : MonoBehaviour
             EPLeftText.text = " ";
             PassTurnIcon.SetActive(true); 
         }
-        UnhexiumAmount.text = "" + _player.UnhexiumNodesCaptured; 
-        MetalScrapAmount.text = "" + _player.MetalScrapAmount;
-        TurnTimer.text = "Turn: " + GameManager.Instance.turnTimer;
+
         
-        //MAKE SURE TO REMEMBER TO ADD POWER CELL MAINTENECE 
+
+        MetalScrapAmount.text = "" + _player.MetalScrapAmount;
+        playerName.text = "" + _player.settings.playerName; 
+        TurnTimer.text = "Turn: " + GameManager.Instance.turnTimer;
+
+        foreach (GameObject node in UnhexiumAmount)
+        {
+            node.SetActive(false);
+        }
+
+        for (int i = 0; i < _player.UnhexiumNodesCaptured; i++)
+        {
+            UnhexiumAmount[i].SetActive(true);
+            UnhexiumAmount[i].GetComponent<CellInfo>().ChangeColor(CellInfo.PowerState.unused);
+        }
+
+        for (int i = 0; i < _player.PowerSupplyUsed; i++)
+        {
+            UnhexiumAmount[i].GetComponent<CellInfo>().ChangeColor(CellInfo.PowerState.used);
+        }
+
+        if(_player.PowerSupplyUsed > _player.PowerSupplyTotal)
+        {
+            foreach (GameObject node in UnhexiumAmount)
+            {
+                node.GetComponent<CellInfo>().ChangeColor(CellInfo.PowerState.deficit); 
+            }
+        }
+
     }
 
     public void PassTurn()

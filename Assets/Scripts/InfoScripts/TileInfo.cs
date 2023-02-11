@@ -29,7 +29,7 @@ public class TileInfo: MonoBehaviour
         walkable,
         unwalkable,
     }
-    [SerializeField] bool isFlagged;
+    public bool isFlagged;
     [SerializeField] GameObject flagPrefab;
     GameObject flag; 
     
@@ -129,37 +129,33 @@ public class TileInfo: MonoBehaviour
 
     public void TryToFlipTile()
     {
-        if (CheckIfTileCanFlip())
+        TileAudioManager.instance.PlayTileAudio(tileAudioType.swipe);
+
+        SelectObjectScript.Instance.canSelect = false;
+        int currentPlayerTurn = (int)GameManager.Instance.currentPlayerTurn;
+
+        var playerInfo = GameManager.Instance.playerInfo[currentPlayerTurn];
+
+        playerInfo.AddPoints(ResourcesType.ExplorationPoints, -1);
+        Owner = GameManager.Instance.playerInfo[(int)GameManager.Instance.currentPlayerTurn];
+        transform.DOJump(transform.position, 0.25f, 1, 0.2f);
+        transform.DORotate(new Vector3(0f, 0, 0), 0.25f).OnComplete(TriggerTileHasFlipped);
+        state = TileState.IsFlipped;
+        Checkable = true;
+        foreach (TileInfo _tile in neighbours)
         {
-            TileAudioManager.instance.PlayTileAudio(tileAudioType.swipe);
-
-            SelectObjectScript.Instance.canSelect = false;
-            int currentPlayerTurn = (int)GameManager.Instance.currentPlayerTurn;
-
-            var playerInfo = GameManager.Instance.playerInfo[currentPlayerTurn];
-
-            playerInfo.AddPoints(ResourcesType.ExplorationPoints, -1);
-            Owner = GameManager.Instance.playerInfo[(int)GameManager.Instance.currentPlayerTurn]; 
-            transform.DOJump(transform.position, 0.25f, 1, 0.2f); 
-            transform.DORotate(new Vector3(0f, 0, 0), 0.25f).OnComplete(TriggerTileHasFlipped);
-            state = TileState.IsFlipped;
             Checkable = true;
-            foreach (TileInfo _tile in neighbours)
-            {
-                Checkable = true;
-                _tile.CheckNeighbours();
-            }
-            UnselectTile();
-            TileManager.instance.FindPlayerOwnedTilesForFlipCheck(Owner);
-            
-            if (isFlagged)
-            {
-                ToggleFlagState();
-            }
-            return;
-            
+            _tile.CheckNeighbours();
         }
-        
+        UnselectTile();
+        TileManager.instance.FindPlayerOwnedTilesForFlipCheck(Owner);
+
+        if (isFlagged)
+        {
+            ToggleFlagState();
+        }
+        return;
+
     }
     public void FlipTileBack()
     {

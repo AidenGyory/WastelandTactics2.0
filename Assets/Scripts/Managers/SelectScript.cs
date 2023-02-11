@@ -49,7 +49,11 @@ public class SelectScript : MonoBehaviour
         currentSelectState = SelectState.Unselected;
         // Unselect Object
         unhighlightObj.Invoke();
-        unselectObj.Invoke();  
+        if(unselectObj != null)
+        {
+            unselectObj.Invoke();
+
+        }
     }
 
     public void SelectObject()

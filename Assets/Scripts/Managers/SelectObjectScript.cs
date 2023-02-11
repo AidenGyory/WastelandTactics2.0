@@ -85,8 +85,8 @@ public class SelectObjectScript : MonoBehaviour
                     //Attack Options
                     if (highlightedObject.objectType == SelectScript.objType.unit)
                     {
-                        Debug.Log("Check Attack");
-                        highlightedObject.GetComponent<UnitInfo>().CheckAttack();
+                        Debug.Log("Check Action");
+                        highlightedObject.GetComponent<UnitInfo>().CheckAction();
                     }
                 }
                 else
@@ -182,7 +182,11 @@ public class SelectObjectScript : MonoBehaviour
 
         if (selectedObject.objectType == SelectScript.objType.tile)
         {
-            selectedObject.GetComponent<TileInfo>().TryToFlipTile();
+            if(selectedObject.GetComponent<TileInfo>().CheckIfTileCanFlip())
+            {
+                selectedObject.GetComponent<TileInfo>().TryToFlipTile();
+            }
+            
         }
     }
 
@@ -272,6 +276,7 @@ public class SelectObjectScript : MonoBehaviour
                 if(_target.currentHealth < 1)
                 {
                     Debug.Log(_target.unitName + " is Destroyed!");
+                    _target.occuipedTile.isOccupied = false; 
                     Destroy(_target.gameObject); 
                 }
                 _unit.canAttack = false; 

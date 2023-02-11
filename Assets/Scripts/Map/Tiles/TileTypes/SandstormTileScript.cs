@@ -36,6 +36,7 @@ public class SandstormTileScript : TileInfo
                 }
 
             }
+            CreateSandstormParticle();
             ClearSandstorm(); 
             Invoke("WaitAndFlip", 0.2f);
         }
@@ -44,7 +45,6 @@ public class SandstormTileScript : TileInfo
     }
     public void ClearSandstorm()
     {
-        CreateSandstormParticle(); 
         canSandstorm = false;
         sandstormMesh.SetActive(false);
         emptyMesh.SetActive(true); 

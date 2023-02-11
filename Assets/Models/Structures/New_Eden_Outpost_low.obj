@@ -845,7 +845,7 @@ vn -0.483866 -0.099305 -0.869489
 vn -0.483866 -0.099305 -0.869489
 vn -0.483866 -0.099305 -0.869489
 s 1
-g Building_Outpost
+g Building_Outpost Buildings
 usemtl initialShadingGroup
 f 23/1/1 11/2/2 20/3/3 24/4/4
 f 20/3/3 6/5/5 21/6/6 24/4/4

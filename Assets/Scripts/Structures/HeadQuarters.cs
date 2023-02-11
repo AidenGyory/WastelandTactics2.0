@@ -10,9 +10,14 @@ public class HeadQuarters : StructureInfo
     {
         for (int i = 0; i < modelMaterials.Length; i++)
         {
-            if (owner.settings.HQMaterial[i] != null)
+            if (owner.settings.HQMaterial != null)
             {
-                modelMaterials[i].material = owner.settings.HQMaterial[i]; 
+                Renderer[] _modelRenderers = GetComponentsInChildren<Renderer>();
+
+                foreach (Renderer _renderer in _modelRenderers)
+                {
+                    _renderer.material = owner.settings.HQMaterial;
+                }
             }
             else
             modelMaterials[i].material = owner.settings.baseMaterial; 
