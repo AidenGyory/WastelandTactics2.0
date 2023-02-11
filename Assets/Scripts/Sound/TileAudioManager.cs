@@ -12,6 +12,8 @@ public enum tileAudioType
     negflip,
     ping,
     select,
+    shoot,
+    damage,
 }
 
 public class TileAudioManager : MonoBehaviour
@@ -25,7 +27,9 @@ public class TileAudioManager : MonoBehaviour
     [SerializeField] AudioClip positiveFlip;
     [SerializeField] AudioClip negativeFlip;
     [SerializeField] AudioClip pingTile;
-    [SerializeField] AudioClip select; 
+    [SerializeField] AudioClip select;
+    [SerializeField] AudioClip shoot;
+    [SerializeField] AudioClip destroy; 
 
     private AudioSource _audio; 
 
@@ -77,6 +81,12 @@ public class TileAudioManager : MonoBehaviour
             case tileAudioType.select:
                 _audio.PlayOneShot(select);
                 break;
+            case tileAudioType.shoot:
+                _audio.PlayOneShot(shoot);
+                break;
+            case tileAudioType.damage:
+                _audio.PlayOneShot(destroy);
+                break; 
             default:
                 break;
         }

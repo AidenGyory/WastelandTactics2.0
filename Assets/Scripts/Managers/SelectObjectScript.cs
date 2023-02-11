@@ -260,7 +260,11 @@ public class SelectObjectScript : MonoBehaviour
             if(highlightedObject.GetComponent<UnitInfo>().isTarget)
             {
                 UnitInfo _unit = selectedObject.GetComponent<UnitInfo>();
-                UnitInfo _target = highlightedObject.GetComponent<UnitInfo>(); 
+                UnitInfo _target = highlightedObject.GetComponent<UnitInfo>();
+
+                Camera.main.GetComponent<CameraFollow>().StartShake(0.1f, 0.1f);
+                TileAudioManager.instance.PlayTileAudio(tileAudioType.shoot);
+                TileAudioManager.instance.PlayTileAudio(tileAudioType.damage); 
 
                 Debug.Log(_unit.unitName + " is Deals" + _unit.baseDamage + " to Unit: " + _target.unitName);
 
