@@ -14,9 +14,7 @@ public class SelectObjectScript : MonoBehaviour
     }
 
     public PointerMode mode;   
-    //Raycast for Object Selection
-    private Ray _ray;
-    private RaycastHit _hit;
+    
 
     public SelectScript highlightedObject;
     public SelectScript selectedObject;
@@ -25,93 +23,80 @@ public class SelectObjectScript : MonoBehaviour
 
     public bool canSelect;
 
-    public MoveScript moveScript;
-    public CameraController camScript;
+    //Raycast for Object Selection
+    private Ray _ray;
+    private RaycastHit _hit;
+
+    MoveScript _moveScript;
+    CameraController _camScript;
+
+    public MoveLineScript moveLineScript; 
+
     void Awake()
     {
-        if (Instance == null)
-        {
-            DontDestroyOnLoad(gameObject);
-            Instance = this;
-        }
-        else if (Instance != this)
-        {
-            Destroy(gameObject);
-        }
+        Instance = this;
     }
-
     private void Start()
     {
-        moveScript = FindObjectOfType<MoveScript>();
-        camScript = FindObjectOfType<CameraController>(); 
+        _moveScript = FindObjectOfType<MoveScript>();
+        _camScript = FindObjectOfType<CameraController>(); 
     }
     void Update()
     {
         if(canSelect)
         {
-            //Raycast down to collideable objects in scene 
+            //Raycast down to Selectable objects in scene 
             RayCastToObjects();
 
-            //When mouse left click is pressed 
+            // Press "Left Click" 
             if (Input.GetMouseButtonDown(0))
             {
-                switch (mode)
+                if (highlightedObject != null)
                 {
-                    case PointerMode.SelectMode:
-                        SelectModeInput();
-                        break;
-                    case PointerMode.MoveMode:
-                        MoveModeInput(); 
-                        break;
-                    case PointerMode.PlacementMode:
-                        PlacementModeInput(); 
-                        //PlaceModeInput(); 
-                        break;
-                    case PointerMode.AttackMode:
-                        AttackUnitInput();
-                        break; 
-                }
-            }
-            //Right-click for flagging locations
-            if (Input.GetMouseButtonDown(1))
-            {
-                if (highlightedObject.objectType == SelectScript.objType.tile)
-                {
-                    highlightedObject.GetComponent<TileInfo>().ToggleFlagState();
-                }
-                else
-                if (highlightedObject == selectedObject)
-                {
-                    //Attack Options
-                    if (highlightedObject.objectType == SelectScript.objType.unit)
+                    switch (mode)
                     {
-                        Debug.Log("Check Action");
-                        highlightedObject.GetComponent<UnitInfo>().CheckAction();
+                        case PointerMode.SelectMode:
+                            if(highlightedObject.objectType == SelectScript.objType.structure && highlightedObject == selectedObject)
+                            {
+                                ActionModeInput();
+                            }
+                            else
+                            SelectModeInput();
+
+                            break;
+                        case PointerMode.MoveMode:
+                            MoveModeInput();
+
+                            break;
+                        case PointerMode.PlacementMode:
+                            break;
+                        case PointerMode.AttackMode:
+                            if (selectedObject != highlightedObject)
+                            {
+                                AttackUnitInput();
+                            }
+
+                            break;
                     }
                 }
                 else
                 {
-                    SetModeToSelect(); 
+                    SetModeToSelect();
+                    return; 
                 }
-
-
             }
-            if(Input.GetKeyDown(KeyCode.Space))
+
+            // Press "Right Click"
+            if(Input.GetMouseButtonDown(1))
             {
-                if(selectedObject != null)
+                if(highlightedObject == selectedObject)
                 {
-                    moveScript.SetDestination(selectedObject.transform.position);
-                    camScript.SetCameraMode(CameraController.CameraMode.Focused); 
+                    ActionModeInput(); 
                 }
             }
-            
         }
+        //REMEMBER TO ADD TOOLTIP HOVERING
 
-
-
-        //Add a tooltip function to tile hovering 
-
-        
     }
     void RayCastToObjects()
     {
@@ -121,113 +106,132 @@ public class SelectObjectScript : MonoBehaviour
         // CAST a ray out till it hits an object collider 
         if (Physics.Raycast(_ray, out _hit))
         {
-
+            //Guard for invalid raycast 
             if (_hit.transform.GetComponent<SelectScript>() == null && highlightedObject != null)
             {
-                if(highlightedObject != null)
+                if (highlightedObject != null)
                 {
                     highlightedObject.UnhighlightObject();
                     highlightedObject = null;
                 }
-                return; 
+                return;
             }
             else // _hit.transform.GetComponent<SelectScript>() == "something" 
             {
-                if(highlightedObject == _hit.transform.GetComponent<SelectScript>()) { return; }
+                //Guard for if raycast hits already highlighted object
+                if (highlightedObject == _hit.transform.GetComponent<SelectScript>()) { return; }
 
-                else if(highlightedObject != null)
+                //Unhlight the current highlighted object
+                if (highlightedObject != null)
                 {
-                    highlightedObject.UnhighlightObject();  
+                    highlightedObject.UnhighlightObject();
                 }
 
+                // Highlighted object now equals the new raycast target 
                 highlightedObject = _hit.transform.GetComponent<SelectScript>();
                 highlightedObject.HighlightObject();
-                return; 
             }
         }
-        
+
     }
+    public void SetModeToSelect()
+    {
+        Debug.Log("SetModeToSelect");
+        ////Set pointer mode back to selectMode
+        mode = PointerMode.SelectMode;
+        //// Turn on Raycasting again
+        canSelect = true;
+
+        if (selectedObject != null)
+        {
+            ////Clear all Canvas info for Units 
+            ClearActionIcons();
+            ////Check which tiles can be flipped
+            TileManager.instance.FindPlayerOwnedTilesForFlipCheck(GameManager.Instance.playerInfo[(int)GameManager.Instance.currentPlayerTurn]);
+            ////Deselect Everything
+            DeselectAll();
+        }
+    }
+    void DeselectAll()
+    {
+        selectedObject.DeselectObject();
+        selectedObject = null;
+
+        _camScript.SetCameraMode(CameraController.CameraMode.Unfocused); 
+    }
+    void ClearActionIcons()
+    {
+        UnitInfo[] _units = FindObjectsOfType<UnitInfo>();
+
+        foreach (UnitInfo _unit in _units)
+        {
+            if (_unit.AttackCanvas != null)
+            {
+                _unit.AttackCanvas.SetActive(false);
+                _unit.isTarget = false;
+            }
+            
+        }
+    }
+    public void SelectPlayer(PlayerInfo _player)
+    {
+        _moveScript.SetDestination(_player.transform.position);
+        _camScript.SetCameraMode(CameraController.CameraMode.Focused); 
+    }
+
+    //INPUT MODES// 
+
     void SelectModeInput()
     {
-        //TIleAudioManager.instance.PlayTileAudio(tileAudioType.select); 
+        //Guard Selecting an already selected object 
+        if (selectedObject == highlightedObject) { return; }
 
-        //once left click is pressed check if there is already an object selected. 
-        if(selectedObject != null)
+        //Is there already a Selected Object? 
+        if (selectedObject != null)
         {
-            //if so, if the object you are selecting is the same object then focus camera on it. 
-            if (selectedObject == highlightedObject)
-            {
-                moveScript.SetDestination(selectedObject.transform.position);
-                camScript.SetCameraMode(CameraController.CameraMode.Focused);
-            }
-            else
-            {
-                selectedObject.DeselectObject();
-                selectedObject = null;
-                camScript.SetCameraMode(CameraController.CameraMode.Unfocused);
-            }
-            
+            selectedObject.DeselectObject();
         }
 
-        if (highlightedObject != null)
+        selectedObject = highlightedObject;
+        selectedObject.SelectObject();
+
+        FocusObject(selectedObject.transform); 
+    }
+    void ActionModeInput()
+    {
+        switch (selectedObject.objectType)
         {
-            selectedObject = highlightedObject;
-            selectedObject.SelectObject();
+            case SelectScript.objType.tile:
+                SetModeToSelect(); 
 
-            
-        }
+                break;
+            case SelectScript.objType.structure:
+                selectedObject.GetComponent<StructureInfo>().CheckAction();
 
-        //Guard for null clause
-        if(selectedObject == null) { return; }
+                break;
+            case SelectScript.objType.unit:
+                selectedObject.GetComponent<UnitInfo>().CheckAction();
 
-        if (selectedObject.objectType == SelectScript.objType.tile)
-        {
-            if(selectedObject.GetComponent<TileInfo>().CheckIfTileCanFlip())
-            {
-                selectedObject.GetComponent<TileInfo>().TryToFlipTile();
-            }
-            
+                break;
         }
     }
-
-    public void PlacementModeInput()
+    void MoveModeInput()
     {
-        
-    }
-
-    public void MoveModeInput()
-    {
-
-        //Check that the highlighted object is a tile 
-        if(highlightedObject != null && highlightedObject.objectType == SelectScript.objType.tile)
+        Debug.Log("Movement Input"); 
+        if(highlightedObject.objectType == SelectScript.objType.tile && highlightedObject.GetComponent<TileInfo>().state == TileInfo.TileState.walkable)
         {
-            // Get reference to highlighted tile 
-            TileInfo _tile = highlightedObject.GetComponent<TileInfo>();
+            // Execute "Move to tile" function 
+            selectedObject.GetComponent<UnitInfo>().MoveToTile(highlightedObject.GetComponent<TileInfo>());
 
-            //If tile is walkable 
-            if (_tile.state == TileInfo.TileState.walkable)
+            // turn off raycasts 
+            canSelect = false;
+        }
+        //Swapping between your own Units
+        if(highlightedObject != selectedObject && highlightedObject.objectType == SelectScript.objType.unit)
+        {
+            if(highlightedObject.GetComponent<UnitInfo>().owner == selectedObject.GetComponent<UnitInfo>().owner)
             {
-                //get reference to Unit
-                UnitInfo _unit = selectedObject.GetComponent<UnitInfo>();
-
-                // Execute "Move to tile" function 
-                _unit.MoveToTile(_tile);
-
-                // turn off selectable 
-                canSelect = false;
-            }
-            else if (_tile.state == TileInfo.TileState.IsFlipped || _tile.state == TileInfo.TileState.CannotFlip)
-            {
-                SetModeToSelect();
-            }
-
-
-
-
-            if (selectedObject != null)
-            {
-                
-
+                SelectModeInput(); 
             }
         }
         else
@@ -235,57 +239,90 @@ public class SelectObjectScript : MonoBehaviour
             SetModeToSelect();
         }
     }
-
-    public void SetModeToSelect()
+    void AttackUnitInput()
     {
-        canSelect = true;
-        mode = PointerMode.SelectMode;
-        camScript.mode = CameraController.CameraMode.Unfocused;  
-        selectedObject.DeselectObject();
-
-        UnitInfo[] _units = FindObjectsOfType<UnitInfo>();
-        foreach (UnitInfo _unit in _units)
+        //Guard for tile
+        if(highlightedObject.objectType == SelectScript.objType.tile)
         {
-            _unit.AttackCanvas.SetActive(false); 
-            _unit.isTarget = false;
+            SetModeToSelect(); 
         }
 
-        if (GameManager.Instance.playerInfo[(int)GameManager.Instance.currentPlayerTurn].ExplorationPointsLeft > 0)
-        {
-            TileManager.instance.FindPlayerOwnedTilesForFlipCheck(GameManager.Instance.playerInfo[(int)GameManager.Instance.currentPlayerTurn]); 
-        }
+        //Guard for attacking own units/buildings 
+        UnitInfo _unit = selectedObject.GetComponent<UnitInfo>();
 
-    }
-
-    public void AttackUnitInput()
-    {
-        if(highlightedObject.objectType == SelectScript.objType.unit)
+        if (highlightedObject.objectType == SelectScript.objType.unit)
         {
-            if(highlightedObject.GetComponent<UnitInfo>().isTarget)
+            UnitInfo _target = highlightedObject.GetComponent<UnitInfo>();
+
+            if(_target.owner == _unit.owner)
             {
-                UnitInfo _unit = selectedObject.GetComponent<UnitInfo>();
-                UnitInfo _target = highlightedObject.GetComponent<UnitInfo>();
-
-                Camera.main.GetComponent<CameraFollow>().StartShake(0.1f, 0.1f);
-                TileAudioManager.instance.PlayTileAudio(tileAudioType.shoot);
-                TileAudioManager.instance.PlayTileAudio(tileAudioType.damage); 
-
-                Debug.Log(_unit.unitName + " is Deals" + _unit.baseDamage + " to Unit: " + _target.unitName);
-
-                _target.currentHealth -= _unit.baseDamage; 
-                if(_target.currentHealth < 1)
-                {
-                    Debug.Log(_target.unitName + " is Destroyed!");
-                    _target.occuipedTile.isOccupied = false; 
-                    Destroy(_target.gameObject); 
-                }
-                _unit.canAttack = false; 
-                SetModeToSelect(); 
-
-
-
-
+                SetModeToSelect();
+                return; 
             }
+
+            //Camera Shake
+            Camera.main.GetComponent<CameraFollow>().StartShake(0.1f, 0.1f);
+
+            //Play Sounds
+            TileAudioManager.instance.PlayTileAudio(tileAudioType.shoot);
+            TileAudioManager.instance.PlayTileAudio(tileAudioType.damage);
+
+            //DebugLog of Damage
+            Debug.Log(_unit.unitName + " is Deals" + _unit.baseDamage + " to Unit: " + _target.unitName);
+
+            // Unit Damage Dealt
+            _target.currentHealth -= _unit.baseDamage;
+
+            //Check if target is Destroyed
+            if (_target.currentHealth < 1)
+            {
+                Debug.Log(_target.unitName + " is Destroyed!");
+                _target.Die();
+            }
+
+            _unit.canAttack = false;
+
+            SetModeToSelect();
         }
+
+        if (highlightedObject.objectType == SelectScript.objType.structure)
+        {
+            StructureInfo _target = highlightedObject.GetComponent<StructureInfo>();
+
+            if (_target.owner == _unit.owner)
+            {
+                SetModeToSelect();
+                return;
+            }
+
+            //Camera Shake
+            Camera.main.GetComponent<CameraFollow>().StartShake(0.1f, 0.1f);
+
+            //Play Sounds
+            TileAudioManager.instance.PlayTileAudio(tileAudioType.shoot);
+            TileAudioManager.instance.PlayTileAudio(tileAudioType.damage);
+
+            //DebugLog of Damage
+            Debug.Log(_unit.unitName + " is Deals" + _unit.baseDamage + " to Unit: " + _target.StructureName);
+
+            // Unit Damage Dealt
+            _target.currentHealth -= _unit.baseDamage;
+
+            //Check if target is Destroyed
+            if (_target.currentHealth < 1)
+            {
+                Debug.Log(_target.StructureName + " is Destroyed!");
+                _target.Die();
+            }
+
+            _unit.canAttack = false;
+
+            SetModeToSelect();
+        }
+    }
+    public void FocusObject(Transform _target)
+    {
+        _moveScript.SetDestination(_target.position);
+        _camScript.SetCameraMode(CameraController.CameraMode.Focused); 
     }
 }

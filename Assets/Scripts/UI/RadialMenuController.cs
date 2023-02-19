@@ -30,6 +30,7 @@ public class RadialMenuController : MonoBehaviour
     
     public void OpenRadialMenu()
     {
+        Debug.Log("Open Radial");
         RadialMenu.SetActive(true); 
     }
 

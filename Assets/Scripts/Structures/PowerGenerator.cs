@@ -1,3 +1,4 @@
+using Mono.Cecil;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -20,5 +21,10 @@ public class PowerGenerator : StructureInfo
             else
                 modelMaterials[i].material = owner.settings.baseMaterial;
         }
+    }
+
+    public void CaptureNode()
+    {
+        owner.PowerSupplyTotal += 1; 
     }
 }

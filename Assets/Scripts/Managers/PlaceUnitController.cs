@@ -1,8 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
-
 public class PlaceUnitController : MonoBehaviour
 {
     public enum UnitTypes
@@ -96,8 +94,8 @@ public class PlaceUnitController : MonoBehaviour
                     //Reset Camera and OjectSelectionManager
                     TileManager.instance.ClearPlaceableStateOnAllTiles();
                     SelectObjectScript.Instance.SetModeToSelect();
-                    SelectObjectScript.Instance.camScript.SetCameraMode(CameraController.CameraMode.Unfocused);
 
+                    GameManager.Instance.UpdatePowerLevel(); 
                     //spawned = true;
                     Destroy(gameObject);
 

@@ -16,7 +16,8 @@ public class StructureInfo : MonoBehaviour
     public int maxHealth;
     public int currentHealth;
     public int sightRangeInTiles;
-    public int UpgradeLevel; 
+    public int UpgradeLevel;
+    public int powerCost; 
     
 
     [Header("Model Info")]
@@ -25,6 +26,8 @@ public class StructureInfo : MonoBehaviour
 
     [SerializeField] UnityEvent UpdatePlayer;
     [SerializeField] UnityEvent runTurnStart;
+    [SerializeField] UnityEvent PlayAction;
+    [SerializeField] UnityEvent onDeath; 
 
     public TileInfo occupiedTile; 
     
@@ -44,6 +47,14 @@ public class StructureInfo : MonoBehaviour
         runTurnStart.Invoke(); 
     }
 
+    public void CheckAction()
+    {
+        if (PlayAction != null)
+        {
+            PlayAction.Invoke();
+        }
+    }
+
     public void SelectStructure()
     {
         foreach (Renderer _model in modelMaterials)
@@ -52,13 +63,6 @@ public class StructureInfo : MonoBehaviour
             _model.material.DOColor(_model.material.color * TileManager.instance.brightness, TileManager.instance.flashSpeed).SetLoops(-1, LoopType.Yoyo);
         }
         
-    }
-
-    public void FocusOnTarget()
-    {
-        SelectObjectScript.Instance.moveScript.SetDestination(transform.position);
-        
-        SelectObjectScript.Instance.camScript.SetCameraMode(CameraController.CameraMode.Focused);
     }
 
     public void UnselectStructure()
@@ -87,6 +91,20 @@ public class StructureInfo : MonoBehaviour
         {
             DOTween.Kill(modelMaterials[i].material);
             modelMaterials[i].material.DOColor(originalColour[i], 0.3f);
+        }
+    }
+
+    public void Die()
+    {
+        occupiedTile.isOccupied = false;
+
+        if (onDeath != null)
+        {
+            onDeath.Invoke();
+        }
+        else
+        {
+            Destroy(gameObject); 
         }
     }
 }

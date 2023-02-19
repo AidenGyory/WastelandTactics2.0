@@ -1,11 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
- 
 
 public class HeadQuarters : StructureInfo
 {
-    
+    public int MetalOutput; 
     public void UpdateMaterials()
     {
         for (int i = 0; i < modelMaterials.Length; i++)
@@ -44,6 +43,7 @@ public class HeadQuarters : StructureInfo
         TileInfo _HQTile = TileManager.instance.GetClosestTile(transform, transform, 1, true);
 
         _HQTile.isOccupied = true;
+        occupiedTile = _HQTile; 
 
         //create a list of tiles 
         List<TileInfo> _tileList = TileManager.instance.SetTileList(transform.position,sightRangeInTiles);
@@ -87,14 +87,24 @@ public class HeadQuarters : StructureInfo
 
     public void OpenRadialMenu()
     {
-        SelectObjectScript.Instance.CameraScreenCanvas.GetComponent<RadialMenuController>().OpenRadialMenu();
-        SelectObjectScript.Instance.canSelect = false; 
+        if(SelectObjectScript.Instance.canSelect)
+        {
+            Debug.Log("Open Radial");
+            SelectObjectScript.Instance.CameraScreenCanvas.GetComponent<RadialMenuController>().OpenRadialMenu();
+            TileManager.instance.ClearCanFlipStateOnAllTiles();
+            SelectObjectScript.Instance.canSelect = false;
+        } 
     }
 
     public void CloseRadialMenu()
     {
         SelectObjectScript.Instance.CameraScreenCanvas.GetComponent<RadialMenuController>().CloseRadialMenu();
-        SelectObjectScript.Instance.canSelect = true;
+        SelectObjectScript.Instance.SetModeToSelect(); 
+    }
+
+    public void ProduceMetal()
+    {
+        owner.MetalScrapAmount += MetalOutput; 
     }
 
 }

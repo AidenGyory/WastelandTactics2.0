@@ -15,7 +15,9 @@ public class ResourceCacheTileScript : TileInfo
 
     public CacheType rewardType;
 
-    public int amount;
+    public bool rewardGiven;
+
+    public GameObject icon; 
 
     private void Awake()
     {
@@ -25,6 +27,25 @@ public class ResourceCacheTileScript : TileInfo
 
     public void PrintTileTypeLog()
     {
-        //Debug.Log("Tile is a Reward Cache! Awesome!");
+        Debug.Log("Reward Cache"); 
     }
+
+    public void GiveReward(PlayerInfo _player)
+    {
+        switch (rewardType)
+        {
+            case CacheType.Item:
+                Debug.Log("Relic Given!"); 
+                break;
+            case CacheType.MetalScrap:
+                _player.MetalScrapAmount += 50; 
+                break;
+            case CacheType.ExplorationPoint:
+                _player.ExplorationPointsLeft += 2; 
+                break;
+        }
+        rewardGiven = true;
+        icon.SetActive(false); 
+    }
+
 }

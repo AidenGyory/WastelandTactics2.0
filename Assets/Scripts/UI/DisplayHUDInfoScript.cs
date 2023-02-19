@@ -231,7 +231,7 @@ public class DisplayHUDInfoScript : MonoBehaviour
             node.SetActive(false);
         }
 
-        for (int i = 0; i < _player.UnhexiumNodesCaptured; i++)
+        for (int i = 0; i < _player.PowerSupplyTotal; i++)
         {
             UnhexiumAmount[i].SetActive(true);
             UnhexiumAmount[i].GetComponent<CellInfo>().ChangeColor(CellInfo.PowerState.unused);

@@ -47,40 +47,26 @@ public class SelectScript : MonoBehaviour
         if (currentSelectState == SelectState.Selected) {return; }
         // if not selected then set state to unselected 
         currentSelectState = SelectState.Unselected;
-        // Unselect Object
-        unhighlightObj.Invoke();
-        if(unselectObj != null)
+
+        // Unhighlight Object
+        if(unhighlightObj != null)
         {
-            unselectObj.Invoke();
+            unhighlightObj.Invoke();
 
         }
     }
 
     public void SelectObject()
     {
-         
         // Guard for if object is selected 
         if (currentSelectState == SelectState.Selected) { return; }
 
-        if (objectType == objType.tile)
-        {
-            if(GetComponent<TileInfo>().state == TileInfo.TileState.IsFlipped)
-            {
-                TileAudioManager.instance.PlayTileAudio(tileAudioType.select);
-
-            }
-        }
-        if(objectType == objType.structure)
-        {
-            TileAudioManager.instance.PlayTileAudio(tileAudioType.select);
-
-        }
-
+        TileAudioManager.instance.PlayTileAudio(tileAudioType.select);
 
         // if not selected then set state to unselected 
         currentSelectState = SelectState.Selected;
 
-        //Invoke Unity Event in Editor
+        //Invoke "SelectObj()" Event in Editor
         selectObj.Invoke();
     }
 
@@ -100,10 +86,5 @@ public class SelectScript : MonoBehaviour
     {
         DeselectObject();
         UnhighlightObject();
-    }
-
-    public void FocusOnTarget()
-    {
-        SelectObjectScript.Instance.camScript.SetCameraMode(CameraController.CameraMode.Focused);
     }
 }

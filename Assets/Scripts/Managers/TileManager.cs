@@ -291,32 +291,34 @@ public class TileManager : MonoBehaviour
     //method to find all tiles that are owned by the current player
     public void FindPlayerOwnedTilesForFlipCheck(PlayerInfo _currentPlayer)
     {
-
         //Clear the state of all "CanFlip" tiles
         ClearCanFlipStateOnAllTiles();
 
-        //Create local List of Ownder Tiles 
-        List<TileInfo> _ownedTiles = new List<TileInfo>();
-
-        //iterate through list of tiles to find owned tiles 
-        for (int i = 0; i < allTiles.Count - 1; i++)
+        if (_currentPlayer.ExplorationPointsLeft > 0)
         {
-            if (allTiles[i].GetComponent<TileInfo>().Owner == _currentPlayer)
+
+            //Create local List of Ownder Tiles 
+            List<TileInfo> _ownedTiles = new List<TileInfo>();
+
+            //iterate through list of tiles to find owned tiles 
+            for (int i = 0; i < allTiles.Count - 1; i++)
             {
-                _ownedTiles.Add(allTiles[i]);
-                //Debug.Log("Tile: " + allTiles[i] + " Added to list");
+                if (allTiles[i].GetComponent<TileInfo>().Owner == _currentPlayer)
+                {
+                    _ownedTiles.Add(allTiles[i]);
+                    //Debug.Log("Tile: " + allTiles[i] + " Added to list");
+                }
+            }
+
+            //iterate through the list of tiles on on the gameboard
+            for (int i = 0; i < _ownedTiles.Count; i++)
+            {
+                if (_ownedTiles[i].Checkable)
+                {
+                    FindAdjacentFlippableTiles(_ownedTiles[i].transform.position, 1);
+                }
             }
         }
-
-        //iterate through the list of tiles on on the gameboard
-        for (int i = 0; i < _ownedTiles.Count; i++)
-        {
-            if (_ownedTiles[i].Checkable)
-            {
-                FindAdjacentFlippableTiles(_ownedTiles[i].transform.position, 1);
-            }
-        }
-
     }
     public void ClearCanFlipStateOnAllTiles()
     {

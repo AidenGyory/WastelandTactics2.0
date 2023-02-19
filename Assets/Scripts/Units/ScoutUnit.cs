@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class ScoutUnit : UnitInfo
 {
-    
-
+    bool _areaScanned; 
+    //Invoked by Unity Event 
     public void UpdateMaterials()
     {
         for (int i = 0; i < models.Length; i++)
@@ -24,27 +24,48 @@ public class ScoutUnit : UnitInfo
         }
     }
 
-    public void DropBeacon()
+    //Invoked by Unity Event "PlayAction" 
+    public void ScanArea()
     {
-        if(occuipedTile.state != TileInfo.TileState.IsFlipped)
+        if(!_areaScanned)
         {
-            if(occuipedTile.type == TileInfo.TileType.Sandstorm && !occuipedTile.isFlagged)
+            _areaScanned = true;
+            Debug.Log("Dropped a Beacon");
+            //ADD SCAN FOR TILES 
+
+            List<TileInfo> _scannedTiles = TileManager.instance.SetTileList(occuipedTile.transform.position, 1);
+
+            for (int i = 0; i < _scannedTiles.Count; i++)
             {
-                occuipedTile.ToggleFlagState(); 
+                if (_scannedTiles[i].state != TileInfo.TileState.IsFlipped)
+                {
+                    _scannedTiles[i].ShowScanIcon(true); 
+                }
             }
         }
-
-        for (int i = 0; i < occuipedTile.neighbours.Count; i++)
+        else
         {
-            if (occuipedTile.neighbours[i].state != TileInfo.TileState.IsFlipped)
+            Debug.Log("Already Scanned!!"); 
+        }
+
+
+    }
+
+    public void ReplenishScanAbility()
+    {
+        _areaScanned = false; 
+    }
+
+    private void LateUpdate()
+    {
+        if(occuipedTile.type == TileInfo.TileType.Reward && occuipedTile.state == TileInfo.TileState.IsFlipped)
+        {
+            if(!occuipedTile.GetComponent<ResourceCacheTileScript>().rewardGiven)
             {
-                if (occuipedTile.neighbours[i].type == TileInfo.TileType.Sandstorm && !occuipedTile.neighbours[i].isFlagged)
-                {
-                    occuipedTile.neighbours[i].ToggleFlagState();
-                }
+                occuipedTile.GetComponent<ResourceCacheTileScript>().GiveReward(owner); 
             }
         }
     }
 
-    
+
 }

@@ -14,5 +14,6 @@ public class VantagePoint : TileInfo
         GameObject _AddEPUI = Instantiate(AddEpPrefab, SelectObjectScript.Instance.CameraScreenCanvas);
         _AddEPUI.transform.position = Camera.main.WorldToScreenPoint(transform.position) + Vector3.up * distanceOffset; 
         Debug.Log("Add Exploration Point!!");
+        TileManager.instance.FindPlayerOwnedTilesForFlipCheck(Owner); 
     }
 }

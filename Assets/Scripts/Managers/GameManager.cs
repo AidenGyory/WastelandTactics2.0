@@ -40,6 +40,7 @@ public class GameManager : MonoBehaviour
 
     // This variable holds the current player turn.
     public PlayerTurn currentPlayerTurn;
+    public PlayerInfo currentPlayer; 
 
     // These variables store settings for encounters.
     [Header("Encounter Settings")]
@@ -86,9 +87,12 @@ public class GameManager : MonoBehaviour
         // Set the current player turn either randomly or to player 1, depending on the value of randomiseFirstPlayer.
         currentPlayerTurn = randomiseFirstPlayer ? (PlayerTurn)Random.Range(0, players + 1) : PlayerTurn.player1;
         //Initilize the first player
-        InitiatePlayerTurn();
+        currentPlayer = playerInfo[(int)currentPlayerTurn];
+        InitializePlayerTurn();
         // Allow objects to be selected.
         SelectObjectScript.Instance.canSelect = true;
+
+        
     }
 
     // This function sets the current player turn to the next player and initiates their turn.
@@ -108,14 +112,15 @@ public class GameManager : MonoBehaviour
         currentPlayerTurn = (PlayerTurn)_currentPlayer;
 
         // Initiate the turn for the new current player.
-        InitiatePlayerTurn();
+        currentPlayer = playerInfo[(int)currentPlayerTurn];
+        InitializePlayerTurn();
     }
 
     // This function checks if the current player has enough exploration points to perform a certain action.
     public bool CheckExplorationPoints()
     {
         // Check if the current player has enough exploration points.
-        bool hasEnoughPoints = playerInfo[(int)currentPlayerTurn].ExplorationPointsLeft > 0;
+        bool hasEnoughPoints = currentPlayer.ExplorationPointsLeft > 0;
 
         // If they don't, log a message.
         if (!hasEnoughPoints)
@@ -126,107 +131,85 @@ public class GameManager : MonoBehaviour
         return hasEnoughPoints;
     }
 
-    // This function initiates the turn for the current player by refreshing their stats.
-    public void InitiatePlayerTurn()
+    // This function initialize the turn for the current player by refreshing their stats.
+    public void InitializePlayerTurn()
     {
-        // Get the player info for the current player.
-        PlayerInfo _currentPlayer = playerInfo[(int)currentPlayerTurn];
-
-        //set camera to focus on player headquarters
-        SelectObjectScript.Instance.moveScript.SetDestination(playerInfo[(int)currentPlayerTurn].transform.position);
-
-        // Add Production
-        _currentPlayer.MetalScrapAmount += _currentPlayer.MetalScrapProduction; 
-
-        //Find all flipable tiles for current player
-        TileManager.instance.FindPlayerOwnedTilesForFlipCheck(_currentPlayer); 
+        SelectObjectScript.Instance.SelectPlayer(currentPlayer);
+        //Refresh all tile Scans
+        foreach (TileInfo _tile in TileManager.instance.allTiles)
+        {
+            _tile.ShowScanIcon(false); 
+        }
 
         // Refresh the player's exploration points.
-        _currentPlayer.AddPoints(ResourcesType.ExplorationPoints, _currentPlayer.ExplorationPointsMax);
+        currentPlayer.AddPoints(ResourcesType.ExplorationPoints, currentPlayer.ExplorationPointsMax);
 
+        //Find all flipable tiles for current player
+        TileManager.instance.FindPlayerOwnedTilesForFlipCheck(currentPlayer);
+
+        //Replenish all Units
         UnitInfo[] _units = FindObjectsOfType<UnitInfo>();
 
         foreach (UnitInfo _unit in _units)
         {
-            _unit.currentMovementTiles = _unit.maxMovementTiles;
-            _unit.canAttack = true; 
+            if(_unit.owner == currentPlayer)
+            {
+                _unit.ReplenishUnit(); 
+            }
         }
 
+        //Replenish all Stuctures
         StructureInfo[] _structures = FindObjectsOfType<StructureInfo>();
-
-        List<Factory> _factories = new List<Factory>(); 
 
         foreach(StructureInfo _structure in _structures)
         {
-            if(_structure.owner == _currentPlayer)
+            if(_structure.owner == currentPlayer)
             {
-                if(_structure.GetComponent<Factory>())
-                {
-                    _factories.Add(_structure.GetComponent<Factory>());
-                }
+                _structure.StartTurn(); 
             }
         }
+        UpdatePowerLevel();
+        CheckForMalfunction();
 
-        ProduceFactoryResources(_factories);
-        CheckPowerLevel(); 
+        
     }
 
-    public void ProduceFactoryResources(List<Factory> _factories)
+    public void UpdatePowerLevel()
     {
-        PlayerInfo _currentPlayer = playerInfo[(int)currentPlayerTurn];
+        int PowerNeeded = 0; 
 
-        for (int i = 0; i < _factories.Count; i++)
+        UnitInfo[] _units = FindObjectsOfType<UnitInfo>();
+        StructureInfo[] _Structures = FindObjectsOfType<StructureInfo>();
+
+        for (int i = 0; i < _units.Length; i++)
         {
-            if (_factories[i].active)
+            if (_units[i].owner == currentPlayer)
             {
-                if (_factories[i].resource == Factory.ResourceType.Metal)
-                {
-                    _currentPlayer.MetalScrapAmount += _factories[i].resourceAmount; 
-                }
+                PowerNeeded += _units[i].powerCost; 
             }
+        }
+
+        for (int i = 0; i < _Structures.Length; i++)
+        {
+            if (_Structures[i].owner == currentPlayer)
+            {
+                PowerNeeded += _Structures[i].powerCost;
+            }
+        }
+
+        currentPlayer.PowerSupplyUsed = PowerNeeded; 
+    }
+
+    void CheckForMalfunction()
+    {
+        if(currentPlayer.PowerSupplyTotal < currentPlayer.PowerSupplyUsed)
+        {
+            CreateMalfunction(); 
         }
     }
 
-    public void CheckPowerLevel()
+    void CreateMalfunction()
     {
-        PlayerInfo _currentPlayer = playerInfo[(int)currentPlayerTurn];
-
-        _currentPlayer.PowerSupplyTotal = _currentPlayer.UnhexiumNodesCaptured;
-
-        List<UnitInfo> _playerUnits = new List<UnitInfo>();
-        List<StructureInfo> _playerStructures = new List<StructureInfo>();
-
-        UnitInfo[] _allunits = FindObjectsOfType<UnitInfo>();
-        StructureInfo[] _allStructures = FindObjectsOfType<StructureInfo>();
-
-        for (int i = 0; i < _allunits.Length; i++)
-        {
-            if (_allunits[i].owner == _currentPlayer)
-            {
-                _playerUnits.Add(_allunits[i]);
-            }
-        }
-
-        for (int i = 0; i < _allStructures.Length; i++)
-        {
-            if(!_allStructures[i].GetComponent<HeadQuarters>())
-            {
-                if(_allStructures[i].GetComponent<Factory>() && _allStructures[i].GetComponent<Factory>().resource == Factory.ResourceType.UnHexium)
-                {
-
-                }
-                else
-                {
-                    if (_allStructures[i].owner == _currentPlayer)
-                    {
-                        _playerStructures.Add(_allStructures[i]);
-                    }
-                }
-                
-            }
-        }
-
-        Debug.Log("Player has " + _playerUnits.Count + " Units and " + _playerStructures.Count + " Structures");
-        _currentPlayer.PowerSupplyUsed = _playerStructures.Count + _playerUnits.Count; 
+        Debug.Log(currentPlayer.settings.playerName + " is in a power defict!!"); 
     }
 }

@@ -21,13 +21,15 @@ public class UnitInfo : MonoBehaviour
     public int baseDamage;
     public int attackRange; 
     public int prestigeLevel;
+    public int powerCost; 
 
     [Header("Model Info")]
     public GameObject[] models;
     public Color originalColour;
 
     [SerializeField] UnityEvent UpdatePlayer;
-    [SerializeField] UnityEvent PlayAction; 
+    [SerializeField] UnityEvent PlayAction;
+    [SerializeField] UnityEvent OnTurnStart; 
 
     [Header("Movement Components")]
     [SerializeField] float speed;
@@ -80,21 +82,11 @@ public class UnitInfo : MonoBehaviour
 
     public void SelectUnit()
     {
-
         foreach (Material _material in _ModelMaterials)
         {
             DOTween.Kill(_material);
             _material.DOColor(_material.color * TileManager.instance.brightness, TileManager.instance.flashSpeed).SetLoops(-1, LoopType.Yoyo);
         }
-        FocusOnTarget();
-
-    }
-
-    public void FocusOnTarget()
-    {
-        SelectObjectScript.Instance.moveScript.SetDestination(transform.position);
-
-        SelectObjectScript.Instance.camScript.SetCameraMode(CameraController.CameraMode.Focused);
     }
 
     public void UnselectUnit()
@@ -165,7 +157,7 @@ public class UnitInfo : MonoBehaviour
         else if(canMove)
         {
             SelectObjectScript.Instance.canSelect = true;
-            SelectObjectScript.Instance.SetModeToSelect();
+            //SelectObjectScript.Instance.SetModeToSelect();
             TileManager.instance.ClearMoveableStateOnAllTiles();
             moveindex = 0;
             occuipedTile = _tilePath[_tilePath.Count - 1];
@@ -189,6 +181,7 @@ public class UnitInfo : MonoBehaviour
 
     public void CheckMovement()
     {
+        Debug.Log("Check Unit Movement"); 
         if (owner == GameManager.Instance.playerInfo[(int)GameManager.Instance.currentPlayerTurn])
         {
             //Set Selection Mode (Move unit Mode) 
@@ -200,6 +193,18 @@ public class UnitInfo : MonoBehaviour
             // set tiles to moveable from list ignoring terrain
             TileManager.instance.SetTilesAsMoveable(occuipedTile,_moveableTiles, canFly);
         }
+    }
+
+    public void ReplenishUnit()
+    {
+        canAttack = true;
+        currentMovementTiles = maxMovementTiles;
+        if(OnTurnStart != null)
+        {
+            OnTurnStart.Invoke();
+        }
+         
+
     }
 
     public void CheckAction()
@@ -232,6 +237,12 @@ public class UnitInfo : MonoBehaviour
         {
             Debug.Log("Can't attack"); 
         }
+    }
+
+    public void Die()
+    {
+        occuipedTile.isOccupied = false; 
+        Destroy(gameObject); 
     }
 
 }

@@ -1,20 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Text.RegularExpressions;
 using UnityEngine;
 
 public class Factory : StructureInfo
 {
-    public enum ResourceType
-    {
-        Metal,
-        UnHexium,
-    }
     public bool active;
 
-    public ResourceType resource;
-
-    public int resourceAmount; 
+    public int metalOutput; 
 
     public void UpdateMaterials()
     {
@@ -32,16 +24,10 @@ public class Factory : StructureInfo
             else
                 modelMaterials[i].material = owner.settings.baseMaterial;
         }
-
-        if(occupiedTile.type == TileInfo.TileType.Unhexium)
-        {
-            CaptureNode(); 
-        }
     }
 
-    public void CaptureNode()
+    public void ProduceMetal()
     {
-        owner.AddPoints(ResourcesType.Unhexium, 1);
-        resource = ResourceType.UnHexium; 
+        owner.MetalScrapAmount += metalOutput; 
     }
 }

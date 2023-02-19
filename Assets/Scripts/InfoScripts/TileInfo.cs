@@ -4,7 +4,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
-using UnityEngine.UI;
 
 public class TileInfo: MonoBehaviour
 {
@@ -29,9 +28,6 @@ public class TileInfo: MonoBehaviour
         walkable,
         unwalkable,
     }
-    public bool isFlagged;
-    [SerializeField] GameObject flagPrefab;
-    GameObject flag; 
     
     public TileState state;
     public bool unwalkable; 
@@ -56,7 +52,6 @@ public class TileInfo: MonoBehaviour
     [SerializeField] GameObject dustPrefab;
     [SerializeField] Vector3 particlePrefabOffset;
 
-
     private void Start()
     {
         //flip tile upside down if tile is not in flipped state.
@@ -64,8 +59,6 @@ public class TileInfo: MonoBehaviour
         {
             transform.rotation = Quaternion.Euler(180, 0, 0);
         }
-
-
 
         //set up original colour renderers for each model 
         for (int i = 0; i < modelMaterials.Length; i++)
@@ -129,6 +122,7 @@ public class TileInfo: MonoBehaviour
 
     public void TryToFlipTile()
     {
+
         TileAudioManager.instance.PlayTileAudio(tileAudioType.swipe);
 
         SelectObjectScript.Instance.canSelect = false;
@@ -150,10 +144,6 @@ public class TileInfo: MonoBehaviour
         UnselectTile();
         TileManager.instance.FindPlayerOwnedTilesForFlipCheck(Owner);
 
-        if (isFlagged)
-        {
-            ToggleFlagState();
-        }
         return;
 
     }
@@ -172,43 +162,6 @@ public class TileInfo: MonoBehaviour
             _tile.CheckNeighbours();
         }
         state = TileState.CannotFlip;
-    }
-
-    public void ToggleFlagState()
-    {
-        isFlagged = !isFlagged;
-
-        TileAudioManager.instance.PlayTileAudio(tileAudioType.ping); 
-
-        if(isFlagged)
-        {
-            if(flag == null)
-            {
-                GameObject _flag = Instantiate(flagPrefab, SelectObjectScript.Instance.CameraScreenCanvas);
-                _flag.transform.position = Camera.main.WorldToScreenPoint(transform.position + Vector3.up * 3); 
-                _flag.GetComponent<FlagTileScript>().SetTarget(transform);
-                flag = _flag;
-            }
-            //Debug.Log("Flag Tile"); 
-        }
-        else
-        {
-            if(flag != null)
-            {
-                flag.GetComponent<Image>().DOColor(Color.clear, 0.3f).OnComplete(DestroyFlag);
-                flag.transform.GetComponentInChildren<Image>().DOColor(Color.clear, 0.3f); 
-
-            }
-            //Debug.Log("UnFlag Tile"); 
-        }
-    }
-
-    public void DestroyFlag()
-    {
-        TileAudioManager.instance.PlayTileAudio(tileAudioType.ping);
-
-        Destroy(flag);
-        flag = null;
     }
 
     [Tooltip("Add Actions that are in scripts INSIDE the prefab")] 
@@ -259,20 +212,27 @@ public class TileInfo: MonoBehaviour
 
     public void SelectTile()
     {
-        foreach (Renderer _model in modelMaterials)
+        if(CheckIfTileCanFlip())
         {
-            _model.material.DOColor(TileManager.instance.selected, TileManager.instance.flashSpeed).SetLoops(-1, LoopType.Yoyo);
-            
-        }
-
-        if (state == TileState.IsFlipped)
-        {
-            DOTween.Kill(transform.localScale);
-            transform.DOScaleY(1.5f, 0.3f);
+            TryToFlipTile(); 
         }
         else
         {
-            UnselectTile();
+            foreach (Renderer _model in modelMaterials)
+            {
+                _model.material.DOColor(TileManager.instance.selected, TileManager.instance.flashSpeed).SetLoops(-1, LoopType.Yoyo);
+
+            }
+
+            if (state == TileState.IsFlipped)
+            {
+                DOTween.Kill(transform.localScale);
+                transform.DOScaleY(1.5f, 0.3f);
+            }
+            else
+            {
+                UnselectTile();
+            }
         }
     }
 
@@ -395,6 +355,15 @@ public class TileInfo: MonoBehaviour
     {
         GameObject _dust = Instantiate(dustPrefab); 
         _dust.transform.position = transform.position;
+    }
+
+    public GameObject scanIcon; 
+    public void ShowScanIcon(bool visible)
+    {
+        if(scanIcon != null)
+        {
+            scanIcon.SetActive(visible);
+        }
     }
 
 }

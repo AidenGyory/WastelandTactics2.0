@@ -52,9 +52,9 @@ public class WorkerUnit : UnitInfo
                     }
                 }
                 break;
-            case StructureType.Factory: //Factory can be placed on Metal or Unhexium nodes 
+            case StructureType.Factory: //Factory can be placed on Metal nodes
                 {
-                    if (_tileType == TileInfo.TileType.MetalMine || _tileType == TileInfo.TileType.Unhexium)
+                    if (_tileType == TileInfo.TileType.MetalMine)
                     {
                         _suitable = true;
                     }

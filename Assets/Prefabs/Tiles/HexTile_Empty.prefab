@@ -137,7 +137,6 @@ Transform:
   m_Children:
   - {fileID: 6451824399755097621}
   - {fileID: 6451523175588511087}
-  - {fileID: 8943504127641354150}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -177,6 +176,7 @@ MonoBehaviour:
   neighbours: []
   Checkable: 0
   tileName: Desert
+  type: 0
   tileImage: {fileID: 21300000, guid: 8cf962398145d0c428af8c9b119d16a4, type: 3}
   tileDescription: 'This tile is clear '
   TileHasFlipped:
@@ -418,83 +418,3 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!1001 &7795145000211553748
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    m_TransformParent: {fileID: 6455541775358079975}
-    m_Modifications:
-    - target: {fileID: 1166536264397677170, guid: f76be463a3ba24543b7affc0bb75b730,
-        type: 3}
-      propertyPath: m_RootOrder
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 1166536264397677170, guid: f76be463a3ba24543b7affc0bb75b730,
-        type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1166536264397677170, guid: f76be463a3ba24543b7affc0bb75b730,
-        type: 3}
-      propertyPath: m_LocalPosition.y
-      value: -0.018
-      objectReference: {fileID: 0}
-    - target: {fileID: 1166536264397677170, guid: f76be463a3ba24543b7affc0bb75b730,
-        type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1166536264397677170, guid: f76be463a3ba24543b7affc0bb75b730,
-        type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1166536264397677170, guid: f76be463a3ba24543b7affc0bb75b730,
-        type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1166536264397677170, guid: f76be463a3ba24543b7affc0bb75b730,
-        type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1166536264397677170, guid: f76be463a3ba24543b7affc0bb75b730,
-        type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1166536264397677170, guid: f76be463a3ba24543b7affc0bb75b730,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1166536264397677170, guid: f76be463a3ba24543b7affc0bb75b730,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1166536264397677170, guid: f76be463a3ba24543b7affc0bb75b730,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 9076470542775273627, guid: f76be463a3ba24543b7affc0bb75b730,
-        type: 3}
-      propertyPath: m_Name
-      value: BorderFrame
-      objectReference: {fileID: 0}
-    - target: {fileID: 9076470542775273627, guid: f76be463a3ba24543b7affc0bb75b730,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: f76be463a3ba24543b7affc0bb75b730, type: 3}
---- !u!4 &8943504127641354150 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 1166536264397677170, guid: f76be463a3ba24543b7affc0bb75b730,
-    type: 3}
-  m_PrefabInstance: {fileID: 7795145000211553748}
-  m_PrefabAsset: {fileID: 0}

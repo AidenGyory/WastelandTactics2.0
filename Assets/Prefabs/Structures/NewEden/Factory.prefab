@@ -141,6 +141,7 @@ MonoBehaviour:
   currentHealth: 200
   sightRangeInTiles: 0
   UpgradeLevel: 0
+  powerCost: 1
   modelMaterials:
   - {fileID: 3696019199013692572}
   - {fileID: 6620877888562704441}
@@ -162,11 +163,28 @@ MonoBehaviour:
         m_CallState: 2
   runTurnStart:
     m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 8607299163083580868}
+        m_TargetAssemblyTypeName: Factory, Assembly-CSharp
+        m_MethodName: ProduceMetal
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  PlayAction:
+    m_PersistentCalls:
+      m_Calls: []
+  onDeath:
+    m_PersistentCalls:
       m_Calls: []
   occupiedTile: {fileID: 0}
   active: 1
-  resource: 0
-  resourceAmount: 100
+  metalOutput: 100
 --- !u!1001 &1217936888210524518
 PrefabInstance:
   m_ObjectHideFlags: 0
