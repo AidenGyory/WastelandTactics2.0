@@ -29,8 +29,9 @@ public class StructureInfo : MonoBehaviour
     [SerializeField] UnityEvent PlayAction;
     [SerializeField] UnityEvent onDeath; 
 
-    public TileInfo occupiedTile; 
-    
+    public TileInfo occupiedTile;
+    [SerializeField] int BorderRangeinTiles; 
+
 
     public void UpdatePlayerDetails()
     {
@@ -42,7 +43,7 @@ public class StructureInfo : MonoBehaviour
         }
     }
 
-    public void StartTurn()
+    public void RefreshStructure()
     {
         runTurnStart.Invoke(); 
     }
@@ -107,4 +108,67 @@ public class StructureInfo : MonoBehaviour
             Destroy(gameObject); 
         }
     }
+
+    public void UpdateBorder()
+    {
+
+        //create a list of tiles 
+        List<TileInfo> _tileList = TileManager.instance.SetTileList(occupiedTile.transform.position, BorderRangeinTiles);
+
+        //check if there are tiles in the list 
+        if (_tileList.Count < 1) { return; }
+
+        //iterate through the list of tiles 
+        foreach (TileInfo _tile in _tileList)
+        {
+            //check if the tile is already flipped 
+            if (_tile.state == TileInfo.TileState.IsFlipped && _tile.BorderOwner == null)
+            {
+                //set the owner of the tile to match the owner of the building.  
+                _tile.BorderOwner = owner;
+                _tile.AddBorder(); 
+            }
+
+        }
+    }
+
+    public void UpdateTileOwners()
+    {
+
+        //create a list of tiles 
+        List<TileInfo> _tileList = TileManager.instance.SetTileList(occupiedTile.transform.position, sightRangeInTiles);
+
+        //check if there are tiles in the list 
+        if (_tileList.Count < 1) { return; }
+
+        //iterate through the list of tiles 
+        foreach (TileInfo _tile in _tileList)
+        {
+            //check if the tile is already flipped 
+            if (_tile.state == TileInfo.TileState.IsFlipped)
+            {
+                _tile.Owner = owner; 
+            }
+
+        }
+    }
+
+    public void SetOccupiedTile()
+    {
+        Collider[] hitColliders = Physics.OverlapSphere(transform.position, 0.2f, TileManager.instance.isTiles);
+
+        foreach (Collider hitCollider in hitColliders)
+        {
+            Debug.Log("Found object: " + hitCollider.gameObject.name);
+            TileInfo _tile = hitCollider.GetComponent<TileInfo>();
+
+            _tile.isOccupied = true;
+            _tile.Owner = owner;
+            _tile.BorderOwner = owner;
+
+            occupiedTile = _tile;
+        }
+        UpdateTileOwners(); 
+    }
+    
 }

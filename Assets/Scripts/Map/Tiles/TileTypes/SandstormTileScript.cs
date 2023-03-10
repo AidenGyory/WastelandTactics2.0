@@ -52,9 +52,11 @@ public class SandstormTileScript : TileInfo
 
     public void WaitAndFlip()
     {
+        //Once Flip Back has finished 
         if(tilesToFlipBack.Count < 1)
         {
-            TileManager.instance.FindPlayerOwnedTilesForFlipCheck(GameManager.Instance.playerInfo[(int)GameManager.Instance.currentPlayerTurn]);
+            //Find tiles that can be flipped again
+            TileManager.instance.FindPlayerOwnedTilesForFlipCheck(GameManager.Instance.currentPlayerTurn);
             return; 
         }
 

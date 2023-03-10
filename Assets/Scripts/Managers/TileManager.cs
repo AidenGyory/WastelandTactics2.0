@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
 using System.Linq;
+using Unity.VisualScripting;
 
 public class TileManager : MonoBehaviour
 {
@@ -50,18 +51,14 @@ public class TileManager : MonoBehaviour
         }
     }
 
-    private void Start()
+    public void ResetIconsOnTiles()
     {
-        // Load Game Order
-        Invoke(nameof(InitialiseAllTiles), 1f);
-        Invoke(nameof(SetTileOwners), 1.1f);
-        Invoke(nameof(StartGame), 2f);
+        foreach(TileInfo _tile in allTiles)
+        {
+            _tile.ShowScanIcon(false); 
+        }
     }
-    public void StartGame()
-    {
-        // Officially make the game start and playable. 
-        GameManager.Instance.StartGame();
-    }
+
     // Populate the tiles array with all TileInfo objects in the scene
     public void InitialiseAllTiles()
     {
@@ -78,50 +75,39 @@ public class TileManager : MonoBehaviour
         }
     }
 
-    public TileInfo GetClosestTile(Transform _origin, Transform _target, int _radiusInTiles, bool _ignoreOccupied)
+    public TileInfo GetClosestTile(Vector3 _target)
     {
-        // Tiles to check 
-        List<TileInfo> _TilesToCheck = SetTileList(_origin.position, _radiusInTiles);
+        List<TileInfo> _TilesToCheck = SetTileList(_target, 1); 
 
-        // distance from tile to target tile 
-        List<float> _tileDistance = new List<float>();
-
-        for (int i = 0; i < _TilesToCheck.Count - 1; i++)
+        if(_TilesToCheck.Count < 1)
         {
-            if(_ignoreOccupied)
-            {
-                if(_TilesToCheck[i].state == TileInfo.TileState.walkable)
-                {
-                    _tileDistance.Add(Vector3.Distance(_TilesToCheck[i].transform.position, _target.position));
-                }
-                else
-                {
-                    _tileDistance.Add(999);
-                }
-            }
-            else
-            {
-                if (_TilesToCheck[i].state == TileInfo.TileState.walkable && !_TilesToCheck[i].isOccupied)
-                {
-                    _tileDistance.Add(Vector3.Distance(_TilesToCheck[i].transform.position, _target.position));
-                }
-                else
-                {
-                    _tileDistance.Add(999);
-                }
-            } 
-            //Debug.Log("Tile: " + _TilesToCheck[i] + " distance from target: " + _tileDistance[i]);
+            Debug.LogWarning("NO TILES FOUND"); 
+            return null; 
         }
 
-        float _minDistance = _tileDistance.Min();
-        int _tileindex = _tileDistance.IndexOf(_minDistance);
+        TileInfo _closestTile; 
+
+        if (_TilesToCheck.Count > 1)
+        {
+            // distance from tile to target tile 
+            List<float> _tileDistance = new List<float>();
+
+            for (int i = 0; i < _TilesToCheck.Count - 1; i++)
+            {
+                _tileDistance.Add(Vector3.Distance(_TilesToCheck[i].transform.position, _target));
+            }
+
+            float _minDistance = _tileDistance.Min();
+            int _tileindex = _tileDistance.IndexOf(_minDistance);
+
+            _closestTile = _TilesToCheck[_tileindex];
+        }
+        else
+        {
+            _closestTile = _TilesToCheck[0];
+        }
         
-
-        TileInfo _unitTile = _TilesToCheck[_tileindex];
-        //Debug.Log("Closest Tile: " + _unitTile);
-
-
-        return _unitTile;
+        return _closestTile;
     }
 
     //Set the owners of the tiles surounding each headquarters on the map 
@@ -133,7 +119,7 @@ public class TileManager : MonoBehaviour
         // run the "Update tile Ownership" function from all headquarters
         foreach (var headQuarters in hq)
         {
-            headQuarters.UpdateTileOwnership();
+            //headQuarters.UpdateTileOwnership();
         }
 
     }
@@ -367,6 +353,21 @@ public class TileManager : MonoBehaviour
                 
                 _tile.UnselectTile();
             }
+        }
+    }
+
+    public void SetBorderTileOwnership()
+    {
+        foreach(TileInfo _tile in allTiles)
+        {
+            _tile.BorderOwner = null; 
+        }
+
+        StructureInfo[] structures = FindObjectsOfType<StructureInfo>();
+
+        foreach (StructureInfo _building in structures)
+        {
+            _building.UpdateBorder(); 
         }
     }
 }

@@ -92,6 +92,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 4083330812356515707}
+        m_TargetAssemblyTypeName: Outpost, Assembly-CSharp
+        m_MethodName: CloseRadialMenu
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   highlightObj:
     m_PersistentCalls:
       m_Calls:
@@ -177,11 +189,24 @@ MonoBehaviour:
       m_Calls: []
   PlayAction:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 4083330812356515707}
+        m_TargetAssemblyTypeName: Outpost, Assembly-CSharp
+        m_MethodName: OpenRadialMenu
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   onDeath:
     m_PersistentCalls:
       m_Calls: []
   occupiedTile: {fileID: 0}
+  BorderRangeinTiles: 1
 --- !u!1001 &3273197704268515924
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -264,6 +289,16 @@ PrefabInstance:
       propertyPath: m_ConstrainProportionsScale
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: -1617051881012753547, guid: 5041ad2e27c015740bcf0dde60020aac,
+        type: 3}
+      propertyPath: m_Materials.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -1617051881012753547, guid: 5041ad2e27c015740bcf0dde60020aac,
+        type: 3}
+      propertyPath: m_Materials.Array.data[1]
+      value: 
+      objectReference: {fileID: 2100000, guid: 8c3f6e725af831a4da95d2e3a96f3f5e, type: 2}
     - target: {fileID: 919132149155446097, guid: 5041ad2e27c015740bcf0dde60020aac,
         type: 3}
       propertyPath: m_Name

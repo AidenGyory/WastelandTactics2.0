@@ -1,64 +1,20 @@
-using System.Collections;
-using System.Collections.Generic;
-using TMPro;
-using UnityEditor;
 using UnityEngine;
 
-//REMINDER: THIS SCRIPT SHOULD BE CREATED BEFORE ENTERING THE GAME SCENE
 public class GameManager : MonoBehaviour
 {
-    // This variable holds a reference to the singleton instance of the GameManager script.
+    public MapProfileTemplateSO mapProfile;
+
     public static GameManager Instance;
 
-    // This enum lists the different types of maps that can be selected.
-    public enum MapIndex
-    {
-        Donut = 0,
-        Oval = 1,
-        Rectangle = 2,
-        Square = 3,
-    }
+    [Header("Current Turn")]
+    public PlayerInfo currentPlayerTurn;
+    public int turnTimer;
+    [Space]
+    [Header("Player Data")]
+    public PlayerInfo[] players;
+    public GameObject[] HQPrefabs;
+    int playerIndex; 
 
-    // This enum lists the different options for the number of players that can spawn.
-    public enum PlayerSpawns
-    {
-        zeroPlayers = 0,
-        onePlayer = 1,
-        twoPlayer = 2,
-        threePlayer = 3,
-        fourPlayer = 4,
-    }
-
-    // This enum lists the different player turns.
-    public enum PlayerTurn
-    {
-        player1,
-        player2,
-        player3,
-        player4,
-    }
-
-    // This variable holds the current player turn.
-    public PlayerTurn currentPlayerTurn;
-    public PlayerInfo currentPlayer; 
-
-    // These variables store settings for encounters.
-    [Header("Encounter Settings")]
-    public MapIndex mapType;
-    public PlayerSpawns amountOfPlayers;
-    public PlayerInfo[] playerInfo;
-    public bool randomiseFirstPlayer;
-    public int turnTimer; 
-
-    // This variable holds a reference to the headquarters game object.
-    [Header("Structure Prefabs")]
-    public GameObject HQPrefab;
-
-    // This variable stores the number of players.
-    [SerializeField] int players;
-
-
-    // This script sets up a singleton instance of itself that persists across scene changes.
     void Awake()
     {
         // If there is no instance of the script, set this instance as the singleton.
@@ -78,138 +34,107 @@ public class GameManager : MonoBehaviour
     //Invoked through the tile manager once the game is ready to be played. 
     public void StartGame()
     {
-        // Initialize the number of players.
-        players = (int)amountOfPlayers;
-
         // If there are not enough players to play, log an error and return.
-        if (players < 2) { Debug.LogError("NOT ENOUGH PLAYERS TO PLAY!!"); return; }
+        if (mapProfile.amountOfPlayers < 2) { Debug.LogError("NOT ENOUGH PLAYERS TO PLAY!!"); return; }
 
-        // Set the current player turn either randomly or to player 1, depending on the value of randomiseFirstPlayer.
-        currentPlayerTurn = randomiseFirstPlayer ? (PlayerTurn)Random.Range(0, players + 1) : PlayerTurn.player1;
-        //Initilize the first player
-        currentPlayer = playerInfo[(int)currentPlayerTurn];
-        InitializePlayerTurn();
-        // Allow objects to be selected.
-        SelectObjectScript.Instance.canSelect = true;
+        playerIndex = 0; 
 
-        
+        //If randomise first player is checked, then set a random first player
+        if(mapProfile.randomiseFirstPlayer)
+        {
+            playerIndex = Random.Range(0, mapProfile.amountOfPlayers); 
+        }
+
+        currentPlayerTurn = players[playerIndex];
+
+        SelectObjectScript.Instance.SetModeToSelect();
+
+        //Start Player Turn
+        Invoke("StartTurn", 1f); 
     }
-
-    // This function sets the current player turn to the next player and initiates their turn.
     public void SetNextPlayersTurn()
     {
-        // Increment the index of the current player.
-        int _currentPlayer = (int)currentPlayerTurn + 1;
 
-        // If the current player is the last player, set the index to 0 (start with the first player again).
-        if (_currentPlayer >= players)
+        playerIndex += 1;
+
+        if (playerIndex > mapProfile.amountOfPlayers - 1)
         {
-            turnTimer += 1; 
-            _currentPlayer = 0;
+            playerIndex = 0;
+            turnTimer += 1;
         }
 
-        // Set the current player turn based on the updated index.
-        currentPlayerTurn = (PlayerTurn)_currentPlayer;
+        currentPlayerTurn = players[playerIndex];
 
-        // Initiate the turn for the new current player.
-        currentPlayer = playerInfo[(int)currentPlayerTurn];
-        InitializePlayerTurn();
+        StartTurn();
     }
-
-    // This function checks if the current player has enough exploration points to perform a certain action.
-    public bool CheckExplorationPoints()
+    void StartTurn()
     {
-        // Check if the current player has enough exploration points.
-        bool hasEnoughPoints = currentPlayer.ExplorationPointsLeft > 0;
+        //Select current player for zoom back to HQ
+        SelectObjectScript.Instance.SelectPlayer(currentPlayerTurn);
 
-        // If they don't, log a message.
-        if (!hasEnoughPoints)
-        {
-            //Debug.Log("Not Enough Points!!");
-        }
-
-        return hasEnoughPoints;
-    }
-
-    // This function initialize the turn for the current player by refreshing their stats.
-    public void InitializePlayerTurn()
-    {
-        SelectObjectScript.Instance.SelectPlayer(currentPlayer);
-        //Refresh all tile Scans
-        foreach (TileInfo _tile in TileManager.instance.allTiles)
-        {
-            _tile.ShowScanIcon(false); 
-        }
+        //Remove icons from Scanned Tiles
+        TileManager.instance.ResetIconsOnTiles();
 
         // Refresh the player's exploration points.
-        currentPlayer.AddPoints(ResourcesType.ExplorationPoints, currentPlayer.ExplorationPointsMax);
+        currentPlayerTurn.AddExplorationPoints(currentPlayerTurn.ExplorationPointsMax);
+
+        currentPlayerTurn.CheckForMalfunctions();
+
+        AddEffectsFromRelicsAndMalfunctions();
+
+        //Refresh all Player Objects
+        RefreshAllPlayerUnits();
+
+        RefreshAllPlayerStructures();
 
         //Find all flipable tiles for current player
-        TileManager.instance.FindPlayerOwnedTilesForFlipCheck(currentPlayer);
-
-        //Replenish all Units
+        TileManager.instance.FindPlayerOwnedTilesForFlipCheck(currentPlayerTurn);
+    }
+    public void RefreshAllPlayerUnits()
+    {
         UnitInfo[] _units = FindObjectsOfType<UnitInfo>();
 
         foreach (UnitInfo _unit in _units)
         {
-            if(_unit.owner == currentPlayer)
+            if (_unit.owner == currentPlayerTurn)
             {
-                _unit.ReplenishUnit(); 
+                _unit.RefreshUnit();
             }
         }
-
-        //Replenish all Stuctures
+    }
+    public void RefreshAllPlayerStructures()
+    {
         StructureInfo[] _structures = FindObjectsOfType<StructureInfo>();
 
-        foreach(StructureInfo _structure in _structures)
+        foreach (StructureInfo _structure in _structures)
         {
-            if(_structure.owner == currentPlayer)
+            if (_structure.owner == currentPlayerTurn)
             {
-                _structure.StartTurn(); 
+                _structure.RefreshStructure();
             }
         }
-        UpdatePowerLevel();
-        CheckForMalfunction();
-
-        
     }
-
-    public void UpdatePowerLevel()
+    public void AddEffectsFromRelicsAndMalfunctions()
     {
-        int PowerNeeded = 0; 
-
-        UnitInfo[] _units = FindObjectsOfType<UnitInfo>();
-        StructureInfo[] _Structures = FindObjectsOfType<StructureInfo>();
-
-        for (int i = 0; i < _units.Length; i++)
-        {
-            if (_units[i].owner == currentPlayer)
-            {
-                PowerNeeded += _units[i].powerCost; 
-            }
-        }
-
-        for (int i = 0; i < _Structures.Length; i++)
-        {
-            if (_Structures[i].owner == currentPlayer)
-            {
-                PowerNeeded += _Structures[i].powerCost;
-            }
-        }
-
-        currentPlayer.PowerSupplyUsed = PowerNeeded; 
+        //Effects from Relics and Malfunctions list go here 
     }
-
-    void CheckForMalfunction()
+    public void CreateHeadquarters(SetupGameManager _setup)
     {
-        if(currentPlayer.PowerSupplyTotal < currentPlayer.PowerSupplyUsed)
+        PlayerSpawn[] _spawns = FindObjectsOfType<PlayerSpawn>();
+
+        for (int i = 0; i < _spawns.Length; i++)
         {
-            CreateMalfunction(); 
-        }
-    }
+            GameObject _headquarters = Instantiate(HQPrefabs[i]);
+            _headquarters.transform.position = _spawns[i].transform.position;
 
-    void CreateMalfunction()
-    {
-        Debug.Log(currentPlayer.settings.playerName + " is in a power defict!!"); 
+            HeadQuarters _hq = _headquarters.GetComponent<HeadQuarters>();
+
+            _hq.owner = players[i];
+            _hq.UpdatePlayerDetails();
+            _hq.UpdatePlayerLocation();
+            _hq.UpdateMaterials(); 
+        }
+        _setup.HeadquartersCompleted(); 
+
     }
 }

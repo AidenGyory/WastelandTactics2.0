@@ -5,7 +5,6 @@ using UnityEngine.UI;
 
 public class DisplayHUDInfoScript : MonoBehaviour
 {
-    //HUD COMPONENTS 
 
     [Header("Map Filters")]
     [SerializeField] bool FiltersMaximised;
@@ -60,10 +59,9 @@ public class DisplayHUDInfoScript : MonoBehaviour
     PlayerInfo _player;
     SelectScript _selected; 
 
-
     public void UpdateHUDInfo()
     {
-        _player = GameManager.Instance.playerInfo[(int)GameManager.Instance.currentPlayerTurn];
+        _player = GameManager.Instance.currentPlayerTurn;
         _selected = SelectObjectScript.Instance.selectedObject; 
 
         if(_selected != null)

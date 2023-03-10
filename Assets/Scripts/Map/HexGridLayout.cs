@@ -5,29 +5,31 @@ using UnityEngine;
 public class HexGridLayout : MonoBehaviour
 {
     [Header("List of Hex Tiles")]
-    [SerializeField] GameObject hexTilePrefab;
+    [SerializeField] GameObject _randomTilePrefab;
 
-    [Header("Map Size")]
-    [SerializeField] Vector2 mapSize;
-
+    [Header("Default Map Settings")]
+    [Tooltip("This data is only used if no Map Profile is referenced.")]
+    [SerializeField] Vector2 _mapSize;
+    [Space]
     [SerializeField] float _tileXOffset;
     [SerializeField] float _tileZOffset;
 
-    void Start()
+    public void CreateHexTileMap(SetupGameManager _setup, MapProfileTemplateSO _mapProfile)
     {
-        CreateHexTileMap();
-    }
+        if (_mapProfile != null)
+        {
+            _mapSize = _mapProfile.mapSize;
+            _tileXOffset = _mapProfile.tileXOffset;
+            _tileZOffset = _mapProfile.tileZOffset;
+        }
 
-
-    void CreateHexTileMap()
-    {
         //for each number on the X Axis (width) 
-        for (int x = 0; x <= mapSize.x; x++)
+        for (int x = 0; x <= _mapSize.x; x++)
         {
             //for each number on the Z Axis (height) 
-            for (int z = 0; z <= mapSize.y; z++)
+            for (int z = 0; z <= _mapSize.y; z++)
             {
-                GameObject _tile = Instantiate(hexTilePrefab);
+                GameObject _tile = Instantiate(_randomTilePrefab);
 
                 if (z % 2 == 0)
                 {
@@ -43,6 +45,7 @@ public class HexGridLayout : MonoBehaviour
 
             }
         }
+        _setup.TileMapCompleted(); 
     }
 
     // Set the tile parent to make clean 

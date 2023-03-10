@@ -17,7 +17,7 @@ MonoBehaviour:
   faction: 0
   superPower: 2
   primaryColour: {r: 1, g: 0.93073094, b: 0, a: 1}
-  secondaryColour: {r: 0, g: 0, b: 0, a: 1}
+  secondaryColour: {r: 1, g: 0.46524507, b: 0, a: 1}
   factionLeader: {fileID: 21300000, guid: bb48e5bddd3d48a4db824aa2cf23b89e, type: 3}
   factionLogo: {fileID: 21300000, guid: 6c600108f6a87644da76686c78dd76c4, type: 3}
   baseMaterial: {fileID: 2100000, guid: d7c55d7f1080a1a42a85e69ccc47fdf9, type: 2}

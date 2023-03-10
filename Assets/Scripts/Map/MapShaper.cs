@@ -4,26 +4,33 @@ using UnityEngine;
 
 public class MapShaper : MonoBehaviour
 {
-
     [SerializeField] GameObject[] shapes;
-    int index;
-    int playerSpawns; 
+    [SerializeField] int _mapTypeAsIndex;
+    [SerializeField] int _amountOfPlayers; 
 
-    // Start is called before the first frame update
-    void Start()
+
+    public void SetMapShape(SetupGameManager _setup, MapProfileTemplateSO _mapProfile)
     {
-        index = (int)GameManager.Instance.mapType;
-        playerSpawns = (int)GameManager.Instance.amountOfPlayers - 2; 
 
-        foreach(GameObject shape in shapes)
+        if (_mapProfile != null)
         {
-            shape.SetActive(false); 
+            _mapTypeAsIndex = (int)_mapProfile.mapType;
+            _amountOfPlayers = _mapProfile.amountOfPlayers;
         }
 
-        shapes[(int)index].SetActive(true);
-        shapes[(int)index].GetComponent<PlayerSpawnLocations>().TurnOnSpawnLocations((int)playerSpawns);
+        foreach (GameObject shape in shapes)
+        {
+            if (shape.activeInHierarchy)
+            {
+                shape.SetActive(false);
+            }
+        }
 
-        Invoke("TurnOff", 1f);
+        shapes[_mapTypeAsIndex].SetActive(true);
+        shapes[_mapTypeAsIndex].GetComponent<PlayerSpawnLocations>().TurnOnSpawnLocations(_amountOfPlayers - 2);
+
+        _setup.MapShaperCompleted(); 
+        //TurnOff(); 
     }
 
     public void TurnOff()

@@ -9,11 +9,10 @@ public class ExhaustTileScript : TileInfo
     [SerializeField] float distanceOffset;
     public void AddExplorationPoint(int _amount)
     {
-        GameManager.Instance.playerInfo[(int)GameManager.Instance.currentPlayerTurn].AddPoints(ResourcesType.ExplorationPoints, _amount);
+        GameManager.Instance.currentPlayerTurn.AddExplorationPoints(_amount);
 
         GameObject _ui = Instantiate(exhaustUIPrefab, SelectObjectScript.Instance.CameraScreenCanvas);
-        _ui.transform.position = Camera.main.WorldToScreenPoint(transform.position) + Vector3.up * distanceOffset;
 
-        //Debug.Log("Remove Exploration Point!!");
+        _ui.transform.position = Camera.main.WorldToScreenPoint(transform.position) + Vector3.up * distanceOffset;
     }
 }

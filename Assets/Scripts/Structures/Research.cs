@@ -21,4 +21,24 @@ public class Research : StructureInfo
                 modelMaterials[i].material = owner.settings.baseMaterial;
         }
     }
+
+    public void AddResearchPoints()
+    {
+        owner.ResearchPoints++; 
+    }
+
+    
+
+    public void OpenResearchMenu()
+    {
+        if (SelectObjectScript.Instance.canSelect)
+        {
+
+            SelectObjectScript.Instance.CameraScreenCanvas.GetComponent<TechTreeMenuUI>().OpenUI();
+            TileManager.instance.ClearCanFlipStateOnAllTiles();
+            SelectObjectScript.Instance.canSelect = false;
+
+        }
+    }
+
 }

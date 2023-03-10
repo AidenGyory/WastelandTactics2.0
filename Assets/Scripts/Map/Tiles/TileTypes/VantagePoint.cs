@@ -10,10 +10,12 @@ public class VantagePoint : TileInfo
     [SerializeField] float distanceOffset; 
     public void AddExplorationPoint(int _amount)
     {
-        GameManager.Instance.playerInfo[(int)GameManager.Instance.currentPlayerTurn].AddPoints(ResourcesType.ExplorationPoints, _amount);
+        GameManager.Instance.currentPlayerTurn.AddExplorationPoints(_amount); 
+
         GameObject _AddEPUI = Instantiate(AddEpPrefab, SelectObjectScript.Instance.CameraScreenCanvas);
+
         _AddEPUI.transform.position = Camera.main.WorldToScreenPoint(transform.position) + Vector3.up * distanceOffset; 
-        Debug.Log("Add Exploration Point!!");
+
         TileManager.instance.FindPlayerOwnedTilesForFlipCheck(Owner); 
     }
 }

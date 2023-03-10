@@ -30,8 +30,6 @@ public class SelectObjectScript : MonoBehaviour
     MoveScript _moveScript;
     CameraController _camScript;
 
-    public MoveLineScript moveLineScript; 
-
     void Awake()
     {
         Instance = this;
@@ -147,10 +145,12 @@ public class SelectObjectScript : MonoBehaviour
             ////Clear all Canvas info for Units 
             ClearActionIcons();
             ////Check which tiles can be flipped
-            TileManager.instance.FindPlayerOwnedTilesForFlipCheck(GameManager.Instance.playerInfo[(int)GameManager.Instance.currentPlayerTurn]);
+            TileManager.instance.FindPlayerOwnedTilesForFlipCheck(GameManager.Instance.currentPlayerTurn);
             ////Deselect Everything
             DeselectAll();
         }
+
+        Camera.main.GetComponent<CameraController>().SetCameraMode(CameraController.CameraMode.Unfocused);
     }
     void DeselectAll()
     {

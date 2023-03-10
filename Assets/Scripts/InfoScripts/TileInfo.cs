@@ -16,9 +16,12 @@ public class TileInfo: MonoBehaviour
         MetalMine,
         Unhexium,
         Vantage,
-        Exhaust
+        Exhaust,
+        Oasis,
     }
     public PlayerInfo Owner; 
+    public PlayerInfo BorderOwner;
+    public GameObject border; 
     public enum TileState
     {
         CanFlip,
@@ -51,7 +54,6 @@ public class TileInfo: MonoBehaviour
     [Header("dust prefab")]
     [SerializeField] GameObject dustPrefab;
     [SerializeField] Vector3 particlePrefabOffset;
-
     private void Start()
     {
         //flip tile upside down if tile is not in flipped state.
@@ -68,7 +70,6 @@ public class TileInfo: MonoBehaviour
 
         Invoke(nameof(EstablishNeighbours), 1.2f); 
     }
-    //bool to check if you can flip this tile 
     public void EstablishNeighbours()
     {
         //Debug.Log("Initialise Neighbours");
@@ -92,8 +93,7 @@ public class TileInfo: MonoBehaviour
         }
         
     }
-
-    public void CheckNeighbours()
+    public void CheckIfCanFlipNeighbours()
     {
         if (Checkable && state == TileState.IsFlipped)
         {
@@ -111,38 +111,40 @@ public class TileInfo: MonoBehaviour
         }
 
     }
-
     public bool CheckIfTileCanFlip()
     {
         //Check if the player has enough EP and the tilestate is "canFlip"
-        bool _canFlip = GameManager.Instance.CheckExplorationPoints() && state == TileState.CanFlip;
+        bool _canFlip = GameManager.Instance.currentPlayerTurn.ExplorationPointsLeft > 0 && state == TileState.CanFlip;
 
         return _canFlip;         
     }
 
     public void TryToFlipTile()
     {
-
         TileAudioManager.instance.PlayTileAudio(tileAudioType.swipe);
 
         SelectObjectScript.Instance.canSelect = false;
-        int currentPlayerTurn = (int)GameManager.Instance.currentPlayerTurn;
 
-        var playerInfo = GameManager.Instance.playerInfo[currentPlayerTurn];
+        GameManager.Instance.currentPlayerTurn.AddExplorationPoints(-1);
 
-        playerInfo.AddPoints(ResourcesType.ExplorationPoints, -1);
-        Owner = GameManager.Instance.playerInfo[(int)GameManager.Instance.currentPlayerTurn];
+        Owner = GameManager.Instance.currentPlayerTurn; 
+
         transform.DOJump(transform.position, 0.25f, 1, 0.2f);
         transform.DORotate(new Vector3(0f, 0, 0), 0.25f).OnComplete(TriggerTileHasFlipped);
         state = TileState.IsFlipped;
         Checkable = true;
+
         foreach (TileInfo _tile in neighbours)
         {
             Checkable = true;
-            _tile.CheckNeighbours();
+            _tile.CheckIfCanFlipNeighbours();
         }
+
         UnselectTile();
+
         TileManager.instance.FindPlayerOwnedTilesForFlipCheck(Owner);
+
+        TileManager.instance.SetBorderTileOwnership(); 
 
         return;
 
@@ -159,7 +161,7 @@ public class TileInfo: MonoBehaviour
         foreach(TileInfo _tile in neighbours)
         {
             _tile.Checkable = true; 
-            _tile.CheckNeighbours();
+            _tile.CheckIfCanFlipNeighbours();
         }
         state = TileState.CannotFlip;
     }
@@ -169,7 +171,7 @@ public class TileInfo: MonoBehaviour
     {
         foreach (TileInfo _tile in neighbours)
         {
-            _tile.CheckNeighbours();
+            _tile.CheckIfCanFlipNeighbours();
         }
         TileAudioManager.instance.PlayTileAudio(tileAudioType.flip);
         SelectObjectScript.Instance.canSelect = true;
@@ -338,7 +340,9 @@ public class TileInfo: MonoBehaviour
         _replacementTile.name = gameObject.name;
         _replacementTile.transform.position = transform.position;
         _replacementTile.GetComponent<TileInfo>().state = state;
-        TileManager.instance.InitialiseAllTiles(); 
+        _replacementTile.GetComponent<TileInfo>().isOccupied = isOccupied;
+        _replacementTile.GetComponent<TileInfo>().Checkable = Checkable; 
+       TileManager.instance.InitialiseAllTiles(); 
 
         Destroy(gameObject); 
 
@@ -363,6 +367,20 @@ public class TileInfo: MonoBehaviour
         if(scanIcon != null)
         {
             scanIcon.SetActive(visible);
+        }
+    }
+
+    public void AddBorder()
+    {
+        Debug.Log("Add Border for " + Owner); 
+        if(BorderOwner != null)
+        {
+            border.SetActive(true);
+            border.GetComponent<Renderer>().material.color = Owner.settings.primaryColour; 
+        }
+        else
+        {
+            border.SetActive(false); 
         }
     }
 

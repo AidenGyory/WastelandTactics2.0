@@ -6,7 +6,10 @@ public class Factory : StructureInfo
 {
     public bool active;
 
-    public int metalOutput; 
+    public int metalOutput;
+
+    [SerializeField] GameObject metalRewardPrefab;
+    [SerializeField] float distanceOffset;
 
     public void UpdateMaterials()
     {
@@ -28,6 +31,8 @@ public class Factory : StructureInfo
 
     public void ProduceMetal()
     {
+        GameObject _AddMetalUI = Instantiate(metalRewardPrefab);
+        _AddMetalUI.transform.position = transform.position + Vector3.up * distanceOffset;
         owner.MetalScrapAmount += metalOutput; 
     }
 }

@@ -68,6 +68,7 @@ public class SelectScript : MonoBehaviour
 
         //Invoke "SelectObj()" Event in Editor
         selectObj.Invoke();
+        
     }
 
     public void DeselectObject()

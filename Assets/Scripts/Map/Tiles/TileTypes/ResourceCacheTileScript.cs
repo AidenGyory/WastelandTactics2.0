@@ -17,7 +17,10 @@ public class ResourceCacheTileScript : TileInfo
 
     public bool rewardGiven;
 
-    public GameObject icon; 
+    public GameObject icon;
+
+    [SerializeField] GameObject metalRewardPrefab;
+    [SerializeField] float distanceOffset;
 
     private void Awake()
     {
@@ -38,6 +41,8 @@ public class ResourceCacheTileScript : TileInfo
                 Debug.Log("Relic Given!"); 
                 break;
             case CacheType.MetalScrap:
+                GameObject _AddMetalUI = Instantiate(metalRewardPrefab, SelectObjectScript.Instance.CameraScreenCanvas);
+                _AddMetalUI.transform.position = Camera.main.WorldToScreenPoint(transform.position) + Vector3.up * distanceOffset;
                 _player.MetalScrapAmount += 50; 
                 break;
             case CacheType.ExplorationPoint:

@@ -182,7 +182,7 @@ public class UnitInfo : MonoBehaviour
     public void CheckMovement()
     {
         Debug.Log("Check Unit Movement"); 
-        if (owner == GameManager.Instance.playerInfo[(int)GameManager.Instance.currentPlayerTurn])
+        if (owner == GameManager.Instance.currentPlayerTurn)
         {
             //Set Selection Mode (Move unit Mode) 
             SelectObjectScript.Instance.mode = SelectObjectScript.PointerMode.MoveMode;
@@ -195,7 +195,7 @@ public class UnitInfo : MonoBehaviour
         }
     }
 
-    public void ReplenishUnit()
+    public void RefreshUnit()
     {
         canAttack = true;
         currentMovementTiles = maxMovementTiles;
@@ -217,7 +217,9 @@ public class UnitInfo : MonoBehaviour
 
     public void CheckAttack()
     {
-        if(owner == GameManager.Instance.playerInfo[(int)GameManager.Instance.currentPlayerTurn] && canAttack)
+
+
+        if(owner == GameManager.Instance.currentPlayerTurn && canAttack)
         {
             SelectObjectScript.Instance.mode = SelectObjectScript.PointerMode.AttackMode;
 
@@ -225,7 +227,7 @@ public class UnitInfo : MonoBehaviour
 
             for (int i = 0; i < _units.Length; i++)
             {
-                if (_units[i].GetComponent<UnitInfo>().owner != GameManager.Instance.playerInfo[(int)GameManager.Instance.currentPlayerTurn])
+                if (_units[i].GetComponent<UnitInfo>().owner != GameManager.Instance.currentPlayerTurn)
                 {
                     Debug.Log("Can Attack" + _units[i].GetComponent<UnitInfo>().unitName);
                     _units[i].GetComponent<UnitInfo>().AttackCanvas.SetActive(true);

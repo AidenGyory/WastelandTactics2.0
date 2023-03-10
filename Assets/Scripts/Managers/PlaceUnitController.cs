@@ -83,19 +83,18 @@ public class PlaceUnitController : MonoBehaviour
 
                     //Set player owner and initalise setup
                     UnitInfo _unitInfo = _unit.GetComponent<UnitInfo>();
-                    _unitInfo.owner = GameManager.Instance.playerInfo[(int)GameManager.Instance.currentPlayerTurn];
+                    _unitInfo.owner = GameManager.Instance.currentPlayerTurn;
                     _unitInfo.UpdatePlayerDetails();
                     _unitInfo.occuipedTile = _tileInfo;
                     _tileInfo.isOccupied = true;
 
                     //Remove Player Resources 
-                    GameManager.Instance.playerInfo[(int)GameManager.Instance.currentPlayerTurn].MetalScrapAmount -= cost;
+                    GameManager.Instance.currentPlayerTurn.AddMetalScrap(-cost); 
 
                     //Reset Camera and OjectSelectionManager
                     TileManager.instance.ClearPlaceableStateOnAllTiles();
                     SelectObjectScript.Instance.SetModeToSelect();
 
-                    GameManager.Instance.UpdatePowerLevel(); 
                     //spawned = true;
                     Destroy(gameObject);
 

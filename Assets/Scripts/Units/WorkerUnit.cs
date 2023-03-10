@@ -88,20 +88,4 @@ public class WorkerUnit : UnitInfo
         //Debug.Log("Location is suitable?: " + _suitable); 
         return _suitable; 
     }
-
-
-
-    public void OpenRadialMenu()
-    {
-        SelectObjectScript.Instance.CameraScreenCanvas.GetComponent<RadialBuildMenu>().OpenRadialMenu();
-        SelectObjectScript.Instance.CameraScreenCanvas.GetComponent<RadialBuildMenu>().SelectedWorkerUnit = this.gameObject;
-        SelectObjectScript.Instance.canSelect = false;
-    }
-
-    public void CloseRadialMenu()
-    {
-        SelectObjectScript.Instance.CameraScreenCanvas.GetComponent<RadialBuildMenu>().SelectedWorkerUnit = null;
-        SelectObjectScript.Instance.CameraScreenCanvas.GetComponent<RadialBuildMenu>().CloseRadialMenu();
-        SelectObjectScript.Instance.canSelect = true;
-    }
 }

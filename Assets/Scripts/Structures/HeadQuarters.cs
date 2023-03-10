@@ -1,10 +1,17 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class HeadQuarters : StructureInfo
 {
-    public int MetalOutput; 
+    public int MetalOutput;
+    public GameObject scoutPrefab;
+    [SerializeField] bool freeScout;
+
+    [SerializeField] GameObject metalRewardPrefab;
+    [SerializeField] float distanceOffset;
+
     public void UpdateMaterials()
     {
         for (int i = 0; i < modelMaterials.Length; i++)
@@ -18,8 +25,6 @@ public class HeadQuarters : StructureInfo
                     _renderer.material = owner.settings.HQMaterial;
                 }
             }
-            else
-            modelMaterials[i].material = owner.settings.baseMaterial; 
         }
     }
 
@@ -27,84 +32,84 @@ public class HeadQuarters : StructureInfo
     public void UpdatePlayerLocation()
     {
         //Find the correct Player owner by iterating through the list 
-        for (int i = 0; i < GameManager.Instance.playerInfo.Length; i++)
+        for (int i = 0; i < GameManager.Instance.players.Length; i++)
         {
-            if (GameManager.Instance.playerInfo[i] == owner)
+            if (GameManager.Instance.players[i] == owner)
             {
                 //set the position of the player info object to the headquarters position. 
-                GameManager.Instance.playerInfo[i].transform.position = transform.position; 
+                GameManager.Instance.players[i].transform.position = transform.position; 
             }
         }
     }
 
-    public void UpdateTileOwnership()
-    {
-
-        TileInfo _HQTile = TileManager.instance.GetClosestTile(transform, transform, 1, true);
-
-        _HQTile.isOccupied = true;
-        occupiedTile = _HQTile; 
-
-        //create a list of tiles 
-        List<TileInfo> _tileList = TileManager.instance.SetTileList(transform.position,sightRangeInTiles);
-
-        //check if there are tiles in the list 
-        if (_tileList.Count < 1) { return;  }
-
-        //iterate through the list of tiles 
-        foreach (TileInfo _tile in _tileList)
-        {
-            //check if the tile is already flipped 
-            if (_tile.state == TileInfo.TileState.IsFlipped)
-            {
-                //set the owner of the tile to match the owner of the building.  
-                _tile.Owner = owner;
-                _tile.Checkable = true; 
-            }
-
-        }
-    }
-    public void UpdateTileOwnership(List<TileInfo> tilesToSet)
-    {
-        //create a tile list of the tiles surrounding the Headquarters
-        TileManager.instance.SetTileList(transform.position, 1);
-
-        //check if there are tiles in the list 
-        if (tilesToSet.Count < 1) { return; }
-
-        //iterate through the list of tiles 
-        foreach (TileInfo _tile in tilesToSet)
-        {
-            //check if the tile is already flipped 
-            if (_tile.state == TileInfo.TileState.IsFlipped)
-            {
-                //set the owner of the tile to match the owner of the building.  
-                _tile.Owner = owner;
-            }
-
-        }
-    }
 
     public void OpenRadialMenu()
     {
         if(SelectObjectScript.Instance.canSelect)
         {
-            Debug.Log("Open Radial");
-            SelectObjectScript.Instance.CameraScreenCanvas.GetComponent<RadialMenuController>().OpenRadialMenu();
+            
+            SelectObjectScript.Instance.CameraScreenCanvas.GetComponent<RadialMenuForStructures>().OpenRadialMenu();
             TileManager.instance.ClearCanFlipStateOnAllTiles();
             SelectObjectScript.Instance.canSelect = false;
+             
         } 
     }
 
     public void CloseRadialMenu()
     {
-        SelectObjectScript.Instance.CameraScreenCanvas.GetComponent<RadialMenuController>().CloseRadialMenu();
+        SelectObjectScript.Instance.CameraScreenCanvas.GetComponent<RadialMenuForStructures>().CloseRadialMenu();
         SelectObjectScript.Instance.SetModeToSelect(); 
     }
 
     public void ProduceMetal()
     {
+        GameObject _AddMetalUI = Instantiate(metalRewardPrefab);
+        _AddMetalUI.transform.position = transform.position + Vector3.up * distanceOffset; 
         owner.MetalScrapAmount += MetalOutput; 
+    }
+
+    public void FreeScout()
+    {
+        if(freeScout)
+        {
+            List<TileInfo> _scoutTiles = new List<TileInfo>(); 
+
+            foreach(TileInfo _tile in occupiedTile.neighbours)
+            {
+                if(!_tile.isOccupied)
+                {
+                    _scoutTiles.Add(_tile); 
+                }
+            }
+
+            TileInfo _spawnTile = _scoutTiles[Random.Range(0, _scoutTiles.Count)];
+
+            GameObject _scout = Instantiate(scoutPrefab);
+            _scout.transform.position = _spawnTile.transform.position;
+            _scout.GetComponent<ScoutUnit>().occuipedTile = _spawnTile;
+            _scout.GetComponent<ScoutUnit>().owner = owner;
+            _scout.GetComponent<ScoutUnit>().UpdatePlayerDetails(); 
+            _spawnTile.isOccupied = true;
+            freeScout = false; 
+        }
+    }
+
+    public void SetTileOwnership()
+    {
+        Collider[] _tiles = Physics.OverlapSphere(occupiedTile.transform.position,sightRangeInTiles);
+
+        foreach (Collider _tile in _tiles)
+        {
+            if(_tile.GetComponent<TileInfo>() != null)
+            {
+                if(_tile.GetComponent<TileInfo>().state == TileInfo.TileState.IsFlipped)
+                {
+                    _tile.GetComponent<TileInfo>().Owner = owner;
+                    UpdateBorder();
+                }
+
+            }
+        }
     }
 
 }
