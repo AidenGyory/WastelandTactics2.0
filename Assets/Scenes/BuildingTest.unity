@@ -2594,6 +2594,16 @@ PrefabInstance:
       propertyPath: m_Name
       value: HQBuilding
       objectReference: {fileID: 0}
+    - target: {fileID: 2827272470035316157, guid: 8c16871ee55c54c41a6df036525d7dca,
+        type: 3}
+      propertyPath: m_Size.y
+      value: 1.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 2827272470035316157, guid: 8c16871ee55c54c41a6df036525d7dca,
+        type: 3}
+      propertyPath: m_Center.y
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3201904431455082013, guid: 8c16871ee55c54c41a6df036525d7dca,
         type: 3}
       propertyPath: m_RootOrder
@@ -3100,6 +3110,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: PowerCell
+      objectReference: {fileID: 0}
+    - target: {fileID: 2827272470035316157, guid: eb3845976695d1a46a4c6ec9452a7380,
+        type: 3}
+      propertyPath: m_Size.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2827272470035316157, guid: eb3845976695d1a46a4c6ec9452a7380,
+        type: 3}
+      propertyPath: m_Center.y
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 3201904431455082013, guid: eb3845976695d1a46a4c6ec9452a7380,
         type: 3}
@@ -14916,6 +14936,26 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Research
+      objectReference: {fileID: 0}
+    - target: {fileID: 2827272470035316157, guid: b9da5e8b8f3a07047b31506fb5eb19ae,
+        type: 3}
+      propertyPath: m_Size.x
+      value: 1.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 2827272470035316157, guid: b9da5e8b8f3a07047b31506fb5eb19ae,
+        type: 3}
+      propertyPath: m_Size.y
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 2827272470035316157, guid: b9da5e8b8f3a07047b31506fb5eb19ae,
+        type: 3}
+      propertyPath: m_Size.z
+      value: 1.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 2827272470035316157, guid: b9da5e8b8f3a07047b31506fb5eb19ae,
+        type: 3}
+      propertyPath: m_Center.y
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 3201904431455082013, guid: b9da5e8b8f3a07047b31506fb5eb19ae,
         type: 3}

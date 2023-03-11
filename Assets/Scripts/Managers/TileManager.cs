@@ -36,6 +36,9 @@ public class TileManager : MonoBehaviour
 
     public LayerMask isUnit; 
 
+    //List of Tiles that need to be flipped
+    public List<TileInfo> tilesToFlip;
+
     // Initialize the singleton instance on Awake
     private void Awake()
     {
@@ -381,6 +384,35 @@ public class TileManager : MonoBehaviour
             _building.UpdateBorder(); 
         }
 
-        UpdateBorders(); 
+        UpdateBorders();
+    }
+
+    public bool runFlipTiles; 
+    public void FlipTilesInList()
+    {
+
+        if (tilesToFlip.Count < 1) 
+        {
+            FindPlayerOwnedTilesForFlipCheck(GameManager.Instance.currentPlayerTurn);
+            runFlipTiles = false; 
+        }
+        else
+        {
+            if(tilesToFlip[0].state == TileInfo.TileState.IsFlipped)
+            {
+                tilesToFlip.RemoveAt(0);
+                runFlipTiles = true;
+                FlipTilesInList(); 
+            }
+            else
+            {
+                tilesToFlip[0].FlipTile();
+                tilesToFlip.RemoveAt(0);
+                runFlipTiles = true;
+                Invoke("FlipTilesInList", 0.2f);
+            }
+        }
+
+        
     }
 }

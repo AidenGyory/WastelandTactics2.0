@@ -255,8 +255,8 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 2.5897346, y: 0.45013815, z: 2.2581873}
-  m_Center: {x: 0.016229847, y: 0.22506908, z: -0.11024485}
+  m_Size: {x: 1.5, y: 1.5, z: 2}
+  m_Center: {x: 0, y: 1, z: 0}
 --- !u!114 &9141932338304723597
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -500,7 +500,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &2719283512271055044
 RectTransform:
   m_ObjectHideFlags: 0
@@ -519,7 +519,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: -70.077, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0.977}
+  m_AnchoredPosition: {x: 0, y: 1.363}
   m_SizeDelta: {x: 1.5, y: 1.5}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!223 &8244986692483424510
@@ -634,7 +634,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0.977}
+  m_AnchoredPosition: {x: 0, y: 1.61}
   m_SizeDelta: {x: 1.5, y: 1.5}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!223 &4547182673218841637
@@ -801,17 +801,17 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: 819c5c9597a78e94a8dce8c69d5e748f,
         type: 3}
       propertyPath: m_LocalScale.x
-      value: 0.09
+      value: 0.08
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 819c5c9597a78e94a8dce8c69d5e748f,
         type: 3}
       propertyPath: m_LocalScale.y
-      value: 0.09
+      value: 0.08
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 819c5c9597a78e94a8dce8c69d5e748f,
         type: 3}
       propertyPath: m_LocalScale.z
-      value: 0.09
+      value: 0.08
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 819c5c9597a78e94a8dce8c69d5e748f,
         type: 3}
@@ -821,7 +821,7 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: 819c5c9597a78e94a8dce8c69d5e748f,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.3
+      value: 0.325
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 819c5c9597a78e94a8dce8c69d5e748f,
         type: 3}

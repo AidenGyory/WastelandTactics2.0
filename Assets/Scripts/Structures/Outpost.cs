@@ -26,40 +26,25 @@ public class Outpost : StructureInfo
 
     public void FlipTiles()
     {
-        
         for (int i = 0; i < occupiedTile.neighbours.Count; i++)
         {
             occupiedTile.neighbours[i].Owner = owner; 
             occupiedTile.neighbours[i].BorderOwner = owner;
 
-            if (occupiedTile.neighbours[i].state != TileState.IsFlipped)
+            if (occupiedTile.neighbours[i].state == TileState.IsFlipped)
             {
-                tilesToFlip.Add(occupiedTile.neighbours[i]);
+
+            }
+            else
+            {
+                TileManager.instance.tilesToFlip.Add(occupiedTile.neighbours[i]);
             }
         }
         TileManager.instance.UpdateBorders();
-        Invoke("WaitAndFlip", 0.1f);
-    }
-
-    public void WaitAndFlip()
-    {
-        if (tilesToFlip.Count < 1)
+        if(!TileManager.instance.runFlipTiles)
         {
-            TileManager.instance.FindPlayerOwnedTilesForFlipCheck(GameManager.Instance.currentPlayerTurn);
-
-            return;
+            TileManager.instance.FlipTilesInList();
         }
-
-        int rand = Random.Range(0, tilesToFlip.Count);
-
-        if (tilesToFlip[rand].state != TileState.IsFlipped)
-        {
-            tilesToFlip[rand].TryToFlipTile();
-            tilesToFlip.Remove(tilesToFlip[rand]);
-        }
-
-
-        Invoke("WaitAndFlip", 0.1f);
     }
 
     public void OpenRadialMenu()

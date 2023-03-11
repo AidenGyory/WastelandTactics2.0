@@ -165,10 +165,7 @@ public class UnitInfo : MonoBehaviour
             _tilePath.Clear();
 
             canMove = false;
-            if(currentMovementTiles > 0)
-            {
-                GetComponent<SelectScript>().SelectObject();
-            }
+
             
         }
         if(currentHealth < maxHealth)
@@ -181,7 +178,7 @@ public class UnitInfo : MonoBehaviour
 
     public void CheckMovement()
     {
-        Debug.Log("Check Unit Movement"); 
+        //Debug.Log("Check Unit Movement"); 
         if (owner == GameManager.Instance.currentPlayerTurn)
         {
             //Set Selection Mode (Move unit Mode) 

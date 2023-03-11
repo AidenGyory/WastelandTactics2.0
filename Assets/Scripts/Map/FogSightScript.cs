@@ -5,5 +5,4 @@ using UnityEngine.UIElements;
 
 public class FogSightScript : MonoBehaviour
 {
-
 }

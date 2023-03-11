@@ -25,12 +25,7 @@ public class ResourceCacheTileScript : TileInfo
     private void Awake()
     {
         if(random)
-        rewardType = (CacheType)Random.Range(0, 2); 
-    }
-
-    public void PrintTileTypeLog()
-    {
-        Debug.Log("Reward Cache"); 
+        rewardType = (CacheType)Random.Range(0, 3); 
     }
 
     public void GiveReward(PlayerInfo _player)
@@ -41,11 +36,13 @@ public class ResourceCacheTileScript : TileInfo
                 Debug.Log("Relic Given!"); 
                 break;
             case CacheType.MetalScrap:
+                Debug.Log("Give Metal"); 
                 GameObject _AddMetalUI = Instantiate(metalRewardPrefab, SelectObjectScript.Instance.CameraScreenCanvas);
                 _AddMetalUI.transform.position = Camera.main.WorldToScreenPoint(transform.position) + Vector3.up * distanceOffset;
                 _player.MetalScrapAmount += 50; 
                 break;
             case CacheType.ExplorationPoint:
+                Debug.Log("Give EP"); 
                 _player.ExplorationPointsLeft += 2; 
                 break;
         }

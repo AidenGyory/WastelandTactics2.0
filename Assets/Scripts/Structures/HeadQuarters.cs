@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class HeadQuarters : StructureInfo
 {
-    public int MetalOutput;
+    public int metalOutput;
     public GameObject scoutPrefab;
     [SerializeField] bool freeScout;
 
@@ -64,9 +64,15 @@ public class HeadQuarters : StructureInfo
 
     public void ProduceMetal()
     {
+        float _metalScrap = metalOutput;
+
+        if (owner.MetalProduction)
+        {
+            _metalScrap *= 1.2f; 
+        }
         GameObject _AddMetalUI = Instantiate(metalRewardPrefab);
-        _AddMetalUI.transform.position = transform.position + Vector3.up * distanceOffset; 
-        owner.MetalScrapAmount += MetalOutput; 
+        _AddMetalUI.transform.position = transform.position + Vector3.up * distanceOffset;
+        owner.AddMetalScrap(Mathf.RoundToInt(_metalScrap));
     }
 
     public void FreeScout()

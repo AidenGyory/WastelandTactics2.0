@@ -134,7 +134,7 @@ public class SelectObjectScript : MonoBehaviour
     }
     public void SetModeToSelect()
     {
-        Debug.Log("SetModeToSelect");
+        //Debug.Log("SetModeToSelect");
         ////Set pointer mode back to selectMode
         mode = PointerMode.SelectMode;
         //// Turn on Raycasting again
@@ -217,7 +217,7 @@ public class SelectObjectScript : MonoBehaviour
     }
     void MoveModeInput()
     {
-        Debug.Log("Movement Input"); 
+        //Debug.Log("Movement Input"); 
         if(highlightedObject.objectType == SelectScript.objType.tile && highlightedObject.GetComponent<TileInfo>().state == TileInfo.TileState.walkable)
         {
             // Execute "Move to tile" function 

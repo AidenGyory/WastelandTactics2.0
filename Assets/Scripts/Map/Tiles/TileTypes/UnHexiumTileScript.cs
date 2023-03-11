@@ -18,8 +18,15 @@ public class UnHexiumTileScript : TileInfo
         return false;
     }
 
-    public void PrintTileTypeLog()
+    [Header("Prefab Element")]
+    [SerializeField] GameObject metalUIPrefab;
+    [SerializeField] float distanceOffset;
+    public void AddFlipReward(int _amount)
     {
-        //Debug.Log("Tile is an Unhexium Node! Awesome!");
+        GameManager.Instance.currentPlayerTurn.AddMetalScrap(_amount);
+
+        GameObject _ui = Instantiate(metalUIPrefab, SelectObjectScript.Instance.CameraScreenCanvas);
+
+        _ui.transform.position = Camera.main.WorldToScreenPoint(transform.position) + Vector3.up * distanceOffset;
     }
 }

@@ -11,4 +11,19 @@ public class SceneManagerScript : MonoBehaviour
     {
         SceneManager.LoadScene(sceneName);
     }
+
+    public void QuitGame()
+    {
+        Application.Quit(); 
+    }
+
+    public void PauseGame()
+    {
+        Time.timeScale = 0.0f;
+    }
+
+    public void UnpauseGame()
+    {
+        Time.timeScale = 1.0f;
+    }
 }

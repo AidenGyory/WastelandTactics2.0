@@ -188,7 +188,7 @@ MonoBehaviour:
   metalOutput: 100
   metalRewardPrefab: {fileID: 2271875349201639985, guid: 3998d8b1b6d6712408be9700ffc9a073,
     type: 3}
-  distanceOffset: 0
+  distanceOffset: 1
 --- !u!1001 &1217936888210524518
 PrefabInstance:
   m_ObjectHideFlags: 0

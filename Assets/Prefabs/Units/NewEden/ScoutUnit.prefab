@@ -279,6 +279,8 @@ MonoBehaviour:
   moveindex: 0
   _tilePath: []
   _ModelMaterials: []
+  scanRadiusInTiles: 1
+  constantScan: 1
 --- !u!114 &4296484960626218554
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -763,7 +765,7 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: 4f4839f563fdf694284e898aee3c0172,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.117
+      value: 0.05
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 4f4839f563fdf694284e898aee3c0172,
         type: 3}
@@ -918,7 +920,7 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: 4f4839f563fdf694284e898aee3c0172,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.117
+      value: 0.05
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 4f4839f563fdf694284e898aee3c0172,
         type: 3}
@@ -1055,7 +1057,7 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: 4f4839f563fdf694284e898aee3c0172,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.117
+      value: 0.05
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 4f4839f563fdf694284e898aee3c0172,
         type: 3}

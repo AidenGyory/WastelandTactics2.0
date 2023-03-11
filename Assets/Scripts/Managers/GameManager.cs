@@ -1,3 +1,4 @@
+using DG.Tweening;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
@@ -69,6 +70,9 @@ public class GameManager : MonoBehaviour
     }
     void StartTurn()
     {
+        DOTween.KillAll();
+
+
         TileManager.instance.SetBorderTileOwnership();
         //Select current player for zoom back to HQ
         SelectObjectScript.Instance.SelectPlayer(currentPlayerTurn);

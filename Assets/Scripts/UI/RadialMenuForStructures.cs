@@ -213,8 +213,43 @@ public class RadialMenuForStructures : MonoBehaviour
 
         foreach (TileInfo _tile in _placementTiles)
         {
-            Debug.Log("Tile: " + _tile.name); 
-            _tile.SetTileToPlaceable();
+            switch (optionSelected)
+            {
+                case 0: //Outpost
+
+                    if (_tile.type == TileInfo.TileType.MetalMine || _tile.type == TileInfo.TileType.Unhexium || _tile.type == TileInfo.TileType.Mountain)
+                    {
+                        
+                    }
+                    else
+                    {
+                        _tile.SetTileToPlaceable();
+                    }
+
+                    break;
+                case 1: //Factory
+                    if(_tile.type == TileInfo.TileType.MetalMine || _tile.type == TileInfo.TileType.Unhexium)
+                    {
+                        _tile.SetTileToPlaceable();
+                    }
+
+                    break;
+                case 3: //Power Generator
+                    _tile.SetTileToPlaceable();
+
+                    break;
+                case 4: //Research Centre
+                    if (_tile.type == TileInfo.TileType.MetalMine || _tile.type == TileInfo.TileType.Unhexium)
+                    {
+
+                    }
+                    else
+                    {
+                        _tile.SetTileToPlaceable();
+                    }
+
+                    break;
+            }
         }
 
         CloseRadialMenu();

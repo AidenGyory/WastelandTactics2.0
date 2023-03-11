@@ -31,7 +31,7 @@ public class TileInfo: MonoBehaviour
         walkable,
         unwalkable,
     }
-    
+    public GameObject tileMesh; 
     public TileState state;
     public bool unwalkable; 
     public bool isOccupied;
@@ -61,6 +61,10 @@ public class TileInfo: MonoBehaviour
         {
             transform.rotation = Quaternion.Euler(180, 0, 0);
         }
+        else
+        {
+            tileMesh.SetActive(true);
+        }
 
         //set up original colour renderers for each model 
         for (int i = 0; i < modelMaterials.Length; i++)
@@ -68,22 +72,6 @@ public class TileInfo: MonoBehaviour
             originalColour.Add(modelMaterials[i].material.color); 
         }
     }
-    //private void OnDrawGizmos()
-    //{
-
-    //    // degree angles for clock-wise rotation from transform.forward / Vector3.forward
-    //    float[] angleInDeg = { 90f, 30f, -30f, -90f, -150f, 150f, 90f };
-    //    Vector3 m_direction;
-    //    float m_maxDistance = 1f;
-    //    Vector3 origin = this.transform.position;
-    //    foreach (float a in angleInDeg)
-    //    {
-    //        float angleInRad = a * Mathf.Deg2Rad;
-    //        m_direction = new Vector3(Mathf.Cos(angleInRad), 0f, Mathf.Sin(angleInRad));
-
-    //        Gizmos.DrawRay(transform.position, m_direction * m_maxDistance);
-    //    }
-    //}
     public void EstablishNeighbours()
     {
         if (neighbours.Count > 0) return; 
@@ -109,7 +97,7 @@ public class TileInfo: MonoBehaviour
                 if (raycastHit.transform.GetComponent<TileInfo>())
                 {
                     // Give information about raycast box
-                    Debug.Log($"Hit{raycastHit.collider.name}");
+                    //Debug.Log($"Hit{raycastHit.collider.name}");
                     
                     neighbours.Add(raycastHit.transform.GetComponent<TileInfo>());
                 }
@@ -156,8 +144,9 @@ public class TileInfo: MonoBehaviour
 
         GameManager.Instance.currentPlayerTurn.AddExplorationPoints(-1);
 
-        Owner = GameManager.Instance.currentPlayerTurn; 
+        Owner = GameManager.Instance.currentPlayerTurn;
 
+        tileMesh.SetActive(true);
         transform.DOJump(transform.position, 0.25f, 1, 0.2f);
         transform.DORotate(new Vector3(0f, 0, 0), 0.25f).OnComplete(TriggerTileHasFlipped);
         state = TileState.IsFlipped;
@@ -173,7 +162,9 @@ public class TileInfo: MonoBehaviour
 
         TileManager.instance.FindPlayerOwnedTilesForFlipCheck(Owner);
 
-        TileManager.instance.SetBorderTileOwnership(); 
+        TileManager.instance.SetBorderTileOwnership();
+
+        //ShakeCamera(); 
 
         return;
 
@@ -209,7 +200,7 @@ public class TileInfo: MonoBehaviour
     [Tooltip("Add Actions that are in scripts INSIDE the prefab")]
     public void TriggerTileHasFlippedBack()
     {
-        
+        tileMesh.SetActive(false);
         SelectObjectScript.Instance.canSelect = true;
         TileHasFlippedBack.Invoke();
     }
@@ -380,8 +371,6 @@ public class TileInfo: MonoBehaviour
     public void ShakeCamera()
     {
         Camera.main.GetComponent<CameraFollow>().StartShake(0.1f, 0.1f); 
-
-        
     }
 
     public void CreateDustParticle()
@@ -397,6 +386,34 @@ public class TileInfo: MonoBehaviour
         {
             scanIcon.SetActive(visible);
         }
+    }
+
+    public void FlipTile()
+    {
+        TileAudioManager.instance.PlayTileAudio(tileAudioType.swipe);
+
+        SelectObjectScript.Instance.canSelect = false;
+
+        Owner = GameManager.Instance.currentPlayerTurn;
+        tileMesh.SetActive(true);
+        transform.DOJump(transform.position, 0.25f, 1, 0.2f);
+        transform.DORotate(new Vector3(0f, 0, 0), 0.25f).OnComplete(TriggerTileHasFlipped);
+        state = TileState.IsFlipped;
+        Checkable = true;
+
+        foreach (TileInfo _tile in neighbours)
+        {
+            Checkable = true;
+            _tile.CheckIfCanFlipNeighbours();
+        }
+
+        UnselectTile();
+
+        TileManager.instance.FindPlayerOwnedTilesForFlipCheck(Owner);
+        TileManager.instance.SetBorderTileOwnership();
+
+        return;
+
     }
 
 }

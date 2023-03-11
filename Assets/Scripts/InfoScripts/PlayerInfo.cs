@@ -77,13 +77,8 @@ public partial class PlayerInfo : MonoBehaviour
 
     public void AddMetalScrap(int _amount)
     {
+        Debug.Log("give " + _amount + " Scrap Metal"); 
         MetalScrapAmount += _amount; 
-        if(MetalProduction)
-        {
-            float x = (float)_amount * 0.2f;
-
-            MetalScrapAmount += (int)x; 
-        }
     }
 
     public void UpdatePlayerPowerSupply()

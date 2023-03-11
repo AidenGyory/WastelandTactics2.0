@@ -30,8 +30,7 @@ public class StructureInfo : MonoBehaviour
     [SerializeField] UnityEvent onDeath; 
 
     public TileInfo occupiedTile;
-    [SerializeField] int BorderRangeinTiles; 
-
+    [SerializeField] int BorderRangeinTiles;
 
     public void UpdatePlayerDetails()
     {
@@ -126,7 +125,7 @@ public class StructureInfo : MonoBehaviour
             {
                 //set the owner of the tile to match the owner of the building.  
                 _tile.BorderOwner = owner;
-                TileManager.instance.UpdateBorders(); 
+                //TileManager.instance.UpdateBorders(); 
             }
 
         }
@@ -159,7 +158,7 @@ public class StructureInfo : MonoBehaviour
 
         foreach (Collider hitCollider in hitColliders)
         {
-            Debug.Log("Found object: " + hitCollider.gameObject.name);
+            //Debug.Log("Found object: " + hitCollider.gameObject.name);
             TileInfo _tile = hitCollider.GetComponent<TileInfo>();
 
             _tile.isOccupied = true;

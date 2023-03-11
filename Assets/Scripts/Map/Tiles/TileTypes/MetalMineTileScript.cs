@@ -5,10 +5,15 @@ using UnityEngine;
 
 public class MetalMineTileScript : TileInfo
 {
-    public int resourceCount;
-
-    public void PrintTileTypeLog()
+    [Header("Prefab Element")]
+    [SerializeField] GameObject metalUIPrefab;
+    [SerializeField] float distanceOffset;
+    public void AddFlipReward(int _amount)
     {
-        //Debug.Log("Tile is a Metal Scrap Mine!");
+        GameManager.Instance.currentPlayerTurn.AddMetalScrap(_amount);
+
+        GameObject _ui = Instantiate(metalUIPrefab, SelectObjectScript.Instance.CameraScreenCanvas);
+
+        _ui.transform.position = Camera.main.WorldToScreenPoint(transform.position) + Vector3.up * distanceOffset;
     }
 }

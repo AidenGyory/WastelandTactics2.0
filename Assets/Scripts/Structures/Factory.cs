@@ -31,8 +31,14 @@ public class Factory : StructureInfo
 
     public void ProduceMetal()
     {
+        float _metalScrap = metalOutput; 
+
+        if(owner.MetalProduction)
+        {
+            _metalScrap += (float)metalOutput * 0.2f; 
+        }
         GameObject _AddMetalUI = Instantiate(metalRewardPrefab);
         _AddMetalUI.transform.position = transform.position + Vector3.up * distanceOffset;
-        owner.MetalScrapAmount += metalOutput; 
+        owner.AddMetalScrap(Mathf.RoundToInt(_metalScrap)); 
     }
 }

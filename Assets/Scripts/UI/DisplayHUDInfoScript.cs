@@ -40,6 +40,7 @@ public class DisplayHUDInfoScript : MonoBehaviour
     [SerializeField] GameObject PowerBar;
     [SerializeField] GameObject[] UnhexiumAmount;
     [SerializeField] TMP_Text MetalScrapAmount;
+    [SerializeField] TMP_Text ResearchPoints;
     [SerializeField] TMP_Text TurnTimer;
     [SerializeField] TMP_Text playerName; 
     [SerializeField] Image PlayerFlag;
@@ -221,6 +222,7 @@ public class DisplayHUDInfoScript : MonoBehaviour
         
 
         MetalScrapAmount.text = "" + _player.MetalScrapAmount;
+        ResearchPoints.text = "" + _player.ResearchPoints; 
         playerName.text = "" + _player.settings.playerName; 
         TurnTimer.text = "Turn: " + GameManager.Instance.turnTimer;
 
