@@ -126,7 +126,7 @@ public class StructureInfo : MonoBehaviour
             {
                 //set the owner of the tile to match the owner of the building.  
                 _tile.BorderOwner = owner;
-                _tile.AddBorder(); 
+                TileManager.instance.UpdateBorders(); 
             }
 
         }

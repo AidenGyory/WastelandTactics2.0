@@ -17,3 +17,4 @@ MonoBehaviour:
   tileZOffset: 0.44
   mapType: 1
   amountOfPlayers: 2
+  randomiseFirstPlayer: 1

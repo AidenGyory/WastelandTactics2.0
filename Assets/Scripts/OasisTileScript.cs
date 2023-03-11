@@ -9,22 +9,15 @@ public class OasisTileScript : TileInfo
     List<TileInfo> tilesToFlip = new List<TileInfo>();
     public void FlipTiles()
     {
-        // find the tiles within unit movement radius 
-        Collider[] _tiles = Physics.OverlapSphere(transform.position, flipRadius, isTiles);
-
-        for (int i = 0; i < _tiles.Length; i++)
+        for (int i = 0; i < neighbours.Count; i++)
         {
-            TileInfo _info = _tiles[i].GetComponent<TileInfo>();
-
-            if (_info.state != TileState.IsFlipped)
+            if (neighbours[i].state != TileState.IsFlipped)
             {
-                tilesToFlip.Add(_info);
+                tilesToFlip.Add(neighbours[i]);
             }
-
         }
-        Invoke("WaitAndFlip", 0.2f);
 
-
+        Invoke("WaitAndFlip", 0.1f);
     }
 
     public void WaitAndFlip()
@@ -39,11 +32,12 @@ public class OasisTileScript : TileInfo
 
         int rand = Random.Range(0, tilesToFlip.Count);
 
-        tilesToFlip[rand].TryToFlipTile();
+        if(tilesToFlip[rand].state != TileState.IsFlipped)
+        {
+            tilesToFlip[rand].TryToFlipTile();
+            tilesToFlip.Remove(tilesToFlip[rand]);
+        }
 
-
-        tilesToFlip.Remove(tilesToFlip[rand]);
-
-        Invoke("WaitAndFlip", 0.075f);
+        Invoke("WaitAndFlip", 0.1f);
     }
 }

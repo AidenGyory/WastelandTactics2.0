@@ -40,6 +40,7 @@ public class HeadQuarters : StructureInfo
                 GameManager.Instance.players[i].transform.position = transform.position; 
             }
         }
+        
     }
 
 
@@ -70,27 +71,27 @@ public class HeadQuarters : StructureInfo
 
     public void FreeScout()
     {
-        if(freeScout)
+        if (freeScout)
         {
-            List<TileInfo> _scoutTiles = new List<TileInfo>(); 
+            List<TileInfo> _scoutTiles = new List<TileInfo>();
 
-            foreach(TileInfo _tile in occupiedTile.neighbours)
+            foreach (TileInfo _tile in occupiedTile.neighbours)
             {
-                if(!_tile.isOccupied)
+                if (!_tile.isOccupied)
                 {
-                    _scoutTiles.Add(_tile); 
+                    _scoutTiles.Add(_tile);
                 }
             }
 
-            TileInfo _spawnTile = _scoutTiles[Random.Range(0, _scoutTiles.Count)];
+            TileInfo _spawnTile = _scoutTiles[Random.Range(1, _scoutTiles.Count)];
 
             GameObject _scout = Instantiate(scoutPrefab);
             _scout.transform.position = _spawnTile.transform.position;
             _scout.GetComponent<ScoutUnit>().occuipedTile = _spawnTile;
             _scout.GetComponent<ScoutUnit>().owner = owner;
-            _scout.GetComponent<ScoutUnit>().UpdatePlayerDetails(); 
+            _scout.GetComponent<ScoutUnit>().UpdatePlayerDetails();
             _spawnTile.isOccupied = true;
-            freeScout = false; 
+            freeScout = false;
         }
     }
 

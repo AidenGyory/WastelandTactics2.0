@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
 using System.Linq;
-using Unity.VisualScripting;
 
 public class TileManager : MonoBehaviour
 {
@@ -73,8 +72,20 @@ public class TileManager : MonoBehaviour
         {
             allTiles.Add(t);
         }
+        allTiles[0].EstablishNeighbours();
+        
     }
 
+    public void UpdateBorders()
+    {
+        foreach(TileInfo _tile in allTiles)
+        {
+            if(_tile.BorderOwner != null)
+            {
+                _tile.GetComponent<TerritoryBorderScript>().UpdateBorders(); 
+            }
+        }
+    }
     public TileInfo GetClosestTile(Vector3 _target)
     {
         List<TileInfo> _TilesToCheck = SetTileList(_target, 1); 
@@ -369,5 +380,7 @@ public class TileManager : MonoBehaviour
         {
             _building.UpdateBorder(); 
         }
+
+        UpdateBorders(); 
     }
 }

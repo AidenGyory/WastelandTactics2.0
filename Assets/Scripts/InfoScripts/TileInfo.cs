@@ -67,31 +67,60 @@ public class TileInfo: MonoBehaviour
         {
             originalColour.Add(modelMaterials[i].material.color); 
         }
-
-        Invoke(nameof(EstablishNeighbours), 1.2f); 
     }
+    //private void OnDrawGizmos()
+    //{
+
+    //    // degree angles for clock-wise rotation from transform.forward / Vector3.forward
+    //    float[] angleInDeg = { 90f, 30f, -30f, -90f, -150f, 150f, 90f };
+    //    Vector3 m_direction;
+    //    float m_maxDistance = 1f;
+    //    Vector3 origin = this.transform.position;
+    //    foreach (float a in angleInDeg)
+    //    {
+    //        float angleInRad = a * Mathf.Deg2Rad;
+    //        m_direction = new Vector3(Mathf.Cos(angleInRad), 0f, Mathf.Sin(angleInRad));
+
+    //        Gizmos.DrawRay(transform.position, m_direction * m_maxDistance);
+    //    }
+    //}
     public void EstablishNeighbours()
     {
-        //Debug.Log("Initialise Neighbours");
+        if (neighbours.Count > 0) return; 
 
-        float _tileSize = TileManager.instance.tileSize;
-        LayerMask _isTiles = TileManager.instance.isTiles;
+        // degree angles for clock-wise rotation from transform.forward / Vector3.forward
+        float[] angleInDeg = { 90f, 30f, -30f, -90f, -150f, 150f, 90f };
+        float m_maxDistance = 1;
+        Vector3 m_direction;
+        bool m_HitDetected = false;
+        List<GameObject> list = new List<GameObject>();
 
-        // Find all colliders within the given radius and isTiles layermask
-        Collider[] tiles = Physics.OverlapSphere(transform.position, _tileSize, _isTiles);
+        Vector3 origin = this.transform.position;
+        RaycastHit raycastHit;
 
-        for (int i = 0; i < tiles.Length; i++)
+        foreach (float a in angleInDeg)
         {
-            TileInfo _info = tiles[i].GetComponent<TileInfo>();
-            neighbours.Add(_info);
+            float angleInRad = a * Mathf.Deg2Rad;
+            m_direction = new Vector3(Mathf.Cos(angleInRad), 0f, Mathf.Sin(angleInRad));
+
+            m_HitDetected = Physics.Raycast(origin, m_direction, out raycastHit, m_maxDistance, TileManager.instance.isTiles);
+            if (m_HitDetected)
+            {
+                if (raycastHit.transform.GetComponent<TileInfo>())
+                {
+                    // Give information about raycast box
+                    Debug.Log($"Hit{raycastHit.collider.name}");
+                    
+                    neighbours.Add(raycastHit.transform.GetComponent<TileInfo>());
+                }
+            }
         }
 
-        if(neighbours.Contains(this))
+        foreach(TileInfo _tile in neighbours)
         {
-            //Debug.Log("List Contains This Tile");  
-            neighbours.Remove(this);
+            _tile.EstablishNeighbours(); 
         }
-        
+
     }
     public void CheckIfCanFlipNeighbours()
     {
@@ -367,20 +396,6 @@ public class TileInfo: MonoBehaviour
         if(scanIcon != null)
         {
             scanIcon.SetActive(visible);
-        }
-    }
-
-    public void AddBorder()
-    {
-        Debug.Log("Add Border for " + Owner); 
-        if(BorderOwner != null)
-        {
-            border.SetActive(true);
-            border.GetComponent<Renderer>().material.color = Owner.settings.primaryColour; 
-        }
-        else
-        {
-            border.SetActive(false); 
         }
     }
 

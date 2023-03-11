@@ -139,7 +139,7 @@ MonoBehaviour:
   StructureImage: {fileID: 21300000, guid: d40883ff01509409183ce95ab2664053, type: 3}
   maxHealth: 200
   currentHealth: 200
-  sightRangeInTiles: 0
+  sightRangeInTiles: 1
   UpgradeLevel: 0
   powerCost: 1
   modelMaterials:
@@ -183,7 +183,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   occupiedTile: {fileID: 0}
-  BorderRangeinTiles: 0
+  BorderRangeinTiles: 1
   active: 1
   metalOutput: 100
   metalRewardPrefab: {fileID: 2271875349201639985, guid: 3998d8b1b6d6712408be9700ffc9a073,

@@ -246,7 +246,7 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: 1c3b69ff68591bc46a8840bd4753a25f,
         type: 3}
       propertyPath: m_LocalScale.y
-      value: 0.02
+      value: 0.015
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 1c3b69ff68591bc46a8840bd4753a25f,
         type: 3}
@@ -306,7 +306,7 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: 1c3b69ff68591bc46a8840bd4753a25f,
         type: 3}
       propertyPath: m_ConstrainProportionsScale
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -1168205317935097147, guid: 1c3b69ff68591bc46a8840bd4753a25f,
         type: 3}

@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class SetupGameManager : MonoBehaviour
 {
@@ -9,7 +10,11 @@ public class SetupGameManager : MonoBehaviour
     [SerializeField] MapShaper _mapShaper;
     [SerializeField] HexGridLayout _hexGridLayout;
 
-    PlayerSpawn[] _spawns; 
+    PlayerSpawn[] _spawns;
+
+    [SerializeField] GameObject loadingScreen;
+    [SerializeField] Image loadingBar;
+    [SerializeField] GameObject loadingCircle; 
 
     void Start()
     {
@@ -20,6 +25,7 @@ public class SetupGameManager : MonoBehaviour
     //Step 1
     void SetupGame()
     {
+        loadingBar.fillAmount = 0.2f; 
         Debug.Log("Set up MapShaper");
         _mapShaper.SetMapShape(this, mapProfile);
         
@@ -28,6 +34,7 @@ public class SetupGameManager : MonoBehaviour
     //Step 2
     public void MapShaperCompleted()
     {
+        loadingBar.fillAmount = 0.4f;
         Debug.Log("MapShape Complete!"); 
         Debug.Log("Set up Tilemap");
         _hexGridLayout.CreateHexTileMap(this, mapProfile);
@@ -37,11 +44,13 @@ public class SetupGameManager : MonoBehaviour
     //Step 3
     public void TileMapCompleted()
     {
+        loadingBar.fillAmount = 0.6f;
         Debug.Log("Tile Map Complete!");
         GameManager.Instance.CreateHeadquarters(this); 
     }
     public void HeadquartersCompleted()
     {
+        loadingBar.fillAmount = 0.8f;
         Debug.Log("Headquarters Complete!");
         Invoke("TurnOffShaper", 0.5f); 
     }
@@ -68,7 +77,10 @@ public class SetupGameManager : MonoBehaviour
 
             TileManager.instance.InitialiseAllTiles(); 
             GameManager.Instance.StartGame(); 
+            
         }
-        
+        loadingBar.fillAmount = 1f;
+        loadingScreen.GetComponent<Animator>().SetBool("Fade", true);
+        loadingCircle.SetActive(false); 
     }
 }

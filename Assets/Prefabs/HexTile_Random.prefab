@@ -168,7 +168,7 @@ MonoBehaviour:
   - tile: {fileID: 8745371817361114117, guid: 87fba62d4bc0e524387b67654d152982, type: 3}
     weight: 1
   - tile: {fileID: 590754554551721599, guid: ed1f61a75e533c14db74dafe7c43b435, type: 3}
-    weight: 1
+    weight: 0
   - tile: {fileID: 9183377527264780351, guid: 1c7052ac958a7e34a8c572d2fcbfc58a, type: 3}
     weight: 1
   - tile: {fileID: 6450179174133711173, guid: 435678d4bfb2394448fdb30b9d22fe63, type: 3}

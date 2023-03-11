@@ -26,22 +26,19 @@ public class Outpost : StructureInfo
 
     public void FlipTiles()
     {
-        // find the tiles within unit movement radius 
-        Collider[] _tiles = Physics.OverlapSphere(occupiedTile.transform.position, 1, TileManager.instance.isTiles);
-
-        for (int i = 0; i < _tiles.Length; i++)
+        
+        for (int i = 0; i < occupiedTile.neighbours.Count; i++)
         {
-            TileInfo _info = _tiles[i].GetComponent<TileInfo>();
+            occupiedTile.neighbours[i].Owner = owner; 
+            occupiedTile.neighbours[i].BorderOwner = owner;
 
-            if (_info.state != TileState.IsFlipped)
+            if (occupiedTile.neighbours[i].state != TileState.IsFlipped)
             {
-                tilesToFlip.Add(_info);
+                tilesToFlip.Add(occupiedTile.neighbours[i]);
             }
-
         }
-        Invoke("WaitAndFlip", 0.2f);
-
-
+        TileManager.instance.UpdateBorders();
+        Invoke("WaitAndFlip", 0.1f);
     }
 
     public void WaitAndFlip()
@@ -49,16 +46,20 @@ public class Outpost : StructureInfo
         if (tilesToFlip.Count < 1)
         {
             TileManager.instance.FindPlayerOwnedTilesForFlipCheck(GameManager.Instance.currentPlayerTurn);
+
             return;
         }
 
         int rand = Random.Range(0, tilesToFlip.Count);
 
-        tilesToFlip[rand].TryToFlipTile();
+        if (tilesToFlip[rand].state != TileState.IsFlipped)
+        {
+            tilesToFlip[rand].TryToFlipTile();
+            tilesToFlip.Remove(tilesToFlip[rand]);
+        }
 
-        tilesToFlip.Remove(tilesToFlip[rand]);
 
-        Invoke("WaitAndFlip", 0.075f);
+        Invoke("WaitAndFlip", 0.1f);
     }
 
     public void OpenRadialMenu()

@@ -69,6 +69,7 @@ public class GameManager : MonoBehaviour
     }
     void StartTurn()
     {
+        TileManager.instance.SetBorderTileOwnership();
         //Select current player for zoom back to HQ
         SelectObjectScript.Instance.SelectPlayer(currentPlayerTurn);
 
