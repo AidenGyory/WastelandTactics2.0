@@ -47,7 +47,7 @@ public partial class PlayerInfo : MonoBehaviour
     public bool CreateSuperBuilding;
     [Space]
     public bool MetalProduction;
-    public bool GeneratorUnlock;
+    public bool PowerGeneratorUpgrade;
     public bool ExtraBattery;
     public bool ReducedCosts;
     public bool RemoveMalfunction; 
@@ -83,27 +83,35 @@ public partial class PlayerInfo : MonoBehaviour
 
     public void UpdatePlayerPowerSupply()
     {
+        int _powerUsed = 0;
+        int _powerTotal = 3;
+
         UnitInfo[] _units = FindObjectsOfType<UnitInfo>();
         StructureInfo[] _Structures = FindObjectsOfType<StructureInfo>();
+        for (int i = 0; i < _Structures.Length; i++)
+        {
+            if (_Structures[i].owner == this)
+            {
+                if (_Structures[i].GetComponent<PowerGenerator>() != null)
+                {
+                    _powerTotal += _Structures[i].GetComponent<PowerGenerator>().CheckPowerSupplied(); 
+                }
+                _powerUsed += _Structures[i].powerCost;
 
-        int _powerUsed = 0;
+            }
 
+        }
         for (int i = 0; i < _units.Length; i++)
         {
             if (_units[i].owner == this)
             {
                 _powerUsed += _units[i].powerCost;
+                
             }
         }
 
-        for (int i = 0; i < _Structures.Length; i++)
-        {
-            if (_Structures[i].owner == this)
-            {
-                _powerUsed += _Structures[i].powerCost;
-            }
-        }
 
+        PowerSupplyTotal = _powerTotal; 
         PowerSupplyUsed = _powerUsed;
 
     }
@@ -177,7 +185,7 @@ public partial class PlayerInfo : MonoBehaviour
                 MetalProduction = true;
                 break;
             case 1:
-                GeneratorUnlock = true;
+                PowerGeneratorUpgrade = true;
                 break;
             case 2:
                 ExtraBattery = true;
@@ -191,5 +199,10 @@ public partial class PlayerInfo : MonoBehaviour
         }
 
         explotiveUpgradeTrack[_index].alreadyResearched = true;
+    }
+
+    public void AddRelic()
+    {
+        Debug.Log("RUn Relic Add Method");
     }
 }

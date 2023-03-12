@@ -415,4 +415,15 @@ public class TileManager : MonoBehaviour
 
         
     }
+
+    public void ClearScan()
+    {
+        foreach (TileInfo _tile in allTiles)
+        {
+            if (_tile.GetComponent<ScanTileScript>().scanned)
+            {
+                _tile.GetComponent<ScanTileScript>().TurnOffScanLayer();
+            }
+        }
+    }
 }

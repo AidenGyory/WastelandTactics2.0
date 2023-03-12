@@ -32,16 +32,16 @@ public class ExplorationPointUI : MonoBehaviour
 
         foreach (Image _ui in uiImageElements)
         {
-            _ui.DOColor(_ui.color, 0.5f);
+           // _ui.DOColor(_ui.color, 0.5f);
             _ui.color = Color.clear;
         }
         foreach (TMP_Text _text in uiTextElements)
         {
-            _text.DOColor(_text.color, 0.5f);
+            //_text.DOColor(_text.color, 0.5f);
             _text.color = Color.clear;
         }
-        transform.DOScale(Vector3.one * 2,1f).OnComplete(FadeOut); 
-        
+        //transform.DOScale(Vector3.one * 2,1f).OnComplete(FadeOut); 
+        Destroy(gameObject);
     }
 
     public void FadeOut()

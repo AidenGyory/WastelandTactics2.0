@@ -22,10 +22,13 @@ public class ResourceCacheTileScript : TileInfo
     [SerializeField] GameObject metalRewardPrefab;
     [SerializeField] float distanceOffset;
 
+    private RelicAbilityScript _relicUI; 
+
     private void Awake()
     {
         if(random)
-        rewardType = (CacheType)Random.Range(0, 3); 
+        rewardType = (CacheType)Random.Range(0, 3);
+        _relicUI = FindObjectOfType<RelicAbilityScript>(); 
     }
 
     public void GiveReward(PlayerInfo _player)
@@ -33,7 +36,8 @@ public class ResourceCacheTileScript : TileInfo
         switch (rewardType)
         {
             case CacheType.Item:
-                Debug.Log("Relic Given!"); 
+                Debug.Log("Relic Given!");
+                _relicUI.TurnOnRelicUI(); 
                 break;
             case CacheType.MetalScrap:
                 Debug.Log("Give Metal"); 

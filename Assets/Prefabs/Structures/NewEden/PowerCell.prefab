@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 2827272470035316157}
   - component: {fileID: 4474353854127149323}
   - component: {fileID: 8077655633559421315}
+  - component: {fileID: 7209844720090911870}
   m_Layer: 8
   m_Name: PowerCell
   m_TagString: Untagged
@@ -92,12 +93,24 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 7209844720090911870}
+        m_TargetAssemblyTypeName: OutlineScript, Assembly-CSharp
+        m_MethodName: TurnOffOutline
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   highlightObj:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 8077655633559421315}
-        m_TargetAssemblyTypeName: StructureInfo, Assembly-CSharp
-        m_MethodName: HighlightStructure
+      - m_Target: {fileID: 7209844720090911870}
+        m_TargetAssemblyTypeName: OutlineScript, Assembly-CSharp
+        m_MethodName: TurnOnOutline
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -110,9 +123,9 @@ MonoBehaviour:
   unhighlightObj:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 8077655633559421315}
-        m_TargetAssemblyTypeName: StructureInfo, Assembly-CSharp
-        m_MethodName: unhighlightStructure
+      - m_Target: {fileID: 7209844720090911870}
+        m_TargetAssemblyTypeName: OutlineScript, Assembly-CSharp
+        m_MethodName: TurnOffOutline
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -162,18 +175,6 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 8077655633559421315}
-        m_TargetAssemblyTypeName: PowerGenerator, Assembly-CSharp
-        m_MethodName: CaptureNode
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
   runTurnStart:
     m_PersistentCalls:
       m_Calls: []
@@ -185,6 +186,19 @@ MonoBehaviour:
       m_Calls: []
   occupiedTile: {fileID: 0}
   BorderRangeinTiles: 1
+--- !u!114 &7209844720090911870
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1875557019037234701}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: da26bdca2b3f0024abba0a7445e750c1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  outlineModel: {fileID: 6882118362049634761}
 --- !u!1001 &6343473261846988322
 PrefabInstance:
   m_ObjectHideFlags: 0

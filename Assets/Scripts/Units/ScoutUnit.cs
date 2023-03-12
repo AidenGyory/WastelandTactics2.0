@@ -7,7 +7,7 @@ public class ScoutUnit : UnitInfo
     [SerializeField] int scanRadiusInTiles;
     [SerializeField] bool constantScan; 
 
-    bool _areaScanned; 
+
     //Invoked by Unity Event 
     public void UpdateMaterials()
     {
@@ -27,38 +27,6 @@ public class ScoutUnit : UnitInfo
         }
     }
 
-    //Invoked by Unity Event "PlayAction" 
-    public void ScanArea()
-    {
-        //if(!_areaScanned)
-        //{
-        //    _areaScanned = true;
-        //    Debug.Log("Dropped a Beacon");
-        //    //ADD SCAN FOR TILES 
-
-        //    List<TileInfo> _scannedTiles = TileManager.instance.SetTileList(occuipedTile.transform.position, 1);
-
-        //    for (int i = 0; i < _scannedTiles.Count; i++)
-        //    {
-        //        if (_scannedTiles[i].state != TileInfo.TileState.IsFlipped)
-        //        {
-        //            _scannedTiles[i].ShowScanIcon(true); 
-        //        }
-        //    }
-        //}
-        //else
-        //{
-        //    Debug.Log("Already Scanned!!"); 
-        //}
-
-
-    }
-
-    public void ReplenishScanAbility()
-    {
-        _areaScanned = false; 
-    }
-
     private void LateUpdate()
     {
         if(occuipedTile.type == TileInfo.TileType.Reward && occuipedTile.state == TileInfo.TileState.IsFlipped)
@@ -69,7 +37,7 @@ public class ScoutUnit : UnitInfo
             }
         }
 
-        if(constantScan)
+        if (constantScan)
         {
             if(GameManager.Instance.currentPlayerTurn == owner)
             {
@@ -82,16 +50,7 @@ public class ScoutUnit : UnitInfo
                     }
                 }
 
-                foreach(TileInfo _tile in TileManager.instance.allTiles)
-                {
-                    if(_tile.GetComponent<ScanTileScript>().scanned)
-                    {
-                        if(!_tilesScanned.Contains(_tile))
-                        {
-                            _tile.GetComponent<ScanTileScript>().TurnOffScanLayer();
-                        }
-                    }
-                }
+                
             }
         }
     }

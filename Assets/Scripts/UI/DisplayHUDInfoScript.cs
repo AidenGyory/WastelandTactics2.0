@@ -55,7 +55,15 @@ public class DisplayHUDInfoScript : MonoBehaviour
     [SerializeField] Image metalIcon; 
     [SerializeField] Image metalIconBG;
     [SerializeField] Image metalIconTextBG;
+    [SerializeField] Image researchIcon; 
+    [SerializeField] Image researchIconBG;
+    [SerializeField] Image researchTextBG;
     [SerializeField] Image powerIconBG;
+    [SerializeField] Image powerBarBG;
+
+    [Header("InfluenceBar")]
+    [SerializeField] Image player1TileInfluence; 
+    [SerializeField] Image player2TileInfluence;
 
     PlayerInfo _player;
     SelectScript _selected; 
@@ -96,8 +104,13 @@ public class DisplayHUDInfoScript : MonoBehaviour
         metalIcon.color = secondary;
         metalIconBG.color = primary;
         metalIconTextBG.color = secondary;
-        
+
+        researchIcon.color = secondary;
+        researchIconBG.color = primary;
+        researchTextBG.color = secondary;
+
         powerIconBG.color = secondary;
+        powerBarBG.color = secondary;
     }
 
     void UpdateSelectedInfo()
@@ -223,30 +236,59 @@ public class DisplayHUDInfoScript : MonoBehaviour
 
         MetalScrapAmount.text = "" + _player.MetalScrapAmount;
         ResearchPoints.text = "" + _player.ResearchPoints; 
-        playerName.text = "" + _player.settings.playerName; 
-        TurnTimer.text = "Turn: " + GameManager.Instance.turnTimer;
+        playerName.text = "" + _player.settings.playerName;
+        int turnsleft = 30 - GameManager.Instance.turnTimer; 
+        TurnTimer.text = "SANDSTORM IN: " + turnsleft;
 
-        foreach (GameObject node in UnhexiumAmount)
+
+        //Reset PowerCells
+        foreach (GameObject _cell in UnhexiumAmount)
         {
-            node.SetActive(false);
+            _cell.SetActive(false); 
         }
 
-        for (int i = 0; i < _player.PowerSupplyTotal; i++)
+        int _cellsToDisplay = _player.PowerSupplyTotal + 1; 
+
+        if(_cellsToDisplay > UnhexiumAmount.Length)
         {
-            UnhexiumAmount[i].SetActive(true);
-            UnhexiumAmount[i].GetComponent<CellInfo>().ChangeColor(CellInfo.PowerState.unused);
+            _cellsToDisplay = UnhexiumAmount.Length; 
         }
 
-        for (int i = 0; i < _player.PowerSupplyUsed; i++)
+        for (int i = 0; i < _cellsToDisplay; i++)
         {
-            UnhexiumAmount[i].GetComponent<CellInfo>().ChangeColor(CellInfo.PowerState.used);
+            UnhexiumAmount[i].SetActive(true); 
         }
 
+
+        for (int i = 0; i < UnhexiumAmount.Length; i++)
+        {
+            UnhexiumAmount[i].GetComponent<CellInfo>().ChangeColor(CellInfo.PowerState.none);
+        }
+
+        //if in Deficit
         if(_player.PowerSupplyUsed > _player.PowerSupplyTotal)
         {
-            foreach (GameObject node in UnhexiumAmount)
+            for (int i = 0; i < _player.PowerSupplyUsed; i++)
             {
-                node.GetComponent<CellInfo>().ChangeColor(CellInfo.PowerState.deficit); 
+                UnhexiumAmount[i].GetComponent<CellInfo>().ChangeColor(CellInfo.PowerState.notCollected);
+            }
+            for (int i = 0; i < _player.PowerSupplyTotal; i++)
+            {
+                UnhexiumAmount[i].GetComponent<CellInfo>().ChangeColor(CellInfo.PowerState.inDeficit);
+            }
+        }
+        else
+        {
+            //Power Cells Collected
+            for (int i = 0; i < _player.PowerSupplyTotal; i++)
+            {
+                UnhexiumAmount[i].GetComponent<CellInfo>().ChangeColor(CellInfo.PowerState.collected);
+            }
+
+            //Power Cells Used 
+            for (int i = 0; i < _player.PowerSupplyUsed; i++)
+            {
+                UnhexiumAmount[i].GetComponent<CellInfo>().ChangeColor(CellInfo.PowerState.used);
             }
         }
 
@@ -260,8 +302,35 @@ public class DisplayHUDInfoScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        UpdateHUDInfo(); 
+        UpdateHUDInfo();
+        CheckInfluence(); 
     }
 
+    public void CheckInfluence()
+    {
+        float ownedTiles = 0;
+        float player1Tiles = 0;
+        float player2Tiles = 0;
+
+        for (int i = 0; i < TileManager.instance.allTiles.Count; i++)
+        {
+            if (TileManager.instance.allTiles[i].Owner != null)
+            {
+                ownedTiles+=1;
+                if (TileManager.instance.allTiles[i].Owner == GameManager.Instance.players[0])
+                {
+                    player1Tiles += 1;
+                }
+                if (TileManager.instance.allTiles[i].Owner == GameManager.Instance.players[1])
+                {
+                    player2Tiles += 1;
+                }
+            }
+        }
+
+        player1TileInfluence.fillAmount = player1Tiles / ownedTiles;
+        player2TileInfluence.fillAmount = player2Tiles / ownedTiles;
+
+    }
 
 }

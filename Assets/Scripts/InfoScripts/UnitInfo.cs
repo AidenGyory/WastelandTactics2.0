@@ -63,7 +63,8 @@ public class UnitInfo : MonoBehaviour
 
     private void Start()
     {
-        _ModelMaterials.Clear(); 
+        _ModelMaterials.Clear();
+        GameManager.Instance.currentPlayerTurn.UpdatePlayerPowerSupply(); 
     }
     public void UpdatePlayerDetails()
     {

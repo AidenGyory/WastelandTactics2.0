@@ -23,22 +23,22 @@ public class SandstormTileScript : TileInfo
             GameObject _ui = Instantiate(sandstormUIPrefab, SelectObjectScript.Instance.CameraScreenCanvas);
             _ui.transform.position = Camera.main.WorldToScreenPoint(transform.position) + Vector3.up * distanceOffset;
 
-            // find the tiles within unit movement radius 
-            Collider[] _tiles = Physics.OverlapSphere(transform.position, flipRadius, isTiles);
+            //// find the tiles within unit movement radius 
+            //Collider[] _tiles = Physics.OverlapSphere(transform.position, flipRadius, isTiles);
 
-            for (int i = 0; i < _tiles.Length; i++)
-            {
-                TileInfo _info = _tiles[i].GetComponent<TileInfo>();
+            //for (int i = 0; i < _tiles.Length; i++)
+            //{
+            //    TileInfo _info = _tiles[i].GetComponent<TileInfo>();
 
-                if (_info.state == TileState.IsFlipped)
-                {
-                    tilesToFlipBack.Add(_info);
-                }
+            //    if (_info.state == TileState.IsFlipped)
+            //    {
+            //        tilesToFlipBack.Add(_info);
+            //    }
 
-            }
+            //}
             CreateSandstormParticle();
             ClearSandstorm(); 
-            Invoke("WaitAndFlip", 0.2f);
+            //Invoke("WaitAndFlip", 0.2f);
         }
 
         
@@ -75,6 +75,7 @@ public class SandstormTileScript : TileInfo
         TileAudioManager.instance.PlayTileAudio(tileAudioType.sandstorm);
         GameObject _dust = Instantiate(sandstormParticlePrefab);
         _dust.transform.position = transform.position;
+        //ShakeCamera(); 
     }
 
 }

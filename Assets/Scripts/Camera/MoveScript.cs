@@ -130,7 +130,7 @@ public class MoveScript : MonoBehaviour
             _currentPosition = Vector3.Lerp(_currentPosition, _targetPosition, movementSpeed * Time.deltaTime);
 
             transform.position = _currentPosition;
-            if (Vector3.Distance(transform.position, targetPosition + offset) < 0.01f)
+            if (Vector3.Distance(transform.position, targetPosition + offset) < 0.05f)
             {
                 moveFollowTarget = false;
             }

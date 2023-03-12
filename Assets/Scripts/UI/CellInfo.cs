@@ -7,31 +7,39 @@ public class CellInfo : MonoBehaviour
 {
     public enum PowerState
     {
-        unused,
+        none,
+        collected,
         used,
-        deficit,
+        inDeficit,
+        notCollected,
     }
 
-    [SerializeField] Color unused; 
-    [SerializeField] Color used; 
-    [SerializeField] Color defict;
+    [SerializeField] Color none; 
+    [SerializeField] Color collected; 
+    [SerializeField] Color used;
+    [SerializeField] Color inDeficit;
+    [SerializeField] Color inDeficitNotCollected;
 
     public void ChangeColor(PowerState _state)
     {
         switch (_state)
         {
-            case PowerState.unused:
-                GetComponent<Image>().color = unused; 
+            case PowerState.none:
+                GetComponent<Image>().color = none; 
+                break;
+            case PowerState.collected:
+                GetComponent<Image>().color = collected;
                 break;
             case PowerState.used:
                 GetComponent<Image>().color = used;
+                break;
+            case PowerState.inDeficit:
+                GetComponent<Image>().color = inDeficit;
 
                 break;
-            case PowerState.deficit:
-                GetComponent<Image>().color = defict;
+            case PowerState.notCollected:
+                GetComponent<Image>().color = inDeficitNotCollected;
 
-                break;
-            default:
                 break;
         }
     }

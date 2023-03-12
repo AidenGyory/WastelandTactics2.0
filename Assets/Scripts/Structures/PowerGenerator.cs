@@ -23,8 +23,20 @@ public class PowerGenerator : StructureInfo
         }
     }
 
-    public void CaptureNode()
+    public int CheckPowerSupplied()
     {
-        owner.PowerSupplyTotal += 1; 
+        int _powerSupplied = 1; 
+
+        if(occupiedTile.type == TileInfo.TileType.Oasis || occupiedTile.type == TileInfo.TileType.Unhexium)
+        {
+            _powerSupplied += 1; 
+        }
+
+        if(owner.PowerGeneratorUpgrade)
+        {
+            _powerSupplied += 1; 
+        }
+
+        return _powerSupplied;
     }
 }

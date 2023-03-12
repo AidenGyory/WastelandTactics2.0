@@ -83,15 +83,6 @@ public class SelectObjectScript : MonoBehaviour
                     return; 
                 }
             }
-
-            // Press "Right Click"
-            if(Input.GetMouseButtonDown(1))
-            {
-                if(highlightedObject == selectedObject)
-                {
-                    ActionModeInput(); 
-                }
-            }
         }
         //REMEMBER TO ADD TOOLTIP HOVERING
 

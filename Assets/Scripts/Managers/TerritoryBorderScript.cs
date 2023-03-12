@@ -24,9 +24,12 @@ public class TerritoryBorderScript : MonoBehaviour
             }
             for (int i = 0; i < _borders.Count; i++)
             {
-                if (_tileinfo.neighbours[i].BorderOwner == _tileinfo.BorderOwner)
+                if(i < _tileinfo.neighbours.Count)
                 {
-                    _borders[i].enabled = false;
+                    if (_tileinfo.neighbours[i].BorderOwner == _tileinfo.BorderOwner)
+                    {
+                        _borders[i].enabled = false;
+                    }
                 }
             }
         }

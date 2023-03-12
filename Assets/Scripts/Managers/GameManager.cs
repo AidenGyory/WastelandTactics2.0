@@ -72,7 +72,10 @@ public class GameManager : MonoBehaviour
     {
         DOTween.KillAll();
 
+        //Clear Scanned Tiles
+        TileManager.instance.ClearScan(); 
 
+        //Set Borders
         TileManager.instance.SetBorderTileOwnership();
         //Select current player for zoom back to HQ
         SelectObjectScript.Instance.SelectPlayer(currentPlayerTurn);
@@ -142,4 +145,6 @@ public class GameManager : MonoBehaviour
         _setup.HeadquartersCompleted(); 
 
     }
+
+    
 }

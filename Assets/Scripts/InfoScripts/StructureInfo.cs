@@ -32,6 +32,10 @@ public class StructureInfo : MonoBehaviour
     public TileInfo occupiedTile;
     [SerializeField] int BorderRangeinTiles;
 
+    private void Start()
+    {
+        GameManager.Instance.currentPlayerTurn.UpdatePlayerPowerSupply();
+    }
     public void UpdatePlayerDetails()
     {
         UpdatePlayer.Invoke();
@@ -125,7 +129,6 @@ public class StructureInfo : MonoBehaviour
             {
                 //set the owner of the tile to match the owner of the building.  
                 _tile.BorderOwner = owner;
-                //TileManager.instance.UpdateBorders(); 
             }
 
         }

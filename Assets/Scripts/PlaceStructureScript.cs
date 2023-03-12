@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class PlaceStructureScript : MonoBehaviour
@@ -85,10 +86,24 @@ public class PlaceStructureScript : MonoBehaviour
                 TileManager.instance.ClearPlaceableStateOnAllTiles();
                 SelectObjectScript.Instance.SetModeToSelect();
 
-                //spawned = true;
+                TileManager.instance.SetBorderTileOwnership();
                 Destroy(gameObject);
 
             }
+        }
+        if(Input.GetKeyDown(KeyCode.Escape))
+        {
+            //Reset Camera and OjectSelectionManager
+            TileManager.instance.ClearPlaceableStateOnAllTiles();
+            SelectObjectScript.Instance.SetModeToSelect();
+            Destroy(gameObject);
+        }
+        if (Input.GetMouseButton(1))
+        {
+            //Reset Camera and OjectSelectionManager
+            TileManager.instance.ClearPlaceableStateOnAllTiles();
+            SelectObjectScript.Instance.SetModeToSelect();
+            Destroy(gameObject);
         }
     }
 }
