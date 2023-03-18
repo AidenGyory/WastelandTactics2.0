@@ -126,7 +126,7 @@ MonoBehaviour:
   scoutPrefab: {fileID: 2466691373955561914, guid: 8b94fa34a25ede0428849e213ea7d76b,
     type: 3}
   freeScout: 1
-  metalRewardPrefab: {fileID: 2271875349201639985, guid: 3998d8b1b6d6712408be9700ffc9a073,
+  metalRewardPrefab: {fileID: 9001811830997793115, guid: d2220b7bdd06fd644aae5d3f2123456d,
     type: 3}
   distanceOffset: 1
 --- !u!114 &4474353854127149323

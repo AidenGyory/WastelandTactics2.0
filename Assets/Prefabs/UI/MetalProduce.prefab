@@ -145,6 +145,7 @@ GameObject:
   m_Component:
   - component: {fileID: 9001811830997793108}
   - component: {fileID: 9001811830997793110}
+  - component: {fileID: 2586292587533194431}
   m_Layer: 5
   m_Name: MetalProduce
   m_TagString: Untagged
@@ -182,6 +183,24 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 9001811830997793115}
   m_CullTransparentMesh: 1
+--- !u!114 &2586292587533194431
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9001811830997793115}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0064ed22c7707fb4783bc1b4837a55e2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  productionAmount: 100
+  amountText: {fileID: 1091251845618985927}
+  icon: {fileID: 9001811831926192938}
+  countdownToDestroy: 2
+  positive: {r: 0.9960785, g: 0.69411767, b: 0, a: 1}
+  negative: {r: 1, g: 0.25469375, b: 0, a: 0}
 --- !u!1 &9001811831926192936
 GameObject:
   m_ObjectHideFlags: 0
