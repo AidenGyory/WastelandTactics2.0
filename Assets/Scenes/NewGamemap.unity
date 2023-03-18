@@ -21413,7 +21413,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1578264314
 RectTransform:
   m_ObjectHideFlags: 0
@@ -29942,6 +29942,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: TechTree
+      objectReference: {fileID: 0}
+    - target: {fileID: 7225734019572668183, guid: c8adde5881b8dff4da3df67a09fc7cbe,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8369744996581911824, guid: c8adde5881b8dff4da3df67a09fc7cbe,
         type: 3}
