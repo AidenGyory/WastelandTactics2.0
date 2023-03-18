@@ -146,6 +146,7 @@ GameObject:
   - component: {fileID: 9001811830997793108}
   - component: {fileID: 9001811830997793110}
   - component: {fileID: 2586292587533194431}
+  - component: {fileID: 8431544675694986169}
   m_Layer: 5
   m_Name: MetalProduce
   m_TagString: Untagged
@@ -162,8 +163,8 @@ RectTransform:
   m_GameObject: {fileID: 9001811830997793115}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: -10}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_LocalScale: {x: 0.01, y: 0.01, z: 0.01}
+  m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 9001811831926192937}
   - {fileID: 4440846300783591249}
@@ -201,6 +202,18 @@ MonoBehaviour:
   countdownToDestroy: 2
   positive: {r: 0.9960785, g: 0.69411767, b: 0, a: 1}
   negative: {r: 1, g: 0.25469375, b: 0, a: 0}
+--- !u!114 &8431544675694986169
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9001811830997793115}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2b03621df3daef1469d27e5b252f2a23, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &9001811831926192936
 GameObject:
   m_ObjectHideFlags: 0

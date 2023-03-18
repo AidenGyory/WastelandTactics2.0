@@ -35,6 +35,7 @@ public class TileManager : MonoBehaviour
     public float flashSpeed;
 
     public LayerMask isUnit; 
+    public LayerMask isStructure;
 
     //List of Tiles that need to be flipped
     public List<TileInfo> tilesToFlip;
@@ -50,14 +51,6 @@ public class TileManager : MonoBehaviour
         else if (instance != this)
         {
             Destroy(gameObject);
-        }
-    }
-
-    public void ResetIconsOnTiles()
-    {
-        foreach(TileInfo _tile in allTiles)
-        {
-            _tile.ShowScanIcon(false); 
         }
     }
 
@@ -393,8 +386,10 @@ public class TileManager : MonoBehaviour
 
         if (tilesToFlip.Count < 1) 
         {
-            FindPlayerOwnedTilesForFlipCheck(GameManager.Instance.currentPlayerTurn);
-            runFlipTiles = false; 
+            tilesToFlip.Clear(); 
+            runFlipTiles = false;
+            SelectObjectScript.Instance.SetModeToSelect(); 
+
         }
         else
         {

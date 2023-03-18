@@ -6,16 +6,17 @@ using UnityEngine;
 public class VantagePoint : TileInfo
 {
     [Header("Prefab Element")]
-    [SerializeField] GameObject AddEpPrefab;
-    [SerializeField] float distanceOffset; 
-    public void AddExplorationPoint(int _amount)
+    [SerializeField] GameObject EpRewardUIPrefab;
+    [SerializeField] float distanceOffset;
+    [SerializeField] GameObject canvas;
+    public void AddFlipReward(int _amount)
     {
-        GameManager.Instance.currentPlayerTurn.AddExplorationPoints(_amount); 
+        GameObject _AddEPUI = Instantiate(EpRewardUIPrefab);
+        _AddEPUI.transform.SetParent(canvas.transform);
+        _AddEPUI.transform.position = canvas.transform.position;
+        _AddEPUI.GetComponent<MetalProductionScript>().productionAmount = _amount;
 
-        GameObject _AddEPUI = Instantiate(AddEpPrefab, SelectObjectScript.Instance.CameraScreenCanvas);
-
-        _AddEPUI.transform.position = Camera.main.WorldToScreenPoint(transform.position) + Vector3.up * distanceOffset; 
-
-        TileManager.instance.FindPlayerOwnedTilesForFlipCheck(Owner); 
+        GameManager.Instance.currentPlayerTurn.AddExplorationPoints(_amount);
+        SelectObjectScript.Instance.SetModeToSelect(); 
     }
 }

@@ -80,9 +80,6 @@ public class GameManager : MonoBehaviour
         //Select current player for zoom back to HQ
         SelectObjectScript.Instance.SelectPlayer(currentPlayerTurn);
 
-        //Remove icons from Scanned Tiles
-        TileManager.instance.ResetIconsOnTiles();
-
         // Refresh the player's exploration points.
         currentPlayerTurn.AddExplorationPoints(currentPlayerTurn.ExplorationPointsMax);
 
@@ -106,7 +103,7 @@ public class GameManager : MonoBehaviour
         {
             if (_unit.owner == currentPlayerTurn)
             {
-                _unit.RefreshUnit();
+                _unit.StartTurn();
             }
         }
     }
@@ -118,7 +115,7 @@ public class GameManager : MonoBehaviour
         {
             if (_structure.owner == currentPlayerTurn)
             {
-                _structure.RefreshStructure();
+                _structure.StartTurn();
             }
         }
     }

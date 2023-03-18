@@ -10,6 +10,7 @@ public class Factory : StructureInfo
 
     [SerializeField] GameObject metalRewardPrefab;
     [SerializeField] float distanceOffset;
+    [SerializeField] GameObject canvas; 
 
     public void UpdateMaterials()
     {
@@ -38,7 +39,10 @@ public class Factory : StructureInfo
             _metalScrap += (float)metalOutput * 0.2f; 
         }
         GameObject _AddMetalUI = Instantiate(metalRewardPrefab);
-        _AddMetalUI.transform.position = transform.position + Vector3.up * distanceOffset;
+        _AddMetalUI.transform.SetParent(canvas.transform);
+        _AddMetalUI.transform.position = canvas.transform.position;
+        _AddMetalUI.GetComponent<MetalProductionScript>().productionAmount = Mathf.RoundToInt(_metalScrap); 
+
         owner.AddMetalScrap(Mathf.RoundToInt(_metalScrap)); 
     }
 }

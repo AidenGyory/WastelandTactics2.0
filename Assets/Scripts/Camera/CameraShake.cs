@@ -10,13 +10,11 @@ public class CameraShake : MonoBehaviour
 
     public IEnumerator Shake(float shakeAmount, float shakeDuration)
     {
-        if(GetComponent<CameraFollow>().follow)
-        {
-            originalPos = transform.position;
-            GetComponent<CameraFollow>().follow = false;
-        }
+        originalPos = transform.localPosition;
 
-        
+        GetComponent<CameraFollow>().enabled = false;
+
+
         // Set the shake timer to the shake duration.
         float shakeTimer = shakeDuration;
 
@@ -34,6 +32,6 @@ public class CameraShake : MonoBehaviour
 
         // Reset the camera's position.
         transform.localPosition = originalPos;
-        GetComponent<CameraFollow>().follow = true;
+        GetComponent<CameraFollow>().enabled = true;
     }
 }

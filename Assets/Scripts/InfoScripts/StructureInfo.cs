@@ -13,8 +13,6 @@ public class StructureInfo : MonoBehaviour
     public string StructureName;
     public Sprite StructureImage;
     [Header("Structure Components")]
-    public int maxHealth;
-    public int currentHealth;
     public int sightRangeInTiles;
     public int UpgradeLevel;
     public int powerCost; 
@@ -46,7 +44,7 @@ public class StructureInfo : MonoBehaviour
         }
     }
 
-    public void RefreshStructure()
+    public void StartTurn()
     {
         runTurnStart.Invoke(); 
     }

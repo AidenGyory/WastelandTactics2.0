@@ -11,6 +11,10 @@ public class HeadQuarters : StructureInfo
 
     [SerializeField] GameObject metalRewardPrefab;
     [SerializeField] float distanceOffset;
+    [SerializeField] GameObject canvas;
+
+    [SerializeField] GameObject headquartersModel; 
+    [SerializeField] GameObject headquartersModelBroken;
 
     public void UpdateMaterials()
     {
@@ -46,7 +50,7 @@ public class HeadQuarters : StructureInfo
 
     public void OpenRadialMenu()
     {
-        if(SelectObjectScript.Instance.canSelect)
+        if(SelectObjectScript.Instance.canSelect && GameManager.Instance.currentPlayerTurn == owner)
         {
             
             SelectObjectScript.Instance.CameraScreenCanvas.GetComponent<RadialMenuForStructures>().OpenRadialMenu();
@@ -68,10 +72,13 @@ public class HeadQuarters : StructureInfo
 
         if (owner.MetalProduction)
         {
-            _metalScrap *= 1.2f; 
+            _metalScrap += (float)metalOutput * 0.2f;
         }
         GameObject _AddMetalUI = Instantiate(metalRewardPrefab);
-        _AddMetalUI.transform.position = transform.position + Vector3.up * distanceOffset;
+        _AddMetalUI.transform.SetParent(canvas.transform);
+        _AddMetalUI.transform.position = canvas.transform.position;
+        _AddMetalUI.GetComponent<MetalProductionScript>().productionAmount = Mathf.RoundToInt(_metalScrap);
+
         owner.AddMetalScrap(Mathf.RoundToInt(_metalScrap));
     }
 
@@ -117,6 +124,13 @@ public class HeadQuarters : StructureInfo
 
             }
         }
+    }
+
+    public void GameOver()
+    {
+        Debug.Log("GAME OVER! " + GameManager.Instance.currentPlayerTurn + " wins!!");
+        headquartersModel.SetActive(false);
+        headquartersModelBroken.SetActive(true); 
     }
 
 }

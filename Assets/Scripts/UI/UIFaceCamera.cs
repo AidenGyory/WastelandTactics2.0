@@ -7,12 +7,12 @@ public class UIFaceCamera : MonoBehaviour
 
     void Start()
     {
-        canvas = GetComponent<Canvas>();
+        //canvas = GetComponent<Canvas>();
     }
 
     void Update()
     {
-        canvas.transform.LookAt(Camera.main.transform);
-        canvas.transform.rotation = Quaternion.LookRotation(canvas.transform.position - Camera.main.transform.position);
+        transform.LookAt(Camera.main.transform);
+        transform.rotation = Quaternion.LookRotation(transform.position - Camera.main.transform.position);
     }
 }

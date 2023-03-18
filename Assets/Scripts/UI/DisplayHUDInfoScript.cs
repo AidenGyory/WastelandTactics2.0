@@ -39,6 +39,7 @@ public class DisplayHUDInfoScript : MonoBehaviour
     [Header("Player Resources")]
     [SerializeField] GameObject PowerBar;
     [SerializeField] GameObject[] UnhexiumAmount;
+    [SerializeField] GameObject MalfunctionText; 
     [SerializeField] TMP_Text MetalScrapAmount;
     [SerializeField] TMP_Text ResearchPoints;
     [SerializeField] TMP_Text TurnTimer;
@@ -60,6 +61,7 @@ public class DisplayHUDInfoScript : MonoBehaviour
     [SerializeField] Image researchTextBG;
     [SerializeField] Image powerIconBG;
     [SerializeField] Image powerBarBG;
+    [SerializeField] Image powerBarIconColour; 
 
     [Header("InfluenceBar")]
     [SerializeField] Image player1TileInfluence; 
@@ -76,7 +78,7 @@ public class DisplayHUDInfoScript : MonoBehaviour
         if(_selected != null)
         {
             ObjInfoHUD.SetActive(true); 
-            UpdateSelectedInfo();
+            //UpdateSelectedInfo();
         }
         else
         {
@@ -113,108 +115,108 @@ public class DisplayHUDInfoScript : MonoBehaviour
         powerBarBG.color = secondary;
     }
 
-    void UpdateSelectedInfo()
-    {
-        foreach (GameObject _level in levels)
-        {
-            _level.SetActive(false);
-        }
+    //void UpdateSelectedInfo()
+    //{
+    //    foreach (GameObject _level in levels)
+    //    {
+    //        _level.SetActive(false);
+    //    }
 
-        switch (_selected.objectType)
-        {
-            case SelectScript.objType.tile:
-            {
-                    StructureStatUI.SetActive(false);
-                    UnitStatUI.SetActive(false);
-                    healthBarUI.SetActive(false);
+    //    switch (_selected.objectType)
+    //    {
+    //        case SelectScript.objType.tile:
+    //        {
+    //                StructureStatUI.SetActive(false);
+    //                UnitStatUI.SetActive(false);
+    //                healthBarUI.SetActive(false);
 
-                    TilesUI.SetActive(true);
-                    ActionPointUI.SetActive(true);
-
-                    
-
-                    //TileInfo
-                    TileInfo _info = _selected.GetComponent<TileInfo>();
-                    if(_info.state != TileInfo.TileState.IsFlipped)
-                    {
-                        ObjNameText.text = "Unknown"; 
-
-                    }
-                    else
-                    {
-                        ObjNameText.text = "" + _info.tileName;
-                        ObjIcon.sprite = _info.tileImage;
-                    }
-                    
-
-                }
-                break;
-            case SelectScript.objType.structure:
-            {
-                    TilesUI.SetActive(false);
-                    ActionPointUI.SetActive(false);
-                    UnitStatUI.SetActive(false);
-
-                    StructureStatUI.SetActive(true);
-                    healthBarUI.SetActive(true);
-
-
-
-                    //StructureInfo
-                    StructureInfo _info = _selected.GetComponent<StructureInfo>();
-
-                    ObjNameText.text = "" + _info.StructureName;
-                    ObjIcon.sprite = _info.StructureImage;
-                    healthbarText.text = "" + _info.currentHealth + "/" + _info.maxHealth;
-                    healthbarFill.fillAmount = _info.currentHealth / _info.maxHealth;
+    //                TilesUI.SetActive(true);
+    //                ActionPointUI.SetActive(true);
 
                     
 
-                    for (int i = 0; i < _info.UpgradeLevel; i++)
-                    {
-                        levels[i].SetActive(true);
-                    }
+    //                //TileInfo
+    //                TileInfo _info = _selected.GetComponent<TileInfo>();
+    //                if(_info.state != TileInfo.TileState.IsFlipped)
+    //                {
+    //                    ObjNameText.text = "Unknown"; 
 
-                    StructureSight.text = "" + _info.sightRangeInTiles;
-                }
-                break;
-            case SelectScript.objType.unit:
-            {
-                    UnitStatUI.SetActive(true);
-                    ActionPointUI.SetActive(true);
-                    healthBarUI.SetActive(true);
-
-                    TilesUI.SetActive(false);
-                    StructureStatUI.SetActive(false);
+    //                }
+    //                else
+    //                {
+    //                    ObjNameText.text = "" + _info.tileName;
+    //                    ObjIcon.sprite = _info.tileImage;
+    //                }
                     
 
-                    //UnitInfo
-                    UnitInfo _info = _selected.GetComponent<UnitInfo>();
+    //            }
+    //            break;
+    //        case SelectScript.objType.structure:
+    //        {
+    //                TilesUI.SetActive(false);
+    //                ActionPointUI.SetActive(false);
+    //                UnitStatUI.SetActive(false);
 
-                    ObjNameText.text = "" + _info.unitName;
-                    ObjIcon.sprite = _info.unitImage; 
-                    healthbarText.text = "" + _info.currentHealth + "/" + _info.maxHealth;
-                    healthbarFill.fillAmount = _info.currentHealth/_info.maxHealth;
-                    ActionPoints.text = "" + _info.currentMovementTiles;
+    //                StructureStatUI.SetActive(true);
+    //                healthBarUI.SetActive(true);
 
-                    foreach(GameObject _level in levels)
-                    {
-                        _level.SetActive(false); 
-                    }
 
-                    for (int i = 0; i < _info.prestigeLevel; i++)
-                    {
-                        levels[i].SetActive(true); 
-                    }
 
-                    UnitAttack.text = "" + _info.baseDamage;
-                    UnitRange.text = "" + _info.attackRange; 
+    //                //StructureInfo
+    //                StructureInfo _info = _selected.GetComponent<StructureInfo>();
 
-                }
-                break; 
+    //                ObjNameText.text = "" + _info.StructureName;
+    //                ObjIcon.sprite = _info.StructureImage;
+    //                healthbarText.text = "" + _info.currentHealth + "/" + _info.maxHealth;
+    //                healthbarFill.fillAmount = _info.currentHealth / _info.maxHealth;
+
+                    
+
+    //                for (int i = 0; i < _info.UpgradeLevel; i++)
+    //                {
+    //                    levels[i].SetActive(true);
+    //                }
+
+    //                StructureSight.text = "" + _info.sightRangeInTiles;
+    //            }
+    //            break;
+    //        case SelectScript.objType.unit:
+    //        {
+    //                UnitStatUI.SetActive(true);
+    //                ActionPointUI.SetActive(true);
+    //                healthBarUI.SetActive(true);
+
+    //                TilesUI.SetActive(false);
+    //                StructureStatUI.SetActive(false);
+                    
+
+    //                //UnitInfo
+    //                UnitInfo _info = _selected.GetComponent<UnitInfo>();
+
+    //                ObjNameText.text = "" + _info.unitName;
+    //                ObjIcon.sprite = _info.unitImage; 
+    //                healthbarText.text = "" + _info.currentHealth + "/" + _info.maxHealth;
+    //                healthbarFill.fillAmount = _info.currentHealth/_info.maxHealth;
+    //                ActionPoints.text = "" + _info.currentMovementTiles;
+
+    //                foreach(GameObject _level in levels)
+    //                {
+    //                    _level.SetActive(false); 
+    //                }
+
+    //                for (int i = 0; i < _info.prestigeLevel; i++)
+    //                {
+    //                    levels[i].SetActive(true); 
+    //                }
+
+    //                UnitAttack.text = "" + _info.baseDamage;
+    //                UnitRange.text = "" + _info.attackRange; 
+
+    //            }
+    //            break; 
             
-        }
-    }
+    //    }
+    //}
 
     void UpdateResources()
     {
@@ -276,6 +278,8 @@ public class DisplayHUDInfoScript : MonoBehaviour
             {
                 UnhexiumAmount[i].GetComponent<CellInfo>().ChangeColor(CellInfo.PowerState.inDeficit);
             }
+            MalfunctionText.SetActive(true);
+            powerBarIconColour.color = Color.red; 
         }
         else
         {
@@ -290,6 +294,8 @@ public class DisplayHUDInfoScript : MonoBehaviour
             {
                 UnhexiumAmount[i].GetComponent<CellInfo>().ChangeColor(CellInfo.PowerState.used);
             }
+            MalfunctionText.SetActive(false);
+            powerBarIconColour.color = Color.cyan;
         }
 
     }

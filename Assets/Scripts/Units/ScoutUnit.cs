@@ -49,8 +49,6 @@ public class ScoutUnit : UnitInfo
                         _tile.GetComponent<ScanTileScript>().TurnOnScanLayer(); 
                     }
                 }
-
-                
             }
         }
     }

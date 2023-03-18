@@ -21,9 +21,11 @@ public class ResourceCacheTileScript : TileInfo
 
     [SerializeField] GameObject metalRewardPrefab;
     [SerializeField] float distanceOffset;
+    [SerializeField] GameObject canvas;
 
-    private RelicAbilityScript _relicUI; 
+    private RelicAbilityScript _relicUI;
 
+    
     private void Awake()
     {
         if(random)
@@ -40,10 +42,15 @@ public class ResourceCacheTileScript : TileInfo
                 _relicUI.TurnOnRelicUI(); 
                 break;
             case CacheType.MetalScrap:
-                Debug.Log("Give Metal"); 
-                GameObject _AddMetalUI = Instantiate(metalRewardPrefab, SelectObjectScript.Instance.CameraScreenCanvas);
-                _AddMetalUI.transform.position = Camera.main.WorldToScreenPoint(transform.position) + Vector3.up * distanceOffset;
-                _player.MetalScrapAmount += 50; 
+                Debug.Log("Give Metal");
+                float _metalScrap = 50;
+
+                GameObject _AddMetalUI = Instantiate(metalRewardPrefab);
+                _AddMetalUI.transform.SetParent(canvas.transform);
+                _AddMetalUI.transform.position = canvas.transform.position;
+                _AddMetalUI.GetComponent<MetalProductionScript>().productionAmount = Mathf.RoundToInt(_metalScrap);
+
+                GameManager.Instance.currentPlayerTurn.AddMetalScrap(Mathf.RoundToInt(_metalScrap));
                 break;
             case CacheType.ExplorationPoint:
                 Debug.Log("Give EP"); 

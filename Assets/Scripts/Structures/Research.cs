@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Research : StructureInfo
 {
+
     public void UpdateMaterials()
     {
         for (int i = 0; i < modelMaterials.Length; i++)

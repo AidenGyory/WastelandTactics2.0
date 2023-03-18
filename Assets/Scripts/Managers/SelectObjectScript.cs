@@ -8,9 +8,8 @@ public class SelectObjectScript : MonoBehaviour
     public enum PointerMode
     {
         SelectMode,
-        MoveMode,
+        UnitMode,
         PlacementMode,
-        AttackMode,
     }
 
     public PointerMode mode;   
@@ -62,17 +61,8 @@ public class SelectObjectScript : MonoBehaviour
                             SelectModeInput();
 
                             break;
-                        case PointerMode.MoveMode:
-                            MoveModeInput();
-
-                            break;
-                        case PointerMode.PlacementMode:
-                            break;
-                        case PointerMode.AttackMode:
-                            if (selectedObject != highlightedObject)
-                            {
-                                AttackUnitInput();
-                            }
+                        case PointerMode.UnitMode:
+                            UnitInput(); 
 
                             break;
                     }
@@ -152,15 +142,12 @@ public class SelectObjectScript : MonoBehaviour
     }
     void ClearActionIcons()
     {
-        UnitInfo[] _units = FindObjectsOfType<UnitInfo>();
+        HealthScript[] _targets = FindObjectsOfType<HealthScript>();
 
-        foreach (UnitInfo _unit in _units)
+        foreach (HealthScript _unit in _targets)
         {
-            if (_unit.AttackCanvas != null)
-            {
-                _unit.AttackCanvas.SetActive(false);
-                _unit.isTarget = false;
-            }
+            _unit.targetIcon.SetActive(false);
+            _unit.isTarget = false; 
             
         }
     }
@@ -206,6 +193,18 @@ public class SelectObjectScript : MonoBehaviour
                 break;
         }
     }
+
+    void UnitInput()
+    {
+        if(highlightedObject.objectType == SelectScript.objType.tile)
+        {
+            MoveModeInput(); 
+        }
+        else
+        {
+            AttackUnitInput(); 
+        }
+    }
     void MoveModeInput()
     {
         //Debug.Log("Movement Input"); 
@@ -235,81 +234,23 @@ public class SelectObjectScript : MonoBehaviour
         //Guard for tile
         if(highlightedObject.objectType == SelectScript.objType.tile)
         {
-            SetModeToSelect(); 
-        }
-
-        //Guard for attacking own units/buildings 
-        UnitInfo _unit = selectedObject.GetComponent<UnitInfo>();
-
-        if (highlightedObject.objectType == SelectScript.objType.unit)
-        {
-            UnitInfo _target = highlightedObject.GetComponent<UnitInfo>();
-
-            if(_target.owner == _unit.owner)
-            {
-                SetModeToSelect();
-                return; 
-            }
-
-            //Camera Shake
-            Camera.main.GetComponent<CameraFollow>().StartShake(0.1f, 0.1f);
-
-            //Play Sounds
-            TileAudioManager.instance.PlayTileAudio(tileAudioType.shoot);
-            TileAudioManager.instance.PlayTileAudio(tileAudioType.damage);
-
-            //DebugLog of Damage
-            Debug.Log(_unit.unitName + " is Deals" + _unit.baseDamage + " to Unit: " + _target.unitName);
-
-            // Unit Damage Dealt
-            _target.currentHealth -= _unit.baseDamage;
-
-            //Check if target is Destroyed
-            if (_target.currentHealth < 1)
-            {
-                Debug.Log(_target.unitName + " is Destroyed!");
-                _target.Die();
-            }
-
-            _unit.canAttack = false;
-
             SetModeToSelect();
+            return; 
         }
 
-        if (highlightedObject.objectType == SelectScript.objType.structure)
+        //Guard against non-targets
+        if(!highlightedObject.GetComponent<HealthScript>().isTarget)
         {
-            StructureInfo _target = highlightedObject.GetComponent<StructureInfo>();
-
-            if (_target.owner == _unit.owner)
-            {
-                SetModeToSelect();
-                return;
-            }
-
-            //Camera Shake
-            Camera.main.GetComponent<CameraFollow>().StartShake(0.1f, 0.1f);
-
-            //Play Sounds
-            TileAudioManager.instance.PlayTileAudio(tileAudioType.shoot);
-            TileAudioManager.instance.PlayTileAudio(tileAudioType.damage);
-
-            //DebugLog of Damage
-            Debug.Log(_unit.unitName + " is Deals" + _unit.baseDamage + " to Unit: " + _target.StructureName);
-
-            // Unit Damage Dealt
-            _target.currentHealth -= _unit.baseDamage;
-
-            //Check if target is Destroyed
-            if (_target.currentHealth < 1)
-            {
-                Debug.Log(_target.StructureName + " is Destroyed!");
-                _target.Die();
-            }
-
-            _unit.canAttack = false;
-
             SetModeToSelect();
+            return;
         }
+
+        HealthScript _target = highlightedObject.GetComponent<HealthScript>();
+
+        _target.TakeDamage(selectedObject);
+        selectedObject.GetComponent<UnitAttackScript>().hasAttacked = true; 
+        SetModeToSelect();
+
     }
     public void FocusObject(Transform _target)
     {

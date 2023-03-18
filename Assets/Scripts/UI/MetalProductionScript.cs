@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -17,7 +18,6 @@ public class MetalProductionScript : MonoBehaviour
 
     void Start()
     {
-        transform.parent = SelectObjectScript.Instance.CameraScreenCanvas;
         if (productionAmount > 0)
         {
             amountText.color = positive;
@@ -46,6 +46,15 @@ public class MetalProductionScript : MonoBehaviour
             Destroy(gameObject); 
         }
 
-        transform.position += Vector3.up * Time.deltaTime;
+
+        if (countdownToDestroy < 1.5)
+        {
+            amountText.color = Color.Lerp(amountText.color, Color.clear, Time.deltaTime * 2);
+            icon.color = Color.Lerp(amountText.color, Color.clear, Time.deltaTime * 2);
+            transform.position += Vector3.up * Time.deltaTime / 2;
+        }
+
+        transform.position += Vector3.up * Time.deltaTime/2;
+        
     }
 }

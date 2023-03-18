@@ -379,15 +379,6 @@ public class TileInfo: MonoBehaviour
         _dust.transform.position = transform.position;
     }
 
-    public GameObject scanIcon; 
-    public void ShowScanIcon(bool visible)
-    {
-        if(scanIcon != null)
-        {
-            scanIcon.SetActive(visible);
-        }
-    }
-
     public void FlipTile()
     {
         TileAudioManager.instance.PlayTileAudio(tileAudioType.swipe);

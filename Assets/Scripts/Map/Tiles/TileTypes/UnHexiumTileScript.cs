@@ -5,28 +5,19 @@ using UnityEngine;
 
 public class UnHexiumTileScript : TileInfo
 {
-    public bool captured; 
-
-    public float multiplier; 
-
-    public bool ApplyMultiplier()
-    {
-        if(captured)
-        {
-            return true;
-        }
-        return false;
-    }
-
     [Header("Prefab Element")]
-    [SerializeField] GameObject metalUIPrefab;
+    [SerializeField] GameObject metalRewardPrefab;
     [SerializeField] float distanceOffset;
+    [SerializeField] GameObject canvas;
     public void AddFlipReward(int _amount)
     {
-        GameManager.Instance.currentPlayerTurn.AddMetalScrap(_amount);
+        float _metalScrap = _amount;
 
-        GameObject _ui = Instantiate(metalUIPrefab, SelectObjectScript.Instance.CameraScreenCanvas);
+        GameObject _AddMetalUI = Instantiate(metalRewardPrefab);
+        _AddMetalUI.transform.SetParent(canvas.transform);
+        _AddMetalUI.transform.position = canvas.transform.position;
+        _AddMetalUI.GetComponent<MetalProductionScript>().productionAmount = Mathf.RoundToInt(_metalScrap);
 
-        _ui.transform.position = Camera.main.WorldToScreenPoint(transform.position) + Vector3.up * distanceOffset;
+        GameManager.Instance.currentPlayerTurn.AddMetalScrap(Mathf.RoundToInt(_metalScrap));
     }
 }

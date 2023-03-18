@@ -13,14 +13,9 @@ public class UnitInfo : MonoBehaviour
     public string unitName;
     public Sprite unitImage;
     [Header("Unit Components")]
-    public int maxHealth;
-    public int currentHealth;
     public bool canFly;
     public int maxMovementTiles;
     public int currentMovementTiles;
-    public int baseDamage;
-    public int attackRange; 
-    public int prestigeLevel;
     public int powerCost; 
 
     [Header("Model Info")]
@@ -37,17 +32,13 @@ public class UnitInfo : MonoBehaviour
     public TileInfo occuipedTile;
     public LayerMask isUnits;
 
-    [Header("Attack Components")]
-    public bool canAttack;
-    public bool isTarget; 
-    public GameObject AttackCanvas;
-    public GameObject HealthCanvas; 
-    public Image healthBarUI; 
-
     bool canMove;
     public int moveindex;
     public List<TileInfo> _tilePath;
     public List<Material> _ModelMaterials;
+
+    private HealthScript _health;
+    private UnitAttackScript _attackScript; 
 
     private void OnDrawGizmos()
     {
@@ -56,15 +47,14 @@ public class UnitInfo : MonoBehaviour
         {
             Gizmos.DrawSphere(_tilePath[i].transform.position,0.5f); 
         }
-
-        Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(transform.position, attackRange); 
     }
 
     private void Start()
     {
         _ModelMaterials.Clear();
-        GameManager.Instance.currentPlayerTurn.UpdatePlayerPowerSupply(); 
+        GameManager.Instance.currentPlayerTurn.UpdatePlayerPowerSupply();
+        _health = GetComponent<HealthScript>();
+        _attackScript = GetComponent<UnitAttackScript>(); 
     }
     public void UpdatePlayerDetails()
     {
@@ -169,12 +159,6 @@ public class UnitInfo : MonoBehaviour
 
             
         }
-        if(currentHealth < maxHealth)
-        {
-            HealthCanvas.SetActive(true);
-            float _targetHealth = (float)currentHealth / (float)maxHealth;
-            healthBarUI.fillAmount = Mathf.Lerp(healthBarUI.fillAmount, _targetHealth, Time.deltaTime * 8); 
-        }
     }
 
     public void CheckMovement()
@@ -183,7 +167,7 @@ public class UnitInfo : MonoBehaviour
         if (owner == GameManager.Instance.currentPlayerTurn)
         {
             //Set Selection Mode (Move unit Mode) 
-            SelectObjectScript.Instance.mode = SelectObjectScript.PointerMode.MoveMode;
+            SelectObjectScript.Instance.mode = SelectObjectScript.PointerMode.UnitMode;
 
             //Create a list of all "moveable" tiles. 
             List<TileInfo> _moveableTiles = TileManager.instance.SetTileList(transform.position, currentMovementTiles);
@@ -193,9 +177,8 @@ public class UnitInfo : MonoBehaviour
         }
     }
 
-    public void RefreshUnit()
+    public void StartTurn()
     {
-        canAttack = true;
         currentMovementTiles = maxMovementTiles;
         if(OnTurnStart != null)
         {
@@ -210,32 +193,6 @@ public class UnitInfo : MonoBehaviour
         if(PlayAction != null)
         { 
             PlayAction.Invoke();
-        }
-    }
-
-    public void CheckAttack()
-    {
-
-
-        if(owner == GameManager.Instance.currentPlayerTurn && canAttack)
-        {
-            SelectObjectScript.Instance.mode = SelectObjectScript.PointerMode.AttackMode;
-
-            Collider[] _units = Physics.OverlapSphere(transform.position, attackRange, isUnits);
-
-            for (int i = 0; i < _units.Length; i++)
-            {
-                if (_units[i].GetComponent<UnitInfo>().owner != GameManager.Instance.currentPlayerTurn)
-                {
-                    Debug.Log("Can Attack" + _units[i].GetComponent<UnitInfo>().unitName);
-                    _units[i].GetComponent<UnitInfo>().AttackCanvas.SetActive(true);
-                    _units[i].GetComponent<UnitInfo>().isTarget = true; 
-                }
-            }
-        }
-        else
-        {
-            Debug.Log("Can't attack"); 
         }
     }
 
