@@ -658,10 +658,10 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 7807065300437170427}
-        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-        m_MethodName: SetActive
-        m_Mode: 6
+      - m_Target: {fileID: 3723858858024626689}
+        m_TargetAssemblyTypeName: UnityEngine.AudioSource, UnityEngine
+        m_MethodName: Play
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -670,10 +670,10 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 1
         m_CallState: 2
-      - m_Target: {fileID: 3723858858024626689}
-        m_TargetAssemblyTypeName: UnityEngine.AudioSource, UnityEngine
-        m_MethodName: Play
-        m_Mode: 1
+      - m_Target: {fileID: 7807065300437170427}
+        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+        m_MethodName: SetActive
+        m_Mode: 6
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -721,6 +721,10 @@ MonoBehaviour:
   rewardGiven: 0
   icon: {fileID: 7807065300437170427}
   metalRewardPrefab: {fileID: 9001811830997793115, guid: d2220b7bdd06fd644aae5d3f2123456d,
+    type: 3}
+  relicRewardPrefab: {fileID: 9001811830997793115, guid: c645a69d509287a4d96b45e5bb86b66e,
+    type: 3}
+  exRewardPrefab: {fileID: 9001811830997793115, guid: e377ed52835c4d84a946bb09121e6c4a,
     type: 3}
   distanceOffset: 0
   canvas: {fileID: 2501537308328546524}

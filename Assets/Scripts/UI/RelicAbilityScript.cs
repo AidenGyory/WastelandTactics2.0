@@ -7,23 +7,26 @@ public class RelicAbilityScript : MonoBehaviour
 {
     [SerializeField] GameObject RelicUI;
 
-    public void TurnOnRelicUI()
+    private ResourceCacheTileScript tile; 
+
+    public void TurnOnRelicUI(ResourceCacheTileScript _tile)
     {
+        tile = _tile; 
         Time.timeScale = 0; 
         RelicUI.SetActive(true); 
     }
+
     public void ActivateRelic()
     {
+
         Time.timeScale = 1; 
-        Debug.Log("Gain 1 Relic Abilty!");
-        GameManager.Instance.currentPlayerTurn.AddRelic(); 
+        tile.GiveRelic(); 
 
     }
 
     public void ScrapRelic()
     {
         Time.timeScale = 1;
-        Debug.Log("Gain +100 Scrap Metal");
-        GameManager.Instance.currentPlayerTurn.AddMetalScrap(100); 
+        tile.GiveMetal(100);
     }
 }
