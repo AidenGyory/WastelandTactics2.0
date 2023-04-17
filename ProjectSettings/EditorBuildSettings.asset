@@ -5,7 +5,7 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/FactionSelection Screen.unity
     guid: 84b26b21b2e7cdb47b72f6d17746e592
   - enabled: 1

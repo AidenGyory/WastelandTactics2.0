@@ -172,7 +172,7 @@ MonoBehaviour:
   - tile: {fileID: 9183377527264780351, guid: 1c7052ac958a7e34a8c572d2fcbfc58a, type: 3}
     weight: 1
   - tile: {fileID: 6450179174133711173, guid: 435678d4bfb2394448fdb30b9d22fe63, type: 3}
-    weight: 100
+    weight: 1
   - tile: {fileID: 8692853436000316097, guid: 279db24907ecbd346b3bba259dc8fd35, type: 3}
     weight: 1
 --- !u!1 &5915373326039080522
